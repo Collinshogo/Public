@@ -18,7 +18,8 @@ window.AFT_CONFIG = {
   // Whop store and product URLs (no query string here; affiliate + UTMs are appended by script).
   whopStore: "https://whop.com/aft-official/",
   whopJoin: "https://whop.com/aft-official/products/the-all-fluence-indicator/",
-  whopReviews: "https://whop.com/aft-official/reviews",
+  whopHub: "https://whop.com/hub/",
+    whopReviews: "https://whop.com/aft-official/reviews",
   discordInvite: "https://discord.gg/aft-traders",
   supportEmail: "support@allfluencetrading.com",
   youtube: "https://www.youtube.com/@shogotrades",

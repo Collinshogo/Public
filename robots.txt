@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /welcome/
 
 # AI answer engines are welcome to read and cite the site.
 User-agent: OAI-SearchBot

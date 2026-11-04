@@ -6,7 +6,7 @@ Source of the All Fluence Trading website, served by GitHub Pages from `main`.
 - `/challenge/` — The AFT Challenge, the free paper-trading consistency program ("Never let a green day turn red").
 - `/legal/` — risk disclosure, terms, privacy.
 
-How to edit copy, swap testimonials, change links or prices, and read the tracking events: **`docs/RUNBOOK.md`**. Why the page is built this way: `docs/FUNNEL_WARGAME.md`. The Meta ad plan: `docs/AD_PLAN.md`.
+The runbook (how to edit copy, swap testimonials, change links or prices, read the tracking events) and the planning notes are kept outside this public repository; ask the site owner.
 
 Quick edits: links, Pixel ID and prices are all in `config.js`.
 

@@ -42,7 +42,7 @@
   }
 
   // ---- 3. Whop pixel (optional; snippet is Whop's own loader) --------------
-  if (C.whopBizId && !window.whop) {
+  if (C.whopBizId && !excluded && !window.whop) {
     // Whop Pixel, official snippet (docs.whop.com/developer/guides/pixel). Whop records checkout, trial and
     // purchase events itself; this only adds page views and leads so Whop can attribute them.
     !function(w,d,s,u,n,a,b){if(w[n])return;a=w[n]={q:[],t:+new Date,s:[],o:u,track:function(){a.q.push([+new Date].concat([].slice.call(arguments)))},setScope:function(){a.s=[].slice.call(arguments).filter(function(x){return typeof x==="string"});a.q.push([+new Date,"setScope"].concat(a.s))},scope:function(){var c=[].slice.call(arguments);return{track:function(){a.q.push([+new Date].concat([].slice.call(arguments)).concat([{__scope:c}]))}}}};b=d.createElement(s);b.async=1;b.src=u+"/s.js";d.getElementsByTagName(s)[0].parentNode.insertBefore(b,d.getElementsByTagName(s)[0])}(window,document,"script","https://t.whop.tw","whop");
@@ -95,7 +95,12 @@
 
   // ---- 5. PageView; trial completion on /welcome/ (Whop checkout-success redirect) --
   track("PageView");
-  if (/^\/welcome\/?$/.test(location.pathname)) {
+  // Only count /welcome/ loads that came from Whop's checkout-success redirect (referrer or the
+  // ?src=whop marker set in Whop > Settings > Checkout); direct, bookmarked or QA loads send PageView only.
+  var fromWhop = false;
+  try { fromWhop = /(^|\.)whop\.com$/.test(new URL(document.referrer).hostname); } catch (e) {}
+  try { var wq = new URLSearchParams(location.search); fromWhop = fromWhop || wq.get("src") === "whop" || wq.has("receipt_id") || wq.has("membership_id") || wq.has("checkout_id"); } catch (e) {}
+  if (/^\/welcome\/?$/.test(location.pathname) && fromWhop) {
     var doneKey = "aft_trial_done", already = false;
     try { already = !!sessionStorage.getItem(doneKey); sessionStorage.setItem(doneKey, "1"); } catch (e) {}
     if (!already) {
