@@ -122,6 +122,7 @@
         <source src="/assets/video/mnq-master-trader-backtest.mp4" type="video/mp4">
       </video>
       <button class="sound" id="snd" type="button" aria-pressed="false">Tap for sound</button>
+      <button class="full" id="full" type="button" aria-label="Watch full screen">Full screen</button>
       <div class="bar"><i id="prog"></i></div>
     </div>
       <p class="demo-cap"><strong>MNQ Master Trader</strong> live backtest · MNQ 1-minute chart · Jan 1 – Sep 1, 2026</p>
@@ -469,6 +470,17 @@ d.addEventListener('click',function(){d.close();});d.addEventListener('close',fu
 (function(){var v=document.getElementById('cv'),b=document.getElementById('snd'),p=document.getElementById('prog');if(!v)return;
 b.addEventListener('click',function(){v.muted=!v.muted;if(!v.muted){v.currentTime=0;v.play();}b.textContent=v.muted?'Tap for sound':'Mute';b.setAttribute('aria-pressed',String(!v.muted));});
 v.addEventListener('click',function(){if(v.paused)v.play();else v.pause();});
+var f=document.getElementById('full'),pl=document.getElementById('demo');
+function zoomOn(){pl.classList.add('zoomed');document.body.classList.add('noscroll');f.textContent='Close';f.setAttribute('aria-label','Close full screen');v.play().catch(function(){});}
+function zoomOff(){pl.classList.remove('zoomed');document.body.classList.remove('noscroll');f.textContent='Full screen';f.setAttribute('aria-label','Watch full screen');}
+if(f){f.addEventListener('click',function(){
+  if(pl.classList.contains('zoomed')){zoomOff();return;}
+  if(v.webkitEnterFullscreen&&!v.requestFullscreen){v.webkitEnterFullscreen();v.play().catch(function(){});return;}
+  if(document.fullscreenEnabled&&v.requestFullscreen){v.requestFullscreen().then(function(){v.play().catch(function(){});}).catch(zoomOn);}
+  else{zoomOn();}
+});}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&pl.classList.contains('zoomed'))zoomOff();});
+v.addEventListener('dblclick',function(){if(f)f.click();});
 v.addEventListener('timeupdate',function(){if(v.duration)p.style.width=(v.currentTime/v.duration*100)+'%';});
 if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){v.play().catch(function(){});}else{v.pause();}});},{threshold:.25}).observe(v);}
 })();
