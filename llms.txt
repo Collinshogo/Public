@@ -1,6 +1,6 @@
 # All Fluence Trading (AFT)
 
-> All Fluence Trading sells educational software and training for futures traders: two instrument-specific TradingView indicators (the MNQ Master Trader for Micro Nasdaq and the MGC Master Trader for Micro Gold), a general structure-and-levels overlay (The All Fluence indicator), a recorded course, and a members' Discord where the method is traded on livestream. Membership is sold on Whop. It is not a signals service and makes no performance promises.
+> All Fluence Trading sells educational software and training for futures traders: two instrument-specific TradingView indicators (the MNQ Master Trader for Micro Nasdaq and the MGC Master Trader for Micro Gold), a general structure-and-levels overlay (The All Fluence indicator), a recorded course, and a premium Discord where Collin trades the method live. Membership is sold on Whop. It is not a signals service and makes no performance promises.
 
 ## Facts
 - Site: https://allfluencetrading.com/ (landing page), https://allfluencetrading.com/challenge/ (the free AFT Challenge paper-trading program)
