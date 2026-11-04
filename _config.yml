@@ -1,0 +1,7 @@
+# GitHub Pages (Jekyll) build settings: keep working files out of the published site.
+exclude:
+  - docs
+  - README.md
+  - tracking
+  - "*.py"
+  - "*.md"

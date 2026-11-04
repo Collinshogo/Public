@@ -1,6 +1,9 @@
 /* AFT tracking: Meta Pixel (browser) + optional CAPI relay + optional Whop pixel,
    UTM/affiliate pass-through on outbound links. No cookies of our own; no PII collected.
-   Events: PageView (load), ViewContent (pricing seen), InitiateCheckout (Whop click), Lead (Discord / free chapter). */
+   Meta events: PageView (load), ViewContent (pricing seen, reviews, challenge), InitiateCheckout + custom StartTrialClick
+   (any trial button), Lead + custom JoinDiscord (Discord), CompleteRegistration + custom TrialStarted (/welcome/, once per
+   session, reached from Whop's checkout-success redirect). StartTrial and Purchase come from Whop's own Meta integration.
+   Visits with utm_source in AFT_CONFIG.excludeSources (Discord links) load no Meta Pixel and send no Meta event at all. */
 (function () {
   var C = window.AFT_CONFIG || {};
   var sessionKey = "aft_params";
@@ -16,8 +19,19 @@
     else inbound = JSON.parse(sessionStorage.getItem(sessionKey) || "{}");
   } catch (e) { inbound = {}; }
 
+  // ---- 1b. Internal traffic (Discord links etc.) never reaches the Meta Pixel -------
+  var excluded = false;
+  try {
+    var src = String(inbound.utm_source || "").toLowerCase();
+    var list = (C.excludeSources || []).map(function (x) { return String(x).toLowerCase(); });
+    var exKey = "aft_no_pixel", now = Date.now();
+    if (src && list.indexOf(src) >= 0) { excluded = true; localStorage.setItem(exKey, String(now + 30 * 864e5)); }
+    else { var until = Number(localStorage.getItem(exKey) || 0); if (until > now) excluded = true; else if (until) localStorage.removeItem(exKey); }
+  } catch (e) {}
+  window.aftPixelExcluded = excluded;
+
   // ---- 2. Meta Pixel loader ----------------------------------------------
-  var pixelOn = !!C.metaPixelId;
+  var pixelOn = !!C.metaPixelId && !excluded;
   if (pixelOn && !window.fbq) {
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
     n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
@@ -29,10 +43,11 @@
 
   // ---- 3. Whop pixel (optional; snippet is Whop's own loader) --------------
   if (C.whopBizId && !window.whop) {
-    // Whop's loader is pasted by hand into tracking/whop-pixel.js from the Whop dashboard
-    // (Marketing > Pixel > Install). It is loaded only when whopBizId is set.
-    var w = document.createElement("script"); w.async = true; w.src = "/tracking/whop-pixel.js";
-    document.head.appendChild(w);
+    // Whop Pixel, official snippet (docs.whop.com/developer/guides/pixel). Whop records checkout, trial and
+    // purchase events itself; this only adds page views and leads so Whop can attribute them.
+    !function(w,d,s,u,n,a,b){if(w[n])return;a=w[n]={q:[],t:+new Date,s:[],o:u,track:function(){a.q.push([+new Date].concat([].slice.call(arguments)))},setScope:function(){a.s=[].slice.call(arguments).filter(function(x){return typeof x==="string"});a.q.push([+new Date,"setScope"].concat(a.s))},scope:function(){var c=[].slice.call(arguments);return{track:function(){a.q.push([+new Date].concat([].slice.call(arguments)).concat([{__scope:c}]))}}}};b=d.createElement(s);b.async=1;b.src=u+"/s.js";d.getElementsByTagName(s)[0].parentNode.insertBefore(b,d.getElementsByTagName(s)[0])}(window,document,"script","https://t.whop.tw","whop");
+    window.whop.setScope(C.whopBizId);
+    window.whop.track("page");
   }
 
   // ---- 4. Event helpers ----------------------------------------------------
@@ -44,7 +59,7 @@
     return m ? m.pop() : "";
   }
   function capi(eventName, eventId, custom) {
-    if (!C.capiEndpoint) return;
+    if (!C.capiEndpoint || excluded) return;
     var body = JSON.stringify({
       event_name: eventName,
       event_id: eventId,
@@ -63,16 +78,32 @@
     var id = uid();
     if (pixelOn) window.fbq("track", eventName, custom || {}, { eventID: id });
     capi(eventName, id, custom);
-    if (window.whop && window.whop.track) {
-      var whopName = { PageView: "page", ViewContent: "view_content", InitiateCheckout: "initiate_checkout", Lead: "lead" }[eventName];
-      if (whopName && whopName !== "page") { try { window.whop.track(whopName, Object.assign({ event_id: id }, custom || {})); } catch (e) {} }
+    // Whop sees its own checkouts, trials and purchases; only leads are sent to the Whop Pixel.
+    if (eventName === "Lead" && window.whop && window.whop.track) {
+      try { window.whop.track("lead", { event_id: id }); } catch (e) {}
     }
     return id;
   }
+  function trackCustom(eventName, custom) {
+    var id = uid();
+    if (pixelOn) window.fbq("trackCustom", eventName, custom || {}, { eventID: id });
+    capi(eventName, id, custom);
+    return id;
+  }
   window.aftTrack = track;
+  window.aftTrackCustom = trackCustom;
 
-  // ---- 5. PageView -----------------------------------------------------------
+  // ---- 5. PageView; trial completion on /welcome/ (Whop checkout-success redirect) --
   track("PageView");
+  if (/^\/welcome\/?$/.test(location.pathname)) {
+    var doneKey = "aft_trial_done", already = false;
+    try { already = !!sessionStorage.getItem(doneKey); sessionStorage.setItem(doneKey, "1"); } catch (e) {}
+    if (!already) {
+      var P = C.plan || {};
+      track("CompleteRegistration", { content_name: P.name || "membership", status: "trial", value: P.priceMonthly || 0, currency: P.currency || "USD" });
+      trackCustom("TrialStarted", { content_name: P.name || "membership" });
+    }
+  }
 
   // ---- 6. Outbound link decoration + click events ---------------------------
   function decorate(url) {
@@ -96,12 +127,16 @@
     if (!a) return;
     var kind = a.getAttribute("data-ev");
     var name = a.getAttribute("data-name") || a.textContent.trim();
+    var dest = a.getAttribute("data-dest") || "";
     if (kind === "checkout") {
       track("InitiateCheckout", { content_name: name, content_category: "membership", value: priceFor(a), currency: (C.plan || {}).currency || "USD" });
+      trackCustom("StartTrialClick", { placement: name });
     } else if (kind === "lead") {
-      track("Lead", { content_name: name });
+      var isDiscord = dest === "discordInvite";
+      track("Lead", { content_name: name, content_category: isDiscord ? "discord" : "other" });
+      if (isDiscord) trackCustom("JoinDiscord", { placement: name });
     } else if (kind === "content") {
-      track("ViewContent", { content_name: name });
+      track("ViewContent", { content_name: name, content_category: dest === "whopReviews" ? "reviews" : "page" });
     }
   }, true);
 

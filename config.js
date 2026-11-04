@@ -3,11 +3,14 @@
 window.AFT_CONFIG = {
   // --- Tracking -----------------------------------------------------------
   // Meta Pixel ID (Events Manager > Data sources). Empty string = pixel off.
-  metaPixelId: "",
+  metaPixelId: "1151769454028430",
+  // Visits whose utm_source is in this list (e.g. links posted in the Discord) never load the Meta Pixel or send
+  // any Meta event; the exclusion is remembered on that device for 30 days so later pages and /welcome/ stay clean.
+  excludeSources: ["discord"],
   // Optional Conversions API relay (see tracking/capi-worker.js). Empty = off.
   capiEndpoint: "",
-  // Optional Whop pixel scope id (Whop dashboard URL after /dashboard/, starts with biz_). Empty = off.
-  whopBizId: "",
+  // Whop account id (dashboard URL after /dashboard/, starts with biz_). Loads the Whop Pixel. Empty = off.
+  whopBizId: "biz_G9AWq2Fgg1uLUM",
 
   // --- Destinations ---------------------------------------------------------
   // Whop affiliate code appended to every Whop link as ?a=<code>. Never shown in copy.
@@ -15,8 +18,9 @@ window.AFT_CONFIG = {
   // Whop store and product URLs (no query string here; affiliate + UTMs are appended by script).
   whopStore: "https://whop.com/aft-official/",
   whopJoin: "https://whop.com/aft-official/products/the-all-fluence-indicator/",
-  whopFreeChapter: "https://whop.com/aft-official/products/founders-pack-course-trial/",
+  whopReviews: "https://whop.com/aft-official/reviews",
   discordInvite: "https://discord.gg/aft-traders",
+  supportEmail: "support@allfluencetrading.com",
   youtube: "https://www.youtube.com/@shogotrades",
   tiktok: "https://www.tiktok.com/@shogotrades",
   twitch: "https://www.twitch.tv/shogotrades",

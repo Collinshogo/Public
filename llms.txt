@@ -10,6 +10,8 @@
 - Membership price (as listed on Whop, Nov 2026): USD 100 per month, 300 per quarter or 1,000 per year; 14-day free trial; 7-day money-back on the first charge.
 - Checkout and reviews: https://whop.com/aft-official/ (5.0 from 11 reviews, 76 members as of 2026-11-04).
 - Community: Discord (invite on the site), YouTube/TikTok/Twitch @shogotrades.
+- Contact: support@allfluencetrading.com
+- Course: eleven chapters (market structure, higher-timeframe bias, imbalances, ICC and 2H/4H levels, opening ranges, VWAP, entry models, relative strength, sizing, news days, trade breakdowns), all open during the 14-day free trial.
 - Proof on the site: member-posted prop-firm payouts, P&L and testimonials from the AFT Discord (sections "Payouts", "Profit & loss", "In their words"), each shown as posted with a disclaimer; and the MNQ Book / MGC Book Strategy Tester figures for the last 365 days (hypothetical; the Books differ from the indicators by an estimated 1–5% of trades).
 - Method in one line: higher-timeframe bias from imbalances, entries on pullbacks into a confluence stack (imbalance midline, 2H/4H structure level, VWAP band, opening range, session open), resting limit orders with structural stops, targets at structure.
 
