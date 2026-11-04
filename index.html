@@ -28,7 +28,7 @@
 <link rel="preload" href="/assets/hero-mnq-master-trader.png" as="image" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/style.css">
 <script src="/config.js"></script>
 <script src="/tracking.js" defer></script>
@@ -92,13 +92,7 @@
 
 <nav class="nav" aria-label="Main">
   <div class="wrap">
-    <a class="brand" href="/">
-      <svg width="40" height="22" viewBox="0 0 52 28" fill="none" aria-hidden="true">
-        <defs><linearGradient id="g" x1="0" y1="0" x2="52" y2="28" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#39f08a"/><stop offset=".5" stop-color="#7c9cff"/><stop offset="1" stop-color="#f1c75b"/></linearGradient></defs>
-        <path d="M14 4c8 0 16 20 24 20 5.5 0 10-4.5 10-10S43.5 4 38 4c-8 0-16 20-24 20C8.5 24 4 19.5 4 14S8.5 4 14 4Z" stroke="url(#g)" stroke-width="3.2" stroke-linecap="round"/>
-      </svg>
-      <span><span class="brand-name">AFT</span><span class="brand-sub">All Fluence Trading</span></span>
-    </a>
+    <a class="brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo.png" width="965" height="260" alt="AFT, All Fluence Trading"></a>
     <div class="nav-links">
       <a href="#indicators">Indicators</a>
       <a href="#watch">Backtest</a>
@@ -113,14 +107,14 @@
 <header class="hero">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <p class="eyebrow"><span class="dot"></span>TradingView indicators for MNQ and MGC futures</p>
-      <h1>The levels. The entries. The stops.<br><em>Drawn on your chart.</em></h1>
+      <p class="eyebrow">TradingView indicators for MNQ and MGC futures</p>
+      <h1>The levels. The entries. The stops.<br>Drawn on your chart.</h1>
       <p class="lead">The <strong>MNQ Master Trader</strong> and the <strong>MGC Master Trader</strong> mark every setup as it forms, then the course teaches you why and the premium Discord shows it traded live.</p>
       <div class="btn-row">
         <a class="btn btn-primary btn-lg" data-dest="whopJoin" data-ev="checkout" data-name="hero-join" href="https://whop.com/aft-official/products/the-all-fluence-indicator/">Start your 14-day free trial</a>
         <a class="btn btn-ghost btn-lg" data-dest="discordInvite" data-ev="lead" data-name="hero-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Join the free Discord</a>
       </div>
-      <p class="fine">$100/month after the trial. Cancel anytime on Whop.</p>
+      <p class="fine">Free for 14 days, everything included. Cancel before day 14 and you pay nothing.</p>
     </div>
     <figure class="hero-shot">
       <img src="/assets/hero-mnq-master-trader.png" width="1325" height="828" alt="MNQ Master Trader on the MNQ 1-minute chart in TradingView: a session of labelled setups with entry boxes, stop and target zones, partial exits and scale-in notes" fetchpriority="high">
@@ -137,30 +131,27 @@
   </div>
 </header>
 
-<div class="ticker" aria-hidden="true"><div class="ticker-track">
-  <span>MNQ Master Trader</span><span>MGC Master Trader</span><span>The All Fluence indicator</span><span>11-chapter course</span><span>Collin trades live in the premium Discord</span><span>700+ traders</span><span>14-day free trial</span>
-  <span>MNQ Master Trader</span><span>MGC Master Trader</span><span>The All Fluence indicator</span><span>11-chapter course</span><span>Collin trades live in the premium Discord</span><span>700+ traders</span><span>14-day free trial</span>
-</div></div>
+
 
 <section id="what">
   <div class="wrap">
     <div class="sec-head">
-      <p class="index">01 · What it is</p>
+      <p class="index">What it is</p>
       <h2>Stop guessing where to enter.</h2>
     </div>
     <div class="three">
-      <div><span class="n">1</span><h3>The indicators draw it</h3><p>Entry, stop, target, break-even move, scale-in. Labelled by setup name, the moment the conditions are met. Nothing repaints.</p></div>
-      <div><span class="n">2</span><h3>The course explains it</h3><p>Structure, imbalances, VWAP, opening ranges, entry models. Eleven chapters, in the order Collin teaches them.</p></div>
-      <div><span class="n">3</span><h3>Collin trades it live</h3><p>Collin streams the same setups live in the premium Discord channel. You watch the read, the entry and the exit, and you ask why.</p></div>
+      <div><h3>The indicators draw it</h3><p>Entry, stop, target, break-even move, scale-in. Labelled by setup name, the moment the conditions are met. Nothing repaints.</p></div>
+      <div><h3>The course explains it</h3><p>Structure, imbalances, VWAP, opening ranges, entry models. Eleven chapters, in the order Collin teaches them.</p></div>
+      <div><h3>Collin trades it live</h3><p>Collin streams the same setups live in the premium Discord channel. You watch the read, the entry and the exit, and you ask why.</p></div>
     </div>
-    <p class="plain">Not a signals service. No trade copying. You place every trade. <a href="#fit">Who it is for →</a></p>
+    <p class="plain">Not a signals service. No trade copying. You place every trade. <a href="#fit">Who it is for</a></p>
   </div>
 </section>
 
 <section id="indicators" class="dark">
   <div class="wrap">
     <div class="sec-head">
-      <p class="index">02 · The indicators</p>
+      <p class="index">The indicators</p>
       <h2>Two Master Traders. One per market.</h2>
       <p class="lead">High-probability strategies, delivered as indicators. Built to be traded with the All Fluence style, on top of The All Fluence indicator that reads the market underneath.</p>
     </div>
@@ -228,7 +219,7 @@
 <section id="watch" class="watch-sec">
   <div class="wrap watch">
     <div class="watch-head">
-      <p class="index gold">03 · Live backtest · MNQ1! · Jan 1 – Sep 1, 2026</p>
+      <p class="index gold">Live backtest · MNQ1! · Jan 1 – Sep 1, 2026</p>
       <h2 class="watch-title">Watch it work a session.</h2>
     </div>
     <div class="watch-copy">
@@ -252,7 +243,7 @@
 <section id="proof">
   <div class="wrap">
     <div class="sec-head">
-      <p class="index">04 · Payouts</p>
+      <p class="index">Payouts</p>
       <h2>Members get paid.</h2>
       <p class="lead">Posted in the <b>#payouts</b> channel by the members who got them. Shown as posted.</p>
     </div>
@@ -278,7 +269,7 @@
 <section id="pnl" class="dark">
   <div class="wrap">
     <div class="sec-head">
-      <p class="index">05 · Profit &amp; loss</p>
+      <p class="index">Profit &amp; loss</p>
       <h2>Green weeks. Passed evals. Posted the day it happened.</h2>
       <p class="lead">From <b>#profit-loss</b> and <b>#testimonials-and-trading-breakthroughs</b>. Red days get posted there too.</p>
     </div>
@@ -300,7 +291,7 @@
 <section id="voices">
   <div class="wrap">
     <div class="sec-head">
-      <p class="index">06 · In their words</p>
+      <p class="index">In their words</p>
       <h2>Straight from the Discord. Typos and all.</h2>
     </div>
     <div class="quotes">
@@ -317,7 +308,7 @@
         <p>"Definitely one of the best indicators on the market. Provides very high confidence in trading from just this indicator alone." <i>Shooty</i></p>
         <p>"If you want to learn the way the market actually moves, this indicator shows it all." <i>Britt Faulkner</i></p>
         <p>"The absolute best value I have ever received in a trading course!" <i>SaiYin Tradez</i></p>
-        <a data-dest="whopStore" href="https://whop.com/aft-official/reviews" rel="noopener" target="_blank">All 11 reviews on Whop →</a>
+        <a data-dest="whopStore" href="https://whop.com/aft-official/reviews" rel="noopener" target="_blank">All 11 reviews on Whop</a>
       </div>
     </div>
   </div>
@@ -326,7 +317,7 @@
 <section id="method" class="dark">
   <div class="wrap">
     <div class="sec-head">
-      <p class="index">07 · The method</p>
+      <p class="index">The method</p>
       <h2>Enter where the money enters.</h2>
     </div>
     <blockquote class="pull">"Breakout trading is for gamblers. Do not enter before the liquidity sweep or you become the liquidity."<footer>Collin, from the course</footer></blockquote>
@@ -342,7 +333,7 @@
 <section id="course">
   <div class="wrap course-grid">
     <div class="sec-head">
-      <p class="index">08 · The course</p>
+      <p class="index">The course</p>
       <h2>Eleven chapters. Chapter 1 is free.</h2>
       <p class="lead">Recorded lessons with chart replays. No card needed for Chapter 1.</p>
       <a class="btn btn-ghost" data-dest="whopFreeChapter" data-ev="lead" data-name="course-free-chapter" href="https://whop.com/aft-official/products/founders-pack-course-trial/">Unlock Chapter 1 free</a>
@@ -366,7 +357,7 @@
 <section id="fit" class="dark">
   <div class="wrap">
     <div class="sec-head">
-      <p class="index">09 · Fit</p>
+      <p class="index">Fit</p>
       <h2>Read this before you pay.</h2>
     </div>
     <div class="fit-grid">
@@ -379,9 +370,10 @@
 <section id="pricing">
   <div class="wrap pricing-grid">
     <div class="sec-head">
-      <p class="index">10 · Membership</p>
-      <h2>One membership. Everything Collin trades with.</h2>
-      <p class="lead">Checkout on Whop. Whop asks for your TradingView username, so the invite-only indicators can be added, and your Discord username.</p>
+      <p class="index">Membership</p>
+      <h2>Everything free for 14 days. Then $100 a month.</h2>
+      <p class="lead">Try all of it free for 14 days: the indicators on your chart, the course, the premium Discord with the live sessions. If it is not for you, cancel and you pay nothing.</p>
+      <p class="plain">Checkout is on Whop. It asks for your TradingView username, so the invite-only indicators can be added, and your Discord username.</p>
       <p class="plain">Not ready? <a data-dest="discordInvite" data-ev="lead" data-name="pricing-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Join the free Discord</a> or run the <a href="/challenge/">free challenge</a>.</p>
     </div>
     <div class="price-card">
@@ -396,7 +388,7 @@
         <li>Premium Discord with Collin's live sessions</li>
         <li>Future releases as they pass testing</li>
       </ul>
-      <p class="need">14-day free trial with a card on file. Cancel anytime. 7-day money-back on the first charge, one per customer, as stated on Whop. USD.</p>
+      <p class="need">Card on file, nothing charged for 14 days. Cancel anytime from your Whop account. After the trial, Whop's 7-day money-back guarantee covers the first charge, one per customer. Prices in USD.</p>
     </div>
   </div>
 </section>
@@ -404,7 +396,7 @@
 <section id="faq" class="dark">
   <div class="wrap narrow">
     <div class="sec-head">
-      <p class="index">11 · Questions</p>
+      <p class="index">Questions</p>
       <h2>Straight answers.</h2>
     </div>
     <details><summary>Is this a signals service?</summary><p>No. The indicators draw levels and the playbook's setups on your own TradingView chart; the course teaches the method behind them. You read the chart and make every decision. Nothing is traded for you.</p></details>
@@ -420,13 +412,13 @@
 <section id="free">
   <div class="wrap">
     <div class="sec-head">
-      <p class="index">12 · Free first</p>
+      <p class="index">Free first</p>
       <h2>Look before you pay.</h2>
     </div>
     <div class="paths">
-      <a class="path" data-dest="discordInvite" data-ev="lead" data-name="free-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank"><b>The free Discord</b><span>Read the channels, ask questions, see what members post. Live sessions are in the premium Discord.</span><i>Join →</i></a>
-      <a class="path" data-dest="whopFreeChapter" data-ev="lead" data-name="free-chapter" href="https://whop.com/aft-official/products/founders-pack-course-trial/"><b>Chapter 1, free</b><span>The first lessons on market structure. No card.</span><i>Unlock →</i></a>
-      <a class="path" data-ev="content" data-name="free-challenge" href="/challenge/"><b>The AFT Challenge</b><span>Five simulated accounts, hard daily loss limit, bank the green and walk away.</span><i>Rules →</i></a>
+      <a class="path" data-dest="discordInvite" data-ev="lead" data-name="free-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank"><b>The free Discord</b><span>Read the channels, ask questions, see what members post. Live sessions are in the premium Discord.</span><i>Join the free Discord</i></a>
+      <a class="path" data-dest="whopFreeChapter" data-ev="lead" data-name="free-chapter" href="https://whop.com/aft-official/products/founders-pack-course-trial/"><b>Chapter 1, free</b><span>The first lessons on market structure. No card.</span><i>Unlock Chapter 1</i></a>
+      <a class="path" data-ev="content" data-name="free-challenge" href="/challenge/"><b>The AFT Challenge</b><span>Five simulated accounts, hard daily loss limit, bank the green and walk away.</span><i>Read the rules</i></a>
     </div>
   </div>
 </section>
