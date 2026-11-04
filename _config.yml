@@ -1,7 +1,8 @@
 # GitHub Pages (Jekyll) build settings: keep working files out of the published site.
+# Entries are path prefixes: "tracking/" (the folder) must not catch tracking.js.
 exclude:
-  - docs
+  - docs/
+  - tracking/
   - README.md
-  - tracking
   - "*.py"
   - "*.md"
