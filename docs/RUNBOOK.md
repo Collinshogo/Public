@@ -50,7 +50,7 @@ Whop reviews are the `<article class="review">` blocks in the `reviews` section.
 
 ## 3b. The TikTok embed
 
-The `watch` section embeds one TikTok through TikTok's player iframe (`https://www.tiktok.com/player/v1/<video id>`), no script tag. To swap the clip: replace the video id in the iframe `src`, the date and the quoted caption (verbatim from the post). The iframe is third-party content: TikTok sets cookies when it loads, which the privacy page already covers under "embedded content". If TikTok ever blocks the player, the fallback is a static thumbnail linking to the post.
+The `watch` section embeds one TikTok through TikTok's player iframe (`https://www.tiktok.com/player/v1/<video id>`), no script tag. To swap the clip: replace the video id in the iframe `src`, the date and the quoted caption (verbatim from the post). The iframe is third-party content: TikTok sets cookies when it loads, which the privacy paragraph on `legal/index.html` names (TikTok player, cookies, IP). If TikTok ever blocks the player, the fallback is a static thumbnail linking to the post.
 
 ## 4. Reading the events
 
