@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Disallow: /welcome/
+
+# AI answer engines are welcome to read and cite the site.
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+
+Sitemap: https://allfluencetrading.com/sitemap.xml

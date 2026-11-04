@@ -3,193 +3,495 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The AFT Challenge — All Fluence Trading</title>
-<meta name="description" content="The AFT Challenge: a structured consistency program for developing futures traders. Never let a green day turn red.">
-<style>
-  :root{
-    --bg:#0b0e0c; --panel:#101512; --text:#c9d1cc; --dim:#8a948d; --faint:#5c655f;
-    --green:#3ddc84; --green-dim:#1c3a2a; --green-tint:rgba(61,220,132,.06);
-    --red:#f0655a; --red-tint:rgba(240,101,90,.06);
-    --mono:"SF Mono",SFMono-Regular,ui-monospace,Menlo,Consolas,monospace;
-    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    --border:#1e2621;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.65;font-size:16px}
-  .wrap{max-width:720px;margin:0 auto;padding:56px 24px 40px}
-  a{color:var(--green);text-decoration:none;border-bottom:1px solid rgba(61,220,132,.35)}
-  a:hover{border-bottom-color:var(--green)}
-  strong{color:#e8ede9}
-  em{color:var(--dim)}
+<title>All Fluence Trading | MNQ &amp; MGC Master Trader Indicators</title>
+<meta name="description" content="MNQ Master Trader and MGC Master Trader TradingView indicators, the course, and a premium Discord where shogotrades trades live. 14-day free trial on Whop.">
+<link rel="canonical" href="https://allfluencetrading.com/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0e0f16">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
-  .brand{display:flex;align-items:center;gap:14px;margin-bottom:40px}
-  .brand svg{display:block}
-  .brand-name{font-family:var(--mono);letter-spacing:.35em;font-size:15px;color:#e8ede9;font-weight:600}
-  .brand-sub{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--faint);margin-top:3px}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="All Fluence Trading">
+<meta property="og:title" content="All Fluence Trading — MNQ &amp; MGC Master Trader">
+<meta property="og:description" content="Two instrument-specific TradingView indicators, a structured course, and shogotrades trading live in the premium Discord. Educational tools for MNQ and MGC futures traders.">
+<meta property="og:url" content="https://allfluencetrading.com/">
+<meta property="og:image" content="https://allfluencetrading.com/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="All Fluence Trading — MNQ &amp; MGC Master Trader">
+<meta name="twitter:description" content="Two instrument-specific TradingView indicators, a structured course, and shogotrades trading live in the premium Discord. Educational tools for MNQ and MGC futures traders.">
+<meta name="twitter:image" content="https://allfluencetrading.com/assets/og.png">
 
-  h1{font-size:40px;line-height:1.15;margin:0 0 6px;color:#f2f6f3;font-weight:700;letter-spacing:-.01em}
-  .tagline{font-style:italic;color:var(--faint);margin:0 0 32px;font-size:15px}
+<link rel="preload" href="/assets/hero-mnq-master-trader.png" as="image" fetchpriority="high">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/style.css">
+<script src="/config.js"></script>
+<script src="/tracking.js" defer></script>
 
-  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--green);text-transform:uppercase;margin:52px 0 6px}
-  .kicker.red{color:var(--red)}
-  h2{font-size:24px;color:#f2f6f3;margin:0 0 16px;font-weight:700}
-
-  .callout{border-left:3px solid var(--green);background:var(--green-tint);padding:20px 24px;margin:32px 0;border-radius:0 8px 8px 0}
-  .callout.red{border-left-color:var(--red);background:var(--red-tint)}
-  .callout .label{font-family:var(--mono);font-size:11px;letter-spacing:.28em;color:var(--green);text-transform:uppercase;margin:0 0 10px}
-  .callout.red .label{color:var(--red)}
-  .callout p{margin:0 0 12px}
-  .callout p:last-child{margin-bottom:0}
-
-  .params{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:24px 0}
-  .param{background:var(--panel);padding:16px 16px 14px}
-  .param.wide{grid-column:1 / -1}
-  .param .k{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--faint);text-transform:uppercase;margin:0 0 8px}
-  .param .v{font-family:var(--mono);font-size:19px;color:var(--green);font-weight:600;margin:0 0 6px}
-  .param .n{font-size:12.5px;color:var(--dim);line-height:1.5;margin:0}
-
-  .rules{list-style:none;margin:24px 0 0;padding:0;counter-reset:rule}
-  .rules li{display:grid;grid-template-columns:56px 1fr;gap:0 18px;margin:0 0 28px;counter-increment:rule}
-  .rules li::before{content:"0" counter(rule);font-family:var(--mono);color:var(--green);font-size:15px;padding-top:2px;border-top:2px solid var(--green);height:min-content;justify-self:start;padding-right:14px}
-  .rules h3{margin:0 0 6px;font-size:16.5px;color:#f2f6f3}
-  .rules p{margin:0;color:var(--dim);font-size:14.5px}
-
-  .outro-head{color:var(--green);font-size:22px;font-weight:700;margin:40px 0 12px;line-height:1.3}
-
-  footer{margin-top:64px;padding-top:20px;border-top:1px solid var(--border)}
-  footer .line{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--faint);text-transform:uppercase;margin:0 0 8px}
-  footer p{font-size:12px;color:var(--faint);margin:0}
-
-  @media (max-width:640px){
-    .wrap{padding:40px 18px 32px}
-    h1{font-size:32px}
-    .params{grid-template-columns:1fr 1fr}
-    .param.wide{grid-column:1 / -1}
-  }
-</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://allfluencetrading.com/#org",
+      "name": "All Fluence Trading",
+      "alternateName": "AFT",
+      "url": "https://allfluencetrading.com/",
+      "logo": "https://allfluencetrading.com/assets/logo-512.png",
+      "email": "support@allfluencetrading.com",
+      "contactPoint": [{"@type": "ContactPoint", "contactType": "customer support", "email": "support@allfluencetrading.com", "availableLanguage": "en"}],
+      "founder": {"@type": "Person", "name": "shogotrades"},
+      "sameAs": [
+        "https://www.youtube.com/@shogotrades",
+        "https://www.tiktok.com/@shogotrades",
+        "https://www.twitch.tv/shogotrades",
+        "https://whop.com/aft-official/"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://allfluencetrading.com/#site",
+      "url": "https://allfluencetrading.com/",
+      "name": "All Fluence Trading",
+      "publisher": {"@id": "https://allfluencetrading.com/#org"}
+    },
+    {
+      "@type": "Product",
+      "@id": "https://allfluencetrading.com/#membership",
+      "name": "All Fluence Trading membership",
+      "description": "Membership bundle: the MNQ Master Trader and MGC Master Trader TradingView indicators, The All Fluence indicator, the All Fluence Trading course, the premium Discord with shogotrades' live sessions, and future releases as they pass testing. Educational software and training for futures traders; not investment advice.",
+      "brand": {"@id": "https://allfluencetrading.com/#org"},
+      "category": "Trading education software",
+      "image": "https://allfluencetrading.com/assets/og.png",
+      "offers": [
+        {"@type": "Offer", "name": "Monthly", "price": "100", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://whop.com/aft-official/products/the-all-fluence-indicator/", "seller": {"@id": "https://allfluencetrading.com/#org"}},
+        {"@type": "Offer", "name": "Quarterly", "price": "300", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://whop.com/aft-official/products/the-all-fluence-indicator/"},
+        {"@type": "Offer", "name": "Annual", "price": "1000", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://whop.com/aft-official/products/the-all-fluence-indicator/"}
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://allfluencetrading.com/#faq",
+      "mainEntity": [
+        {"@type": "Question", "name": "Is this a signals service?", "acceptedAnswer": {"@type": "Answer", "text": "No. The indicators draw levels and the playbook's setups on your own TradingView chart; the course teaches the method behind them. You read the chart and make every decision. Nothing is traded for you."}},
+        {"@type": "Question", "name": "Do I need a paid TradingView plan?", "acceptedAnswer": {"@type": "Answer", "text": "A free TradingView account is enough to run the indicators. They are invite-only scripts added to the TradingView username you give at checkout. A paid plan only adds things like more indicators per chart and more alerts."}},
+        {"@type": "Question", "name": "Which markets are covered?", "acceptedAnswer": {"@type": "Answer", "text": "MNQ (Micro Nasdaq) and MGC (Micro Gold) are the instruments the Master Trader indicators are built on. The same charts apply to NQ and GC at full size. The All Fluence indicator itself is a general-purpose overlay."}},
+        {"@type": "Question", "name": "Can I cancel? Is there a refund?", "acceptedAnswer": {"@type": "Answer", "text": "Monthly billing, cancel anytime from your Whop account. Whop lists a 14-day free trial and a 7-day money-back guarantee on the first charge, one per customer. Indicator access and Discord access end when the membership ends."}},
+        {"@type": "Question", "name": "Do you promise results?", "acceptedAnswer": {"@type": "Answer", "text": "No. These are educational tools. Futures trading involves substantial risk of loss and is not suitable for every investor. Nothing on this site or in the membership is financial advice."}},
+        {"@type": "Question", "name": "What about automated trading bots?", "acceptedAnswer": {"@type": "Answer", "text": "Automated strategies are being built and tested. They are released to members only as each one passes testing, with no release dates promised. Membership includes them when they ship."}},
+        {"@type": "Question", "name": "Does shogotrades actually trade this?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, on stream, in the premium Discord and on Twitch. The free lessons on YouTube show the method on real charts if you want to check the teaching before you pay."}}
+      ]
+    }
+  ]
+}
+</script>
 </head>
-<body>
-<div class="wrap">
+<body class="has-sticky">
+<noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1151769454028430&ev=PageView&noscript=1"></noscript>
 
-  <div class="brand">
-    <svg width="52" height="28" viewBox="0 0 52 28" fill="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="g" x1="0" y1="0" x2="52" y2="28" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stop-color="#3ddc84"/><stop offset=".5" stop-color="#5aa0f2"/><stop offset="1" stop-color="#c66bd8"/>
-        </linearGradient>
-      </defs>
-      <path d="M14 4c8 0 16 20 24 20 5.5 0 10-4.5 10-10S43.5 4 38 4c-8 0-16 20-24 20C8.5 24 4 19.5 4 14S8.5 4 14 4Z" stroke="url(#g)" stroke-width="3.2" stroke-linecap="round"/>
-    </svg>
-    <div>
-      <div class="brand-name">AFT</div>
-      <div class="brand-sub">ALL FLUENCE TRADING</div>
+<nav class="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo.png" width="935" height="204" alt="AFT, All Fluence Trading"></a>
+    <div class="nav-links">
+      <a href="#indicators">Indicators</a>
+      <a href="#demo">Backtest</a>
+      <a href="#proof">Payouts</a>
+      <a href="#course">Course</a>
+      <a href="#pricing">Pricing</a>
+    </div>
+    <a class="btn btn-primary nav-cta" data-dest="whopJoin" data-ev="checkout" data-name="nav-join" href="https://whop.com/aft-official/products/the-all-fluence-indicator/">Unlock your 14-day free trial</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">TradingView indicators for MNQ and MGC futures</p>
+      <h1>The levels. The entries. The stops.<br>Drawn on your chart.</h1>
+      <p class="lead">The <strong>MNQ Master Trader</strong> and the <strong>MGC Master Trader</strong> mark every setup as it forms, then the course teaches you why and the premium Discord shows it traded live.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary btn-lg" data-dest="whopJoin" data-ev="checkout" data-name="hero-join" href="https://whop.com/aft-official/products/the-all-fluence-indicator/">Start your 14-day free trial</a>
+        <a class="btn btn-ghost btn-lg" data-dest="discordInvite" data-ev="lead" data-name="hero-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Join the free Discord</a>
+      </div>
+      <p class="fine">Free for 14 days, everything included. Cancel before day 14 and you pay nothing.</p>
+    </div>
+    <div class="hero-demo">
+<div class="player" id="demo">
+      <video id="cv" playsinline muted loop autoplay preload="metadata" poster="/assets/video/mnq-master-trader-backtest-poster.jpg" width="720" height="900" aria-label="MNQ Master Trader indicator backtest replay on the MNQ 1-minute chart: the backtest equity curve, then entries, scale-ins, stops moved to break-even and closed positions, each setup named on screen">
+        <source src="/assets/video/mnq-master-trader-backtest.mp4" type="video/mp4">
+      </video>
+      <button class="sound" id="snd" type="button" aria-pressed="false">Tap for sound</button>
+      <button class="full" id="full" type="button" aria-label="Watch full screen">Full screen</button>
+      <div class="bar"><i id="prog"></i></div>
+    </div>
+      <p class="demo-cap"><strong>MNQ Master Trader</strong> backtest replay · MNQ 1-minute chart · Jan 1 – Sep 1, 2026</p>
+    <div class="hero-report">
+      <figure class="screen slim">
+        <a href="/assets/book-mnq.png" data-lb aria-label="Open full size"><img src="/assets/book-mnq.png" width="1785" height="580" alt="TradingView Strategy Tester for the MNQ Book, last 365 days: total P&L +86,063.50 USD (+8,606.35%), max drawdown 2,292.25 USD, profitable trades 74.25% (1165 of 1569), profit factor 2.334, with the cumulative P&L curve" loading="lazy"></a>
+        <figcaption>MNQ Master Trader results · TradingView Strategy Tester · MNQ Book · last 365 days · tap to zoom</figcaption>
+      </figure>
+      <ul class="stats" aria-label="MNQ Book results">
+        <li><b>+86,063.50</b><span>USD net profit</span></li>
+        <li><b>74.25%</b><span>profitable trades<br>1,165 of 1,569</span></li>
+        <li><b>2.334</b><span>profit factor</span></li>
+        <li><b>2,292.25</b><span>USD max drawdown · 142.88%</span></li>
+      </ul>
+      <p class="fine">The MNQ Book is the strategy version of the MNQ Master Trader, run in TradingView's Strategy Tester. The video is that backtest replayed bar by bar. Hypothetical results, not a live account.</p>
+    </div>
     </div>
   </div>
-
-  <h1>The AFT Challenge</h1>
-  <p class="tagline">Never let a green day turn red.</p>
-
-  <p>The AFT Challenge is a structured consistency program for developing futures traders. It simulates the full prop-firm journey — from passing an evaluation all the way to your first payout — on a paper-trading account, so you build the discipline before you ever pay an evaluation fee.</p>
-
-  <p>The challenge trains the three skills that separate consistent traders from everyone else: <strong>sizing appropriately, accepting losses before they spiral, and accepting profit.</strong> There is no difference between this and trading in the prop space — except that this way costs you nothing.</p>
-
-  <div class="callout">
-    <p class="label">Your journey starts today</p>
-    <p>This challenge isn't about home runs. It's about becoming the trader who shows up, takes their one or two best trades, banks the green, and walks away — <strong>every single day, on command.</strong> That skill is the entire business. Open your five paper accounts, set your loss limits, and take your first rep tomorrow morning. It costs you nothing — and it builds everything.</p>
+  <div class="wrap">
+    <figure class="screen hero-full">
+      <a href="/assets/hero-mnq-master-trader.png" data-lb aria-label="Open full size"><img src="/assets/hero-mnq-master-trader.png" width="1814" height="828" alt="MNQ Master Trader on the MNQ 1-minute chart in TradingView: a full session of labelled setups with entry boxes, stops, targets and partial exits, the per-setup strategy table and the month calendar" fetchpriority="high"></a>
+      <figcaption>MNQ Master Trader · MNQ1! · 1 min · the full chart, strategy table and month view</figcaption>
+    </figure>
   </div>
+</header>
 
-  <p><strong>New to trading?</strong> Watch the free All Fluence course on YouTube — <a href="https://www.youtube.com/@shogotrades">@shogotrades</a> — first. And if you feel you want more, the <a href="https://whop.com/aft-c74e/the-all-fluence-indicator">AFT indicator and course</a> are there for you — but nothing in this challenge requires them.</p>
 
-  <p class="kicker">Setup</p>
-  <h2>Challenge Parameters</h2>
 
-  <div class="params">
-    <div class="param">
-      <p class="k">Accounts</p>
-      <p class="v">5 × $2,000</p>
-      <p class="n">Simulated. Traded independently.</p>
+<section id="what">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="index">What it is</p>
+      <h2>Stop guessing where to enter.</h2>
     </div>
-    <div class="param">
-      <p class="k">Daily loss limit</p>
-      <p class="v">−$200</p>
-      <p class="n">Per account, per day. Hard stop.</p>
+    <div class="three">
+      <div><h3>The indicators draw it</h3><p>Entry, stop, target, break-even move, scale-in. Labelled by setup name, the moment the conditions are met. Nothing repaints.</p></div>
+      <div><h3>The course explains it</h3><p>Structure, imbalances, VWAP, opening ranges, entry models. Eleven chapters, in the order shogotrades teaches them.</p></div>
+      <div><h3>shogotrades trades it live</h3><p>shogotrades streams the same setups live in the premium Discord channel. You watch the read, the entry and the exit, and you ask why.</p></div>
     </div>
-    <div class="param">
-      <p class="k">Profit goal</p>
-      <p class="v">+$5,500</p>
-      <p class="n">The typical prop-firm payout threshold — this run takes you from eval to payout.</p>
+    <p class="plain">Not a signals service. No trade copying. You place every trade. <a href="#fit">Who it is for</a></p>
+  </div>
+</section>
+
+<section id="indicators" class="dark">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="index">The indicators</p>
+      <h2>Two Master Traders. One per market.</h2>
+      <p class="lead">High-probability strategies, delivered as indicators. Built to be traded with the All Fluence style, on top of The All Fluence indicator that reads the market underneath.</p>
     </div>
-    <div class="param">
-      <p class="k">Instruments</p>
-      <p class="v">MNQ · MES · MGC</p>
-      <p class="n">Micro Nasdaq, S&amp;P, and Gold futures.</p>
+
+    <article class="feature">
+      <div class="feature-head">
+        <div>
+          <p class="index">MNQ Master Trader</p>
+          <h3>Nasdaq runs. This one catches the run.</h3>
+          <p>Opening-range plays, imbalance pullbacks, the New York open, the overnight sessions. Each setup drawn with its entry, stop and targets, stop moves shown as they happen, alerts on every event.</p>
+        </div>
+        <a class="btn btn-primary" data-dest="whopJoin" data-ev="checkout" data-name="ind-mnq-join" href="https://whop.com/aft-official/products/the-all-fluence-indicator/">Start your 14-day free trial</a>
+      </div>
+      <figure class="screen"><a href="/assets/mnq-master-trader.png" data-lb aria-label="Open full size"><img src="/assets/mnq-master-trader.png" width="1600" height="730" alt="MNQ Master Trader on the MNQ 1-minute chart: a full session of labelled setups, the per-setup strategy table (trades, win rate, profit factor, drawdown) and the month calendar" loading="lazy"></a><figcaption>MNQ1! · 1 min · setups, strategy table, month view</figcaption></figure>
+      <div class="report" id="perf-mnq">
+        <div class="report-head"><p class="index">Performance report · MNQ Book · last 365 days · 1,000 USD start</p><p class="big">+86,063.50 <small>USD</small></p></div>
+        <figure class="screen slim"><a href="/assets/book-mnq.png" data-lb aria-label="Open full size"><img src="/assets/book-mnq.png" width="1785" height="580" alt="TradingView Strategy Tester for the MNQ Book, last 365 days: total P&L +86,063.50 USD (+8,606.35%), max drawdown 2,292.25 USD, profitable trades 74.25% (1165 of 1569), profit factor 2.334, with the cumulative P&L curve" loading="lazy"></a></figure>
+        <ul class="kpis">
+          <li><b>1,569</b><span>trades</span></li>
+          <li><b>74.25%</b><span>profitable</span></li>
+          <li><b>2.334</b><span>profit factor</span></li>
+          <li><b>2,292</b><span>USD max drawdown · 142.88%</span></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="feature-head">
+        <div>
+          <p class="index gold">MGC Master Trader</p>
+          <h3>Gold keeps its own clock. So does this.</h3>
+          <p>London, the New York fix, the Asian hours. Session-anchored setups with their own risk rules, the same closed-bar confirmation, the same on-chart stop management.</p>
+        </div>
+        <a class="btn btn-primary" data-dest="whopJoin" data-ev="checkout" data-name="ind-mgc-join" href="https://whop.com/aft-official/products/the-all-fluence-indicator/">Start your 14-day free trial</a>
+      </div>
+      <figure class="screen"><a href="/assets/mgc-master-trader.png" data-lb aria-label="Open full size"><img src="/assets/mgc-master-trader.png" width="1600" height="723" alt="MGC Master Trader on the MGC 1-minute chart: London, Tokyo and New York session setups with entry boxes, stops, targets and partial exits, the strategy table and the month calendar" loading="lazy"></a><figcaption>MGC1! · 1 min · session setups, strategy table, month view</figcaption></figure>
+      <div class="report" id="perf-mgc">
+        <div class="report-head"><p class="index gold">Performance report · MGC Book · last 365 days · 25,000 USD start</p><p class="big">+80,983.75 <small>USD</small></p></div>
+        <figure class="screen slim"><a href="/assets/book-mgc.png" data-lb aria-label="Open full size"><img src="/assets/book-mgc.png" width="1766" height="581" alt="TradingView Strategy Tester for the MGC Book, last 365 days: total P&L +80,983.75 USD (+323.94%), max drawdown 2,515.75 USD (7.24%), profitable trades 72.85% (1057 of 1451), profit factor 1.817, with the cumulative P&L curve" loading="lazy"></a></figure>
+        <ul class="kpis">
+          <li><b>1,451</b><span>trades</span></li>
+          <li><b>72.85%</b><span>profitable</span></li>
+          <li><b>1.817</b><span>profit factor</span></li>
+          <li><b>2,516</b><span>USD max drawdown · 7.24%</span></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="feature">
+      <div class="feature-head">
+        <div>
+          <p class="index blue">The All Fluence indicator</p>
+          <h3>Read the market before you trade it.</h3>
+          <p>Structure on 2H and 4H, imbalances across eight timeframes, VWAP with sigma bands, five session opening ranges, session liquidity. The context every Master Trader setup is taken in.</p>
+        </div>
+        <a class="btn btn-primary" data-dest="whopJoin" data-ev="checkout" data-name="ind-aft-join" href="https://whop.com/aft-official/products/the-all-fluence-indicator/">Start your 14-day free trial</a>
+      </div>
+      <figure class="screen"><a href="/assets/all-fluence-indicator.png" data-lb aria-label="Open full size"><img src="/assets/all-fluence-indicator.png" width="1600" height="913" alt="The All Fluence indicator on the MNQ 15-minute chart: 1H and 4H structure boxes, stacked imbalances by timeframe, VWAP band, buy and sell zones, session highs and lows, opening ranges and session-open levels" loading="lazy"></a><figcaption>MNQ1! · 15 min · structure, imbalances, VWAP, sessions</figcaption></figure>
+    </article>
+
+    <p class="note">The MNQ Book and MGC Book are the strategy versions of the two Master Traders, run in TradingView's Strategy Tester. Results are very similar to what the indicators show on the chart but not completely the same: trades differ by an estimated 1–5% margin of error, which does not mean worse performance, simply different. Strategy Tester results are hypothetical, do not represent actual trading or any account, and have inherent limitations. Max drawdown is shown in USD and as TradingView's percentage. The MNQ Book was run from a 1,000 USD starting balance and the MGC Book from 25,000 USD, so the two percentages are not comparable; the MNQ Book's 2,292.25 USD drawdown is larger than its starting balance, which a real 1,000 USD account could not have survived. Size from the USD drawdown, not the starting balance. The indicators do not place trades; you do.</p>
+  </div>
+</section>
+
+<section id="proof">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="index">Payouts</p>
+      <h2>Members get paid.</h2>
+      <p class="lead">Posted in the <b>#payouts</b> channel by the members who got them. Shown as posted.</p>
     </div>
-    <div class="param wide">
-      <p class="k">Max position</p>
-      <p class="v">10 micros</p>
-      <p class="n">Scale in freely — but never so large that one trade can blow the daily loss limit.</p>
+    <div class="masonry">
+      <figure class="proof"><a href="/assets/proof/payout-angel-100k-1.jpg" data-lb><img loading="lazy" src="/assets/proof/payout-angel-100k-1.jpg" width="1100" height="807" alt="My Funded Futures lifetime payout certificate for $100,000, issued to Angel, period January 27 to May 18, 2026"></a><figcaption><b>Angel</b> $100,000 lifetime · My Funded Futures · May 24<q>Just Locked in 100 K payout last week</q></figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/payout-angel-8000-1.jpg" data-lb><img loading="lazy" src="/assets/proof/payout-angel-8000-1.jpg" width="1100" height="788" alt="Lucid Trading live trader payout certificate for $8,000 awarded to Angel, March 23, 2026"></a><figcaption><b>Angel</b> $8,000 · Lucid Trading · Mar 23<q>17 k day today. And 21k day on last Friday</q></figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/payout-scalpin-5000-may18.jpg" data-lb><img loading="lazy" src="/assets/proof/payout-scalpin-5000-may18.jpg" width="1078" height="701" alt="Lucid Trading payout certificate for $5,000 awarded to Scott, May 15, 2026"></a><figcaption><b>Scott</b> $5,000 · Lucid Trading · May 18<q>Another payout, bringing monthly post split total to $33,250 for May with 2 weeks left</q></figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/payout-phillip-apr-1.jpg" data-lb><img loading="lazy" src="/assets/proof/payout-phillip-apr-1.jpg" width="370" height="807" alt="My Funded Futures payout certificate for $3,243.64 issued to Phillip, shown in the MyFundedFutures app"></a><figcaption><b>Phillip</b> $3,243.64 · My Funded Futures · Apr 30</figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/payout-astrix-max-4000.jpg" data-lb><img loading="lazy" src="/assets/proof/payout-astrix-max-4000.jpg" width="1100" height="372" alt="My Funded Futures payout record: $4,000 payout submitted and funds removed, February 10, 2026, 80% profit share"></a><figcaption><b>Astrix</b> $4,000 · My Funded Futures · Feb 10<q>max payout</q></figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/payout-johntomy-first.jpg" data-lb><img loading="lazy" src="/assets/proof/payout-johntomy-first.jpg" width="370" height="807" alt="Payout request for $1,800 via Wise, March 16, 2026, with every approval step checked"></a><figcaption><b>johntomy0330</b> $1,800 · first payout · Mar 18<q>Started trading from this year and My first payout! Thank you indicator and shogo's class!</q></figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/payout-sp-4x2000.jpg" data-lb><img loading="lazy" src="/assets/proof/payout-sp-4x2000.jpg" width="787" height="408" alt="Payout table showing four pending payouts of $2,000 each on Premier 50K Trading Challenge accounts, March 6, 2026"></a><figcaption><b>SP</b> 4 × $2,000 in one day · Mar 6<q>time to buy the indicator after this payout</q></figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/payout-crystal-first-1460.jpg" data-lb><img loading="lazy" src="/assets/proof/payout-crystal-first-1460.jpg" width="1100" height="751" alt="Apex Trader Funding rewards certificate for $1,460 presented to Crystal"></a><figcaption><b>Crystal</b> $1,460 · Apex Trader Funding · May 27<q>My first payout after 6 months of learning!!!</q></figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/payout-justin-feb.jpg" data-lb><img loading="lazy" src="/assets/proof/payout-justin-feb.jpg" width="371" height="807" alt="Alpha Futures payout history showing a $1,500 ACH payout"></a><figcaption><b>Justin</b> $1,500 · Alpha Futures · Feb 20<q>Couldnt have done it without ya shogoat</q></figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/payout-suji-first-1350.jpg" data-lb><img loading="lazy" src="/assets/proof/payout-suji-first-1350.jpg" width="1100" height="757" alt="Alpha Futures certificate of disbursement for a $1,350 performance fee, January 28, 2026"></a><figcaption><b>苏吉</b> $1,350 · Alpha Futures · first payout · Jan 28</figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/aft-payout-kizu-first.jpg" data-lb><img loading="lazy" src="/assets/proof/aft-payout-kizu-first.jpg" width="1100" height="828" alt="Alpha Futures certificate of disbursement for a $1,350 performance fee presented to kizu, January 20, 2026"></a><figcaption><b>kizu</b> $1,350 · Alpha Futures · Jan 30<q>1st account 1st payout, only up from here</q></figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/payout-benjii-621-1.jpg" data-lb><img loading="lazy" src="/assets/proof/payout-benjii-621-1.jpg" width="1100" height="788" alt="Lucid Trading payout certificate for $621 awarded to Mubarak, May 6, 2026"></a><figcaption><b>benjii.</b> $621 · Lucid Trading · May 6<q>shoutout to @Shogotrades the GOAT</q></figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/payout-shogotrades-topstep-feb.jpg" data-lb><img loading="lazy" src="/assets/proof/payout-shogotrades-topstep-feb.jpg" width="956" height="548" alt="Bank activity showing five incoming transfers from TopstepTrader LLC, four of $3,597 and one of $3,936, and one outgoing transfer of $18,322.87"></a><figcaption><b>shogotrades</b> $18,322.87 · five Topstep transfers in one week · Feb 23</figcaption></figure>
+    </div>
+    <p class="note">Prop-firm payouts on simulated funded accounts under each firm's rules. One person, one account, not typical, not a promise. Futures trading involves substantial risk of loss. <a href="/legal/">Risk disclosure</a>.</p>
+  </div>
+</section>
+
+<section id="pnl" class="dark">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="index">Profit &amp; loss</p>
+      <h2>Green weeks. Passed evals. Posted the day it happened.</h2>
+      <p class="lead">From <b>#profit-loss</b> and <b>#testimonials-and-trading-breakthroughs</b>. Red days get posted there too.</p>
+    </div>
+    <div class="masonry">
+      <figure class="proof"><a href="/assets/proof/pnl-scalpin-32k-jul2.jpg" data-lb><img loading="lazy" src="/assets/proof/pnl-scalpin-32k-jul2.jpg" width="262" height="855" alt="Trade copier dashboard: total day P&L +$32,477.90 across eleven accounts"></a><figcaption><b>Scott</b> +$32,477.90 in a day · 11 funded accounts · Jul 2</figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/testi-phillip-may.jpg" data-lb><img loading="lazy" src="/assets/proof/testi-phillip-may.jpg" width="1100" height="763" alt="Four My Funded Futures passing certificates for Phillip: two Rapid 100K and two Rapid 50K, April to May 2026"></a><figcaption><b>Phillip</b> four evaluations passed in three weeks · May 14</figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/testi-bluecollar-day.jpg" data-lb><img loading="lazy" src="/assets/proof/testi-bluecollar-day.jpg" width="554" height="268" alt="Three account tiles for one day: $2,933.80 on 5 trades, $4,494.00 on 21 trades, $1,453.32 on 13 trades"></a><figcaption><b>BlueCollar</b> best day so far, three accounts · Jan 27<q>I hit the book hard and studied like a mf'r. Yesterday was my best day.</q></figcaption></figure>
+      <figure class="proof pair"><a href="/assets/proof/testi-f8ed-beforeafter-1.jpg" data-lb><img loading="lazy" src="/assets/proof/testi-f8ed-beforeafter-1.jpg" width="447" height="807" alt="Trading calendar, week of February 23 to 27, 2026: four red days and one green, week total minus $1,529.90"></a><a href="/assets/proof/testi-f8ed-beforeafter-2.jpg" data-lb><img loading="lazy" src="/assets/proof/testi-f8ed-beforeafter-2.jpg" width="370" height="807" alt="Trading calendar, week of March 2 to 6, 2026: four green days and one red, week total plus $3,954.10"></a><figcaption><b>f8ed-tr8de</b> week before the indicator −$1,529.90 · week after +$3,954.10<q>the proofs in the pudding</q></figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/pnl-scalpin-12k-day-jun24.jpg" data-lb><img loading="lazy" src="/assets/proof/pnl-scalpin-12k-day-jun24.jpg" width="400" height="855" alt="Trade copier dashboard: total day P&L +$12,837.50 across nine accounts"></a><figcaption><b>Scott</b> +$12,837.50 · nine accounts · Jun 24<q>2 trades and done. Back to work</q></figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/pnl-phillip-2certs-jun26.jpg" data-lb><img loading="lazy" src="/assets/proof/pnl-phillip-2certs-jun26.jpg" width="621" height="855" alt="Two My Funded Futures Rapid 50K payout certificates for Phillip, $2,945.64 on June 26 and $2,491.92 on June 24, 2026"></a><figcaption><b>Phillip</b> two payouts in three days · Jun 26<q>Back to back this week</q></figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/testi-hitman.jpg" data-lb><img loading="lazy" src="/assets/proof/testi-hitman.jpg" width="870" height="807" alt="Topstep email: congratulations on becoming a Topstep Express Funded Trader, 100K buying power"></a><figcaption><b>Hitman_Mal</b> Topstep Express Funded, 100K · Feb 19<q>Within the last week i have be able to stop blowing accts</q></figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/pnl-suji-passed-jul13.jpg" data-lb><img loading="lazy" src="/assets/proof/pnl-suji-passed-jul13.jpg" width="400" height="855" alt="Prop-firm dashboard listing six accounts with distance to auto-liquidation between $47,856 and $53,410"></a><figcaption><b>苏吉</b> six evaluations passed · Jul 13<q>passed a couple</q></figcaption></figure>
+      <figure class="proof"><a href="/assets/proof/pnl-hitman-bounce-jun26.jpg" data-lb><img loading="lazy" src="/assets/proof/pnl-hitman-bounce-jun26.jpg" width="1100" height="820" alt="Trading platform header on MNQ showing balance $26,160.06 and unrealised P&L $14,872.50"></a><figcaption><b>Hitman_Mal</b> +$14,872.50 open on MNQ · Jun 26<q>Had to bounce back</q></figcaption></figure>
+    </div>
+    <p class="note">Member-posted results, shown as posted. One person, one account, one stretch of time. Not typical, not a promise of income.</p>
+  </div>
+</section>
+
+<section id="voices">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="index">In their words</p>
+      <h2>Straight from the Discord. Typos and all.</h2>
+    </div>
+    <div class="quotes">
+      <blockquote>YOU are the freaking GOAT. Still fairly new to trading and 3 days ago I came across your stream… I just wanted to come here, for now, and say "thank you" for teaching great concepts that can literally change lives.<footer>a94nole · Feb 24, 2026</footer></blockquote>
+      <blockquote>The amount of time snd effort u put into not only trading but teaching us as u trade and explaining things is above and beyond. Within the last week i have be able to stop blowing accts.<footer>Hitman_Mal · Jan 29, 2026</footer></blockquote>
+      <blockquote>The last 2 days have been my most profitable….$1709 and $1200. This is all while using the 2-3 micro strategy and not sizing big.<footer>Blingblam · Jan 27, 2026</footer></blockquote>
+      <blockquote>Forever grateful to come across such a great teacher like you, knew u were gold even when I first came across your live.<footer>Andrew limited · Jan 18, 2026</footer></blockquote>
+      <blockquote>Ever since I came to this server I've started to journal almost all of my trades. I've changed my strategy and my methods.<footer>benjii. · Feb 26, 2026</footer></blockquote>
+      <blockquote>Put in the work to learn how to do this. Free yourself.<footer>BlueCollar · Jan 27, 2026</footer></blockquote>
+    </div>
+    <div class="whop-row">
+      <div class="whop-score"><b>5.0</b><span>★★★★★</span><small>11 reviews on Whop</small></div>
+      <div class="whop-quotes">
+        <p>"Definitely one of the best indicators on the market. Provides very high confidence in trading from just this indicator alone." <i>Shooty</i></p>
+        <p>"If you want to learn the way the market actually moves, this indicator shows it all." <i>Britt Faulkner</i></p>
+        <p>"The absolute best value I have ever received in a trading course!" <i>SaiYin Tradez</i></p>
+        <a data-dest="whopReviews" data-ev="content" data-name="whop-reviews" href="https://whop.com/aft-official/reviews" rel="noopener" target="_blank">All 11 reviews on Whop</a>
+      </div>
     </div>
   </div>
+</section>
 
-  <p>Use TradingView or any paper-trading platform, as long as it lets you set a daily loss limit. Prop-firm accounts are allowed, but paper is recommended — same conditions, zero cost.</p>
-
-  <p class="kicker">The Rules</p>
-  <h2>How the Challenge Is Traded</h2>
-
-  <ol class="rules">
-    <li><div>
-      <h3>Trade five accounts, each on its own</h3>
-      <p>No copy trading. Every account is traded separately, with its own decisions and its own P&amp;L. You are not required to trade all five every day.</p>
-    </div></li>
-    <li><div>
-      <h3>The Profit Acceptance Rule</h3>
-      <p>The moment a closed trade puts an account over <strong>+$100 on the day</strong>, that account is finished until tomorrow. Move to your next account. This is the heart of the challenge: learn to accept profit.</p>
-    </div></li>
-    <li><div>
-      <h3>No cap on winning — only on greed</h3>
-      <p>There is no maximum win per day across your accounts. But the Profit Acceptance Rule always applies, account by account, with no exceptions.</p>
-    </div></li>
-    <li><div>
-      <h3>One to two trades per account, tops</h3>
-      <p>Quality over volume. You're building reps and sets — a small number of deliberate trades, repeated daily, is what grows consistency and proficiency.</p>
-    </div></li>
-    <li><div>
-      <h3>Two consecutive losses — stand down</h3>
-      <p>Two losses in a row on an account ends that account's day. The market is telling you something; listen from the sidelines.</p>
-    </div></li>
-    <li><div>
-      <h3>Respect the red zone</h3>
-      <p>If you've used $150 of your $200 daily loss limit, seriously consider not taking another trade. Living to trade tomorrow <em>is</em> winning.</p>
-    </div></li>
-  </ol>
-
-  <div class="callout">
-    <p class="label">Why +$100 and done</p>
-    <p>New traders don't blow up because they can't find winners — they blow up because they can't keep them. Banking a green account and walking away rewires the instinct that turns winning days into losing ones.</p>
-    <p>And know what that $100 becomes at scale — the skill is identical, only the account count changes. <strong>20 accounts × $100 is $2,000 a day. That's $40,000 a month</strong>, built out of the "small" profits this rule teaches you to accept.</p>
+<section id="method" class="dark">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="index">The method</p>
+      <h2>Enter where the money enters.</h2>
+    </div>
+    <blockquote class="pull">"Breakout trading is for gamblers. Do not enter before the liquidity sweep or you become the liquidity."<footer>shogotrades, from the course</footer></blockquote>
+    <ol class="steps">
+      <li><h3>Bias from the higher timeframe</h3><p>The 1-minute never overrules the 4-hour.</p></li>
+      <li><h3>Wait for the pullback into the stack</h3><p>Imbalance midline, 2H/4H level, VWAP band, opening-range edge. More in line, higher the grade.</p></li>
+      <li><h3>Rest the order. Tight structural stop.</h3><p>Limit at the level, stop behind the structure that would prove you wrong. Size from ATR.</p></li>
+      <li><h3>Target structure. Take what's given.</h3><p>Next level, next imbalance. "Don't be a dick for a tick."</p></li>
+    </ol>
   </div>
+</section>
 
-  <div class="callout red">
-    <p class="label">The real objective: don't blow the account</p>
-    <p>You will hit your daily loss limit some days — that's fine. Losses are part of this business, and taking them and walking away is exactly what you're here to learn. What you're protecting is the account itself, and do the math on how hard these rules make it to lose: at −$200 a day, blowing a $2,000 account takes <strong>ten maximum-loss days in a row.</strong> Ten.</p>
-    <p>That's real risk management. Professionals risk 5% or less of their total account — while the prop space sets you up for failure with structures that put 10–30% of your real capital on the line in a single day. Learn to accept the loss, protect the account, and live to trade tomorrow, and you'll walk into the prop space already trading like a professional.</p>
+<section id="course">
+  <div class="wrap course-grid">
+    <div class="sec-head">
+      <p class="index">The course</p>
+      <h2>Eleven chapters. All of it in the free trial.</h2>
+      <p class="lead">Recorded lessons with chart replays. Every chapter is open from day one of the 14-day free trial.</p>
+      <a class="btn btn-primary" data-dest="whopJoin" data-ev="checkout" data-name="course-join" href="https://whop.com/aft-official/products/the-all-fluence-indicator/">Start your 14-day free trial</a>
+    </div>
+    <ol class="chapters">
+      <li><b>01</b>Market structure</li>
+      <li><b>02</b>Higher-timeframe bias and direction</li>
+      <li><b>03</b>Imbalances and the midline entry</li>
+      <li><b>04</b>ICC and the 2H / 4H levels</li>
+      <li><b>05</b>Opening ranges</li>
+      <li><b>06</b>VWAP and sigma bands</li>
+      <li><b>07</b>Entry models</li>
+      <li><b>08</b>Relative strength and weakness</li>
+      <li><b>09</b>Sizing and consistency</li>
+      <li><b>10</b>News and market-maker days</li>
+      <li><b>11</b>Trade breakdowns and live demos</li>
+    </ol>
   </div>
+</section>
 
-  <p class="kicker">Graduation</p>
-  <h2>When You've Beaten the Challenge</h2>
+<section id="fit" class="dark">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="index">Fit</p>
+      <h2>Read this before you pay.</h2>
+    </div>
+    <div class="fit-grid">
+      <div><p class="index">For you if</p><ul><li>You trade, or want to trade, Nasdaq or Gold futures intraday on TradingView.</li><li>You will backtest a method before you trust it.</li><li>You have lost money chasing breakouts and you know it.</li><li>You want to watch the trades taken live, not a highlight reel.</li></ul></div>
+      <div><p class="index red">Not for you if</p><ul><li>You want alerts to copy without understanding them.</li><li>You need a guarantee.</li><li>You trade only stocks, options or crypto.</li><li>You cannot afford to lose what you trade with. Run the <a href="/challenge/" data-ev="content" data-name="fit-challenge">free paper-trading challenge</a> first.</li></ul></div>
+    </div>
+  </div>
+</section>
 
-  <p>If you can trade these rules to the $5,500 profit goal without blowing an account, you have already demonstrated everything a funded evaluation asks of you — the full road from eval to payout, walked in advance. You're ready to step into the prop space with proof, not hope, that you belong there.</p>
+<section id="pricing">
+  <div class="wrap pricing-grid">
+    <div class="sec-head">
+      <p class="index">Membership</p>
+      <h2>Everything free for 14 days. Then $100 a month.</h2>
+      <p class="lead">Try all of it free for 14 days: the indicators on your chart, the course, the premium Discord with the live sessions. If it is not for you, cancel and you pay nothing.</p>
+      <p class="plain">Checkout is on Whop. It asks for your TradingView username, so the invite-only indicators can be added, and your Discord username.</p>
+      <p class="plain">Not ready? <a data-dest="discordInvite" data-ev="lead" data-name="pricing-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Join the free Discord</a> or run the <a href="/challenge/" data-ev="content" data-name="pricing-challenge">free challenge</a>.</p>
+    </div>
+    <div class="price-card">
+      <div class="price"><span class="amt">$100</span><span class="per">per month</span></div>
+      <p class="price-alt">$300 per quarter · $1,000 per year</p>
+      <a class="btn btn-primary btn-lg" style="width:100%" data-dest="whopJoin" data-ev="checkout" data-name="pricing-join" data-value="100" href="https://whop.com/aft-official/products/the-all-fluence-indicator/">Start your 14-day free trial</a>
+      <ul class="inc">
+        <li><strong>MNQ Master Trader</strong> indicator</li>
+        <li><strong>MGC Master Trader</strong> indicator</li>
+        <li><strong>The All Fluence</strong> indicator</li>
+        <li>The full course, every chapter</li>
+        <li>Premium Discord with shogotrades' live sessions</li>
+        <li>Future releases as they pass testing</li>
+      </ul>
+      <p class="need">Card on file, nothing charged for 14 days. Cancel anytime from your Whop account. After the trial, Whop's 7-day money-back guarantee covers the first charge, one per customer. Prices in USD.</p>
+    </div>
+  </div>
+</section>
 
-  <p class="outro-head">Reps and sets. That's how traders are built.</p>
+<section id="faq" class="dark">
+  <div class="wrap narrow">
+    <div class="sec-head">
+      <p class="index">Questions</p>
+      <h2>Straight answers.</h2>
+    </div>
+    <details><summary>Is this a signals service?</summary><p>No. The indicators draw levels and the playbook's setups on your own TradingView chart; the course teaches the method behind them. You read the chart and make every decision. Nothing is traded for you.</p></details>
+    <details><summary>Do I need a paid TradingView plan?</summary><p>A free TradingView account is enough to run the indicators. They are invite-only scripts added to the TradingView username you give at checkout. A paid plan only adds things like more indicators per chart and more alerts.</p></details>
+    <details><summary>Which markets are covered?</summary><p>MNQ (Micro Nasdaq) and MGC (Micro Gold) are the instruments the Master Trader indicators are built on. The same charts apply to NQ and GC at full size. The All Fluence indicator itself is a general-purpose overlay.</p></details>
+    <details><summary>Can I cancel? Is there a refund?</summary><p>Monthly billing, cancel anytime from your Whop account. Whop lists a 14-day free trial and a 7-day money-back guarantee on the first charge, one per customer. Indicator access and Discord access end when the membership ends.</p></details>
+    <details><summary>Do you promise results?</summary><p>No. These are educational tools. Futures trading involves substantial risk of loss and is not suitable for every investor. Nothing on this site or in the membership is financial advice.</p></details>
+    <details><summary>What about automated trading bots?</summary><p>Automated strategies are being built and tested. They are released to members only as each one passes testing, with no release dates promised. Membership includes them when they ship.</p></details>
+    <details><summary>Does shogotrades actually trade this?</summary><p>Yes, on stream, in the premium Discord and on <a data-dest="twitch" href="https://www.twitch.tv/shogotrades" rel="noopener" target="_blank">Twitch</a>. The free lessons on <a data-dest="youtube" href="https://www.youtube.com/@shogotrades" rel="noopener" target="_blank">YouTube</a> show the method on real charts if you want to check the teaching before you pay.</p></details>
+  </div>
+</section>
 
-  <p>Master the skill at $100 and the only thing left to change is the number of accounts. Five accounts. One green day at a time. See you at the payout.</p>
+<section id="free">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="index">Free first</p>
+      <h2>Look before you pay.</h2>
+    </div>
+    <div class="paths">
+      <a class="path" data-dest="discordInvite" data-ev="lead" data-name="free-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank"><b>The free Discord</b><span>700+ traders. Read the channels, ask questions, see what members post. Live sessions are in the premium Discord.</span><i>Join the free Discord</i></a>
+      <a class="path" data-dest="whopJoin" data-ev="checkout" data-name="free-trial" href="https://whop.com/aft-official/products/the-all-fluence-indicator/"><b>Everything, free for 14 days</b><span>The three indicators, the whole course and the premium Discord. Cancel before day 14 and you pay nothing.</span><i>Start your 14-day free trial</i></a>
+      <a class="path" data-ev="content" data-name="free-challenge" href="/challenge/"><b>The AFT Challenge</b><span>Five simulated accounts, hard daily loss limit, bank the green and walk away.</span><i>Read the rules</i></a>
+    </div>
+  </div>
+</section>
 
-  <footer>
-    <p class="line">All Fluence Trading · AFT Challenge</p>
-    <p>For education only. Trading futures involves substantial risk of loss and is not suitable for every investor. Nothing here is financial advice.</p>
-  </footer>
+<section id="last" class="cta-band">
+  <div class="wrap">
+    <h2>Put the levels on your chart tonight.</h2>
+    <a class="btn btn-primary btn-lg" data-dest="whopJoin" data-ev="checkout" data-name="last-join" href="https://whop.com/aft-official/products/the-all-fluence-indicator/">Start your 14-day free trial</a>
+  </div>
+</section>
 
+<footer class="site">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h4>All Fluence Trading</h4>
+        <p>Educational software and training for MNQ and MGC futures traders. Indicators on TradingView, membership on Whop, community on Discord.</p>
+        <p><a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a></p>
+      </div>
+      <div>
+        <h4>Find us</h4>
+        <ul>
+          <li><a data-dest="youtube" href="https://www.youtube.com/@shogotrades" rel="noopener" target="_blank">YouTube · @shogotrades</a></li>
+          <li><a data-dest="tiktok" href="https://www.tiktok.com/@shogotrades" rel="noopener" target="_blank">TikTok · @shogotrades</a></li>
+          <li><a data-dest="twitch" href="https://www.twitch.tv/shogotrades" rel="noopener" target="_blank">Twitch · shogotrades</a></li>
+          <li><a data-dest="whopStore" href="https://whop.com/aft-official/" rel="noopener" target="_blank">Whop · AFT</a></li>
+          <li><a data-dest="discordInvite" data-ev="lead" data-name="footer-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Site</h4>
+        <ul>
+          <li><a href="/challenge/">The AFT Challenge (free)</a></li>
+          <li><a href="#pricing">Membership</a></li>
+          <li><a href="/legal/">Disclaimer, terms &amp; privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="disclaimer">
+      <p><strong>Risk disclosure.</strong> Futures and futures options trading involves substantial risk of loss and is not suitable for every investor. You can lose more than your initial investment. Past performance, whether actual or indicated by historical tests of strategies, is not indicative of future results. Hypothetical performance results have many inherent limitations. Member results shown on this page are individual, not typical, and not a promise. All Fluence Trading provides educational software and training only and is not a registered investment adviser, broker-dealer or commodity trading advisor. Nothing on this site is financial advice.</p>
+      <p>© <span id="y">2026</span> All Fluence Trading. TradingView is a trademark of TradingView, Inc. Whop and Discord are trademarks of their owners; this site is not affiliated with them.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="sticky-cta" aria-hidden="false">
+  <a class="btn btn-ghost" data-dest="discordInvite" data-ev="lead" data-name="sticky-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a>
+  <a class="btn btn-primary" data-dest="whopJoin" data-ev="checkout" data-name="sticky-join" href="https://whop.com/aft-official/products/the-all-fluence-indicator/">Start free trial</a>
 </div>
+
+<dialog class="lb" id="lb"><img alt=""><p>tap anywhere to close</p></dialog>
+<script>
+(function(){var d=document.getElementById('lb');if(!d||!d.showModal)return;var im=d.querySelector('img');
+document.querySelectorAll('a[data-lb]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();var t=a.querySelector('img');im.src=a.getAttribute('href');im.alt=t?t.alt:'';d.showModal();});});
+d.addEventListener('click',function(){d.close();});d.addEventListener('close',function(){im.src='';});})();
+(function(){var v=document.getElementById('cv'),b=document.getElementById('snd'),p=document.getElementById('prog');if(!v)return;
+b.addEventListener('click',function(){v.muted=!v.muted;if(!v.muted){v.currentTime=0;v.play();}b.textContent=v.muted?'Tap for sound':'Mute';b.setAttribute('aria-pressed',String(!v.muted));});
+v.addEventListener('click',function(){if(v.paused)v.play();else v.pause();});
+var f=document.getElementById('full'),pl=document.getElementById('demo');
+function zoomOn(){pl.classList.add('zoomed');document.body.classList.add('noscroll');f.textContent='Close';f.setAttribute('aria-label','Close full screen');v.play().catch(function(){});}
+function zoomOff(){pl.classList.remove('zoomed');document.body.classList.remove('noscroll');f.textContent='Full screen';f.setAttribute('aria-label','Watch full screen');}
+if(f){f.addEventListener('click',function(){
+  if(pl.classList.contains('zoomed')){zoomOff();return;}
+  if(v.webkitEnterFullscreen&&!v.requestFullscreen){v.webkitEnterFullscreen();v.play().catch(function(){});return;}
+  if(document.fullscreenEnabled&&v.requestFullscreen){v.requestFullscreen().then(function(){v.play().catch(function(){});}).catch(zoomOn);}
+  else{zoomOn();}
+});}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&pl.classList.contains('zoomed'))zoomOff();});
+pl.addEventListener('click',function(e){if(e.target===pl&&pl.classList.contains('zoomed'))zoomOff();});
+v.addEventListener('dblclick',function(){if(f)f.click();});
+v.addEventListener('timeupdate',function(){if(v.duration)p.style.width=(v.currentTime/v.duration*100)+'%';});
+if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){v.play().catch(function(){});}else{v.pause();}});},{threshold:.25}).observe(v);}
+})();
+document.getElementById('y').textContent=new Date().getFullYear();
+</script>
 </body>
 </html>
