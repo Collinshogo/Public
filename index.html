@@ -95,7 +95,7 @@
     <a class="brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo.png" width="965" height="260" alt="AFT, All Fluence Trading"></a>
     <div class="nav-links">
       <a href="#indicators">Indicators</a>
-      <a href="#watch">Backtest</a>
+      <a href="#demo">Backtest</a>
       <a href="#proof">Payouts</a>
       <a href="#course">Course</a>
       <a href="#pricing">Pricing</a>
@@ -116,12 +116,22 @@
       </div>
       <p class="fine">Free for 14 days, everything included. Cancel before day 14 and you pay nothing.</p>
     </div>
-    <figure class="hero-shot">
-      <img src="/assets/hero-mnq-master-trader.png" width="1325" height="828" alt="MNQ Master Trader on the MNQ 1-minute chart in TradingView: a session of labelled setups with entry boxes, stop and target zones, partial exits and scale-in notes" fetchpriority="high">
-      <figcaption>MNQ Master Trader · MNQ1! · 1 min</figcaption>
-    </figure>
+    <div class="hero-demo">
+<div class="player" id="demo">
+      <video id="cv" playsinline muted loop autoplay preload="metadata" poster="/assets/video/mnq-master-trader-backtest-poster.jpg" width="720" height="900" aria-label="MNQ Master Trader indicator live backtest on the MNQ 1-minute chart: the backtest equity curve, then entries, scale-ins, stops moved to break-even and closed positions, each setup named on screen">
+        <source src="/assets/video/mnq-master-trader-backtest.mp4" type="video/mp4">
+      </video>
+      <button class="sound" id="snd" type="button" aria-pressed="false">Tap for sound</button>
+      <div class="bar"><i id="prog"></i></div>
+    </div>
+      <p class="fine">MNQ Master Trader live backtest, MNQ1! 1-minute chart, Jan 1 – Sep 1, 2026. Published backtest replayed bar by bar, not a live account.</p>
+    </div>
   </div>
   <div class="wrap">
+    <figure class="screen hero-full">
+      <img src="/assets/hero-mnq-master-trader.png" width="1814" height="828" alt="MNQ Master Trader on the MNQ 1-minute chart in TradingView: a full session of labelled setups with entry boxes, stops, targets and partial exits, the per-setup strategy table and the month calendar" fetchpriority="high">
+      <figcaption>MNQ Master Trader · MNQ1! · 1 min · the full chart, strategy table and month view</figcaption>
+    </figure>
     <ul class="stats" aria-label="Key numbers">
       <li><b>74.25%</b><span>profitable trades<br>MNQ Book · 365 days</span></li>
       <li><b>2.33</b><span>profit factor<br>MNQ Book · 1,569 trades</span></li>
@@ -213,30 +223,6 @@
     </article>
 
     <p class="note">The MNQ Book and MGC Book are the strategy versions of the two Master Traders, run in TradingView's Strategy Tester. Results are very similar to what the indicators show on the chart but not completely the same: trades differ by an estimated 1–5% margin of error, which does not mean worse performance, simply different. Strategy Tester results are hypothetical, do not represent actual trading or any account, and have inherent limitations. The indicators do not place trades; you do.</p>
-  </div>
-</section>
-
-<section id="watch" class="watch-sec">
-  <div class="wrap watch">
-    <div class="watch-head">
-      <p class="index gold">Live backtest · MNQ1! · Jan 1 – Sep 1, 2026</p>
-      <h2 class="watch-title">Watch it work a session.</h2>
-    </div>
-    <div class="watch-copy">
-      <p class="lead">The MNQ Master Trader on the 1-minute chart. The entry, the scale-in, the stop to break-even, the target. Every setup named on screen as it fires.</p>
-      <div class="btn-row">
-        <a class="btn btn-primary" data-dest="whopJoin" data-ev="checkout" data-name="watch-join" href="https://whop.com/aft-official/products/the-all-fluence-indicator/">Start your 14-day free trial</a>
-        <a class="btn btn-ghost" data-dest="discordInvite" data-ev="lead" data-name="watch-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Join the free Discord</a>
-      </div>
-      <p class="note">Published backtest replayed bar by bar, not a live account. Hypothetical results are not a promise of future results.</p>
-    </div>
-    <div class="player" id="player">
-      <video id="cv" playsinline muted loop autoplay preload="metadata" poster="/assets/video/mnq-master-trader-backtest-poster.jpg" width="720" height="900" aria-label="MNQ Master Trader indicator live backtest on the MNQ 1-minute chart: the backtest equity curve, then entries, scale-ins, stops moved to break-even and closed positions, each setup named on screen">
-        <source src="/assets/video/mnq-master-trader-backtest.mp4" type="video/mp4">
-      </video>
-      <button class="sound" id="snd" type="button" aria-pressed="false">Tap for sound</button>
-      <div class="bar"><i id="prog"></i></div>
-    </div>
   </div>
 </section>
 
