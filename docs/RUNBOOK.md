@@ -32,7 +32,7 @@ Static site on GitHub Pages from the `main` branch of `Collinshogo/Public` (cust
 
 ## 2. Editing copy
 
-Open `index.html`. Sections are marked with `<section id="...">`: `what`, `indicators`, `method`, `course`, `reviews`, `proof` (payouts), `pnl`, `voices` (Discord quotes), `book`, `fit`, `pricing`, `faq`, `free`. Keep one `<h1>`. If you change an FAQ answer, change the same text in the `FAQPage` JSON-LD in `<head>` so the two match. Push to `main`.
+Open `index.html`. Sections are marked with `<section id="...">`: `what`, `indicators`, `method`, `course`, `reviews`, `proof` (payouts), `pnl`, `voices` (Discord quotes), `book`, `watch` (TikTok embed), `fit`, `pricing`, `faq`, `free`. Keep one `<h1>`. If you change an FAQ answer, change the same text in the `FAQPage` JSON-LD in `<head>` so the two match. Push to `main`.
 
 Words to keep out of **ads** (Meta financial-services review): profit, income, payout, returns, ROI, passive, signals, funded, "make money", any dollar result, any P&L image. The page itself now carries payouts and P&L by Collin's decision (2026-11-04); the ad creative must not, and the ad's first screen on the page (hero, what, indicators) stays free of them. See `docs/FUNNEL_WARGAME.md` section 1 for the risk and the fallback.
 
@@ -47,6 +47,10 @@ Whop reviews are the `<article class="review">` blocks in the `reviews` section.
 - Member permission: see go-live step 7. Keep a list of who was asked and when in the Discord mod channel.
 - Downloads from discord.com are blocked in Collin's Chrome profile (the originals were captured by zoom instead). To get originals: open the attachment in Discord, click the blocked-download icon in the address bar and choose "Always allow downloads from discord.com".
 - Update the trust line in the hero (rating, review count, member count) from the public Whop page and note the date in a commit message. Last read: 5.0 / 11 reviews / 76 paid members on 2026-11-04; "700+ in the Discord" is from the Oct 1, 2026 server announcement ("700 People in here").
+
+## 3b. The TikTok embed
+
+The `watch` section embeds one TikTok through TikTok's player iframe (`https://www.tiktok.com/player/v1/<video id>`), no script tag. To swap the clip: replace the video id in the iframe `src`, the date and the quoted caption (verbatim from the post). The iframe is third-party content: TikTok sets cookies when it loads, which the privacy page already covers under "embedded content". If TikTok ever blocks the player, the fallback is a static thumbnail linking to the post.
 
 ## 4. Reading the events
 
