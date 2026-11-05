@@ -24,7 +24,6 @@ window.AFT_CONFIG = {
   supportEmail: "support@allfluencetrading.com",
   youtube: "https://www.youtube.com/@shogotrades",
   tiktok: "https://www.tiktok.com/@shogotrades",
-  twitch: "https://www.twitch.tv/shogotrades",
 
   // --- Plan values for Pixel event values only (nothing here is rendered; the price copy is in index.html) ---
   // Default Whop plan: 14-day trial, then three monthly payments of 100 USD, then billing stops (split pay).
