@@ -43,7 +43,7 @@ def og():
     d.text((210, 106), "ALL FLUENCE TRADING", font=mono(16), fill=DIM)
     d.text((80, 200), "MNQ Master Trader.", font=font(72, True), fill=BRIGHT)
     d.text((80, 285), "MGC Master Trader.", font=font(72, True), fill=BRIGHT)
-    d.text((80, 390), "Two TradingView indicators, the course, and the desk that trades it live.", font=font(28), fill=DIM)
+    d.text((80, 390), "Two TradingView indicators, the course, and the premium Discord.", font=font(28), fill=DIM)
     d.text((80, 540), "allfluencetrading.com", font=mono(22), fill=GREEN)
     d.text((780, 540), "EDUCATIONAL TOOLS · NOT ADVICE", font=mono(16), fill=DIM)
     im.save(os.path.join(ROOT, "og.png"), optimize=True)
