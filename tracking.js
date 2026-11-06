@@ -2,7 +2,9 @@
    UTM/affiliate pass-through on outbound links. No cookies of our own; no PII collected.
    Meta events: PageView (load), ViewContent (pricing seen, reviews, challenge), InitiateCheckout + custom StartTrialClick
    (any trial button), Lead + custom JoinDiscord (Discord), CompleteRegistration + custom TrialStarted (/welcome/, once per
-   session, reached from Whop's checkout-success redirect). StartTrial and Purchase come from Whop's own Meta integration.
+   session, reached from Whop's checkout-success redirect within 24 h of a trial-button click in this browser; any other
+   Whop arrival, such as a free chat join, sends custom WhopWelcome only). StartTrial and Purchase come from Whop's own
+   Meta integration, which also sends Purchase for $0 trials and free plan joins: count trials and sales from Whop.
    Visits with utm_source in AFT_CONFIG.excludeSources (Discord links) load no Meta Pixel and send no Meta event at all. */
 (function () {
   var C = window.AFT_CONFIG || {};
@@ -97,16 +99,25 @@
   track("PageView");
   // Only count /welcome/ loads that came from Whop's checkout-success redirect (referrer or the
   // ?src=whop marker set in Whop > Settings > Checkout); direct, bookmarked or QA loads send PageView only.
+  // Whop sends every checkout here, the free chat plan included. A trial is counted only when this browser clicked a
+  // trial button on this site within TRIAL_INTENT_MS (those buttons open the trial product, which has no free plan);
+  // any other Whop arrival (a free chat join, a checkout started on Whop itself) sends the custom WhopWelcome only.
+  var TRIAL_INTENT_KEY = "aft_trial_intent", TRIAL_INTENT_MS = 24 * 36e5;
   var fromWhop = false;
   try { fromWhop = /(^|\.)whop\.com$/.test(new URL(document.referrer).hostname); } catch (e) {}
   try { var wq = new URLSearchParams(location.search); fromWhop = fromWhop || wq.get("src") === "whop" || wq.has("receipt_id") || wq.has("membership_id") || wq.has("checkout_id"); } catch (e) {}
   if (/^\/welcome\/?$/.test(location.pathname) && fromWhop) {
-    var doneKey = "aft_trial_done", already = false;
+    var doneKey = "aft_trial_done", already = false, intentAt = 0;
     try { already = !!sessionStorage.getItem(doneKey); sessionStorage.setItem(doneKey, "1"); } catch (e) {}
+    try { intentAt = Number(localStorage.getItem(TRIAL_INTENT_KEY) || 0); localStorage.removeItem(TRIAL_INTENT_KEY); } catch (e) {}
     if (!already) {
       var P = C.plan || {};
-      track("CompleteRegistration", { content_name: P.name || "membership", status: "trial", value: P.priceMonthly || 0, currency: P.currency || "USD" });
-      trackCustom("TrialStarted", { content_name: P.name || "membership" });
+      if (intentAt && Date.now() - intentAt < TRIAL_INTENT_MS) {
+        track("CompleteRegistration", { content_name: P.name || "membership", status: "trial", value: P.priceMonthly || 0, currency: P.currency || "USD" });
+        trackCustom("TrialStarted", { content_name: P.name || "membership" });
+      } else {
+        trackCustom("WhopWelcome", { content_name: "whop arrival without a trial click" });
+      }
     }
   }
 
@@ -134,6 +145,7 @@
     var name = a.getAttribute("data-name") || a.textContent.trim();
     var dest = a.getAttribute("data-dest") || "";
     if (kind === "checkout") {
+      try { localStorage.setItem(TRIAL_INTENT_KEY, String(Date.now())); } catch (e) {}
       track("InitiateCheckout", { content_name: name, content_category: "membership", value: priceFor(a), currency: (C.plan || {}).currency || "USD" });
       trackCustom("StartTrialClick", { placement: name });
     } else if (kind === "lead") {
