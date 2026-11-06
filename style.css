@@ -284,3 +284,18 @@ body.has-sticky{padding-bottom:76px}
 /* anchor offsets under the fixed nav */
 section[id],#demo{scroll-margin-top:76px}
 @media(max-width:767px){.lb{max-width:100vw;max-height:100vh;overflow:auto}.lb img{display:block;max-width:none;max-height:none}}
+
+/* Member-results rails: on phones the posts scroll sideways instead of stacking (2026-11-06) */
+.rail-head{font-family:var(--sans);font-size:15px;font-weight:500;color:var(--dim);margin:34px 0 14px;letter-spacing:0}
+.rail-head .swipe{display:none;color:var(--faint);font-weight:400}
+.sec-cta{margin:32px 0 0}
+@media(max-width:899px){
+  .rail{display:flex;gap:12px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;margin:0 -20px;padding:0 20px 6px;scroll-padding-left:20px;scrollbar-width:none;columns:auto}
+  .rail::-webkit-scrollbar{display:none}
+  .rail>*{flex:0 0 80%;max-width:340px;scroll-snap-align:start;margin:0}
+  .rail .proof>a{height:280px;display:flex;align-items:center;justify-content:center}
+  .rail .proof img{width:100%;height:100%;object-fit:contain}
+  .rail .proof.pair>a{display:inline-flex;width:50%;height:280px}
+  .quotes.rail blockquote{border:1px solid var(--line);border-radius:var(--r);background:var(--panel);padding:20px;font-size:17px}
+  .rail-head .swipe{display:inline}
+}
