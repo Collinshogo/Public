@@ -26,7 +26,7 @@ window.AFT_CONFIG = {
   tiktok: "https://www.tiktok.com/@shogotrades",
 
   // --- Plan values for Pixel event values only (nothing here is rendered; the price copy is in index.html) ---
-  // Default Whop plan: 14-day trial, then three monthly payments of 100 USD, then billing stops (split pay).
+  // Default Whop plan ("Monthly $100", plan_iAon6AlunRIuh): 14-day trial, then 100 USD a month until cancelled.
   plan: {
     name: "All Fluence Trading membership",
     priceMonthly: 100,

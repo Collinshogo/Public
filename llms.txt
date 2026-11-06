@@ -7,7 +7,7 @@
 - Instruments: MNQ and MGC futures (CME micros); charts apply equally to NQ and GC.
 - Platform: TradingView. Indicators are invite-only scripts added to the member's TradingView username. We recommend a paid TradingView plan: bar history sets how far back All Fluence can compile data to paint its levels, and your plan sets how much history you get. Essential works, and a higher plan gives more data. A paid plan also lets you use alerts.
 - Timezone used throughout: America/New_York. Daily VWAP is anchored at the CME 18:00 ET open.
-- Membership price (as listed on Whop, Nov 2026): three monthly payments of USD 100 after a 14-day free trial, USD 300 in total; Whop stops billing after the third payment and the membership stays active; other billing options are listed on Whop; 7-day money-back on the first charge.
+- Membership price (as listed on Whop, Nov 2026): USD 100 a month after a 14-day free trial, billed monthly until you cancel; 7-day money-back on the first charge.
 - Checkout and reviews: https://whop.com/aft-official/ (5.0 from 11 reviews, 76 members as of 2026-11-04).
 - Community: Discord (invite on the site), YouTube/TikTok @shogotrades.
 - Contact: support@allfluencetrading.com
