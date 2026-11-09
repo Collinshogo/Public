@@ -1,5 +1,5 @@
 /* AFT tracking: Meta Pixel (browser) + optional CAPI relay + optional Whop pixel,
-   UTM/affiliate pass-through on outbound links. No cookies of our own; no PII collected.
+   UTM/affiliate/fbclid pass-through on outbound links. No cookies of our own; no PII collected.
    Meta events: PageView (load), ViewContent (pricing seen, reviews, challenge), InitiateCheckout + custom StartTrialClick
    (any trial button), Lead + custom JoinDiscord (Discord), CompleteRegistration + custom TrialStarted (/welcome/, once per
    session, reached from Whop's checkout-success redirect within 24 h of a trial-button click in this browser; any other
@@ -100,7 +100,7 @@
   // Only count /welcome/ loads that came from Whop's checkout-success redirect (referrer or the
   // ?src=whop marker set in Whop > Settings > Checkout); direct, bookmarked or QA loads send PageView only.
   // Whop sends every checkout here, the free chat plan included. A trial is counted only when this browser clicked a
-  // trial button on this site within TRIAL_INTENT_MS (those buttons open the trial product, which has no free plan);
+  // trial button on this site within TRIAL_INTENT_MS (those buttons open the trial plan's checkout, which has no free plan);
   // any other Whop arrival (a free chat join, a checkout started on Whop itself) sends the custom WhopWelcome only.
   var TRIAL_INTENT_KEY = "aft_trial_intent", TRIAL_INTENT_MS = 24 * 36e5;
   var fromWhop = false;
@@ -129,6 +129,12 @@
         if (C.whopAffiliate && !u.searchParams.get("a")) u.searchParams.set("a", C.whopAffiliate);
         Object.keys(inbound).forEach(function (k) { if (/^utm_/.test(k) && !u.searchParams.get(k)) u.searchParams.set(k, inbound[k]); });
         if (!u.searchParams.get("utm_source")) u.searchParams.set("utm_source", "allfluencetrading.com");
+        // Meta click id, so the Meta events Whop sends from its checkout (checkout opened, trial start) match the ad
+        // click: this visit's fbclid, else the one in our _fbc cookie (fb.1.<time>.<fbclid>). None for excluded visits.
+        if (!excluded && !u.searchParams.get("fbclid")) {
+          var fbclid = inbound.fbclid || cookie("_fbc").split(".").slice(3).join(".");
+          if (fbclid) u.searchParams.set("fbclid", fbclid);
+        }
       }
       return u.toString();
     } catch (e) { return url; }

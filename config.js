@@ -15,9 +15,10 @@ window.AFT_CONFIG = {
   // --- Destinations ---------------------------------------------------------
   // Whop affiliate code appended to every Whop link as ?a=<code>. Never shown in copy.
   whopAffiliate: "shogotrades",
-  // Whop store and product URLs (no query string here; affiliate + UTMs are appended by script).
+  // Whop store and product URLs (no query string here; affiliate, UTMs and fbclid are appended by script).
   whopStore: "https://whop.com/aft-official/",
-  whopJoin: "https://whop.com/aft-official/products/the-all-fluence-indicator/",
+  // Trial buttons open the checkout of the Suite's only visible plan (Monthly $100, 14-day trial), not the product page.
+  whopJoin: "https://whop.com/checkout/plan_iAon6AlunRIuh",
   whopHub: "https://whop.com/hub/",
     whopReviews: "https://whop.com/aft-official/reviews",
   discordInvite: "https://discord.gg/aft-traders",
