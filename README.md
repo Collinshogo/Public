@@ -2,7 +2,7 @@
 
 Source of the All Fluence Trading website, served by GitHub Pages from `main`.
 
-- `/` — landing page for the membership (MNQ Master Trader, MGC Master Trader, The All Fluence indicator, eleven-chapter course, premium Discord). Checkout on Whop.
+- `/` — landing page for the membership (MNQ Master Trader, MGC Master Trader, The All Fluence indicator, six-chapter course, premium Discord). Checkout on Whop.
 - `/challenge/` — The AFT Challenge, the free paper-trading consistency program ("Never let a green day turn red").
 - `/legal/` — risk disclosure, terms, privacy.
 

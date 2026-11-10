@@ -198,6 +198,8 @@ body.noscroll{overflow:hidden}
 .chapters{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
 .chapters li{display:flex;gap:18px;align-items:baseline;padding:13px 0;border-bottom:1px solid var(--line);font-size:17px;color:var(--bright);font-weight:500}
 .chapters b{font-size:14px;color:var(--faint);font-weight:500;min-width:22px}
+.chapters small{display:block;margin-top:4px;font-size:14px;line-height:1.45;color:var(--faint);font-weight:400}
+.course-more{margin:16px 0 0;font-size:15px;line-height:1.5;color:var(--text)}
 
 /* fit */
 .fit-grid{display:grid;gap:36px}
