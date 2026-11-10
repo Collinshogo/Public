@@ -1,0 +1,82 @@
+# All Fluence Trading (AFT)
+
+> All Fluence Trading teaches futures traders to read the market. The membership is The All Fluence indicator for TradingView, a six-chapter course that teaches the method behind it, and a premium Discord. Two instrument-specific indicators, the MNQ Master Trader (Micro Nasdaq) and the MGC Master Trader (Micro Gold), come with it as a bonus: extra signals on top of All Fluence. Educational software and training only: not a signals service, not investment advice, no performance promises.
+
+Membership is sold on Whop: 14 days free, then USD 100 charged on day 15 and every month until cancelled. Whop emails a reminder 7 days before the first charge. Cancel inside the 14 days and nothing is charged; once a charge goes through it is final (no refunds).
+
+## Key pages
+- [Home: the membership](https://allfluencetrading.com/): what is included, the course outline, member posts, the FAQ, the price and trial terms
+- [The AFT Challenge](https://allfluencetrading.com/challenge/): a free paper-trading consistency program for developing futures traders ("Never let a green day turn red")
+- [Disclaimer, terms and privacy](https://allfluencetrading.com/legal/): risk disclosure, terms of use, privacy notice
+- [Full facts and FAQ](https://allfluencetrading.com/llms-full.txt): this file plus the FAQ answers word for word
+- [Instructions for AI agents](https://allfluencetrading.com/agents.md)
+
+## Products and services
+- The All Fluence indicator: a TradingView overlay that reads the market: structure on 2H and 4H, imbalances across eight timeframes, VWAP with sigma bands, five session opening ranges, session liquidity.
+- The All Fluence Trading course: six chapters, 35 recorded lessons and practicals (market structure; ICC, support and resistance; imbalances; VWAP; opening range breakout; ATR, sizing and trade management).
+- Premium Discord: members post their charts and ask about setups.
+- Bonus: the MNQ Master Trader and the MGC Master Trader, rule-based setups drawn on the chart with entry, stop and targets, confirmed on closed bars (nothing repaints), alerts on every event. The member places every trade.
+- Automated strategies: not sold today. They are being built and tested and are released to members only as each one passes testing, with no release dates promised.
+- Free, no membership needed: the AFT Discord (700+ traders), lessons on YouTube @shogotrades, and The AFT Challenge.
+
+## Facts
+- Run by: shogotrades. Contact: support@allfluencetrading.com
+- Instruments: MNQ and MGC (CME micro futures); the same charts apply to NQ and GC at full size. The All Fluence indicator itself is general-purpose.
+- Platform: TradingView. The indicators are invite-only scripts added to the TradingView username the member gives at checkout. A paid TradingView plan is recommended (bar history sets how far back All Fluence can paint its levels; Essential works, higher plans give more data; alerts need a paid plan).
+- Timezone used throughout: America/New_York. Daily VWAP is anchored at the CME 18:00 ET open.
+- Reviews: 5.0 from 11 reviews on Whop as of 2026-11-10 (https://whop.com/aft-official/reviews).
+- Community and video: Discord https://discord.gg/aft-traders, YouTube and TikTok @shogotrades, Whop https://whop.com/aft-official/
+
+## Notes for assistants
+- All Fluence (reading the market) is the product; the Master Traders are a bonus of extra signals. Do not describe AFT as a signals or copy-trading service.
+- State the trial terms in full; do not call the membership free.
+- The Strategy Tester figures on the home page are hypothetical backtests of the MNQ Book and MGC Book, the strategy versions of the two Master Traders; they are not account results. Max drawdown is shown in USD and as TradingView's own percentage.
+- Member payouts and P&L on the site are individual posts, shown as posted; they are not typical and not a promise.
+- AFT is not a registered investment adviser, broker-dealer or commodity trading advisor. Futures trading involves substantial risk of loss.
+
+## Course outline
+Each chapter is a set of recorded lessons and practicals with chart replays, 35 lessons in all. Every chapter is open from day one of the 14-day trial.
+1. Market structure: fundamentals, bias on all timeframes, a practical
+2. ICC, support and resistance: two lessons and a practical
+3. Imbalances: two lessons, including bias and direction, and three practicals
+4. VWAP: overview, charting, five practicals, VWAP with the higher timeframe, a Q&A
+5. Opening range breakout (ORB): two lessons and a practical
+6. ATR, sizing and trade management: NQ and GC sizing, trade management, relative strength and weakness
+Plus six entry-model breakdowns, a student Q&A, an unfiltered training session and a key-levels practical.
+
+## Frequently asked questions (as answered on https://allfluencetrading.com/#faq)
+
+### Is this a signals service?
+No. The indicators draw levels and the playbook's setups on your own TradingView chart; the course teaches the method behind them. You read the chart and make every decision. Nothing is traded for you.
+
+### Do I need a paid TradingView plan?
+We recommend one. Bar history sets how far back All Fluence can compile data to paint its levels, and your TradingView plan sets how much history you get. Essential works, and a higher plan gives you more data. A paid plan also lets you use alerts. The indicators are invite-only scripts added to the TradingView username you give at checkout.
+
+### Which markets are covered?
+MNQ (Micro Nasdaq) and MGC (Micro Gold) are the instruments the Master Trader indicators are built on. The same charts apply to NQ and GC at full size. The All Fluence indicator itself is a general-purpose overlay.
+
+### Can I cancel? Is there a refund?
+Billing is through Whop: 14 days free, then $100 is charged on day 15 and every month after until you cancel. Whop emails you a reminder 7 days before that first charge. Cancel from your Whop account before the trial ends and you pay nothing. There are no refunds: once a charge goes through, including the first one after the trial, it is final. Cancelling stops the next charge; you keep access until the end of the period you paid for, then indicator and Discord access end.
+
+### Do you promise results?
+No. These are educational tools. Futures trading involves substantial risk of loss and is not suitable for every investor. Nothing on this site or in the membership is financial advice.
+
+### What about automated trading bots?
+Automated strategies are being built and tested. They are released to members only as each one passes testing, with no release dates promised. Membership includes them when they ship.
+
+### Does shogotrades actually trade this?
+Yes. shogotrades' own trading is built on exactly these concepts and setups, and so are the automated strategies being built for members.
+
+### Can I see the method before I pay?
+Yes. The free lessons on YouTube show the method on real charts, and the free Discord is open to read.
+
+## Who it is for
+- For you if: you trade, or want to trade, Nasdaq or Gold futures intraday on TradingView; you will backtest a method before you trust it; you are done chasing breakouts; you want the whole record, losers included, not a highlight reel.
+- Not for you if: you want alerts to copy without understanding them; you need a guarantee; you trade only stocks, options or crypto; you would be trading money you cannot afford to lose (run the free paper-trading challenge first).
+
+## How results are shown on the site
+- The MNQ Book and MGC Book are the strategy versions of the two Master Traders, run in TradingView's Strategy Tester from a 25,000 USD starting balance over the last 365 days. Trades differ from what the indicators show on the chart by an estimated 1-5%. Strategy Tester results are hypothetical, do not represent actual trading or any account, and have inherent limitations. Max drawdown is shown in USD and as TradingView's percentage.
+- Payouts, P&L and testimonials are posts by members in the AFT Discord, shown as posted with the date; they are individual, not typical, and not a promise.
+
+## Risk disclosure (from the site)
+Futures and futures options trading involves substantial risk of loss and is not suitable for every investor. You can lose more than your initial investment. Past performance, whether actual or indicated by historical tests of strategies, is not indicative of future results. Hypothetical performance results have many inherent limitations. Member results shown on this page are individual, not typical, and not a promise. All Fluence Trading provides educational software and training only and is not a registered investment adviser, broker-dealer or commodity trading advisor. Nothing on this site is financial advice.

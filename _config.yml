@@ -6,3 +6,6 @@ exclude:
   - README.md
   - "*.py"
   - "*.md"
+# agents.md is published for AI assistants; "include" overrides the "*.md" rule above for it alone.
+include:
+  - agents.md
