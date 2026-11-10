@@ -16,7 +16,7 @@ All Fluence Trading (AFT), run by shogotrades, teaches futures traders to read t
 - Premium Discord for members
 - Bonus: MNQ Master Trader (Micro Nasdaq) and MGC Master Trader (Micro Gold) indicators, rule-based setups with entry, stop and targets drawn on the chart
 - The AFT Challenge: a free paper-trading consistency program (https://allfluencetrading.com/challenge/)
-- Not sold: automated execution, trade copying, account management. Automated strategies are being built and tested and are released to members only as each one passes testing, with no release dates promised.
+- Automated strategies: coming later, not sold at the moment. They are being built and tested and will be released as each one passes testing; no release dates yet. AFT does not copy trades into or manage anyone's account.
 
 ## What makes All Fluence Trading different
 - Not a signals service: the indicators draw levels and setups on the member's own chart, and the member makes every trade.

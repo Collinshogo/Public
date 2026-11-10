@@ -16,7 +16,7 @@ Membership is sold on Whop: 14 days free, then USD 100 charged on day 15 and eve
 - The All Fluence Trading course: six chapters, 35 recorded lessons and practicals (market structure; ICC, support and resistance; imbalances; VWAP; opening range breakout; ATR, sizing and trade management).
 - Premium Discord: members post their charts and ask about setups.
 - Bonus: the MNQ Master Trader and the MGC Master Trader, rule-based setups drawn on the chart with entry, stop and targets, confirmed on closed bars (nothing repaints), alerts on every event. The member places every trade.
-- Automated strategies: not sold today. They are being built and tested and are released to members only as each one passes testing, with no release dates promised.
+- Automated strategies: coming later, not sold at the moment. They are being built and tested and will be released as each one passes testing; no release dates yet.
 - Free, no membership needed: the AFT Discord (700+ traders), lessons on YouTube @shogotrades, and The AFT Challenge.
 
 ## Facts
