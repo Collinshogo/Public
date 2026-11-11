@@ -57,6 +57,9 @@
   .steps li::before{content:counter(step);font-family:var(--display);color:var(--bright);font-size:22px;font-weight:600;line-height:1.1;border-top:2px solid var(--line2);padding-top:6px}
   .steps h3{margin:0 0 6px;font-size:18px;color:var(--bright);font-family:var(--display);font-weight:600;letter-spacing:-.01em}
   .steps p{margin:0;color:var(--dim);font-size:15.5px}
+  .replay{margin:22px auto 0;max-width:440px}
+  .replay video{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:#000}
+  .replay figcaption{font-size:14px;color:var(--dim);margin:10px 0 0;line-height:1.5}
   .callout{border:1px solid var(--line);border-left:3px solid var(--green);background:var(--green-tint);padding:20px 22px;margin:30px 0;border-radius:10px}
   .callout .label{font-weight:600;color:var(--bright);margin:0 0 8px;font-size:16px}
   .callout p{margin:0 0 12px}
@@ -83,6 +86,14 @@
   <p class="tagline">Automated futures strategies for TradingView, built on the All Fluence method.</p>
   <p>The AFT trading bots are rule-based strategies that run in TradingView on the 1-minute chart. They are built on the same concepts taught in the All Fluence course and used by the Master Trader indicators: market structure, imbalances and session timing. Every entry, stop and target is decided by fixed rules on closed bars, and nothing repaints.</p>
   <p>Each strategy can run on its own as a TradingView strategy, and it can also send its orders to your own futures broker through a third-party automation service you set up and control.</p>
+
+  <p class="kicker">Watch them trade</p>
+  <h2>Backtest replay on the MNQ 1-minute chart</h2>
+  <figure class="replay">
+    <video id="rv" controls playsinline muted preload="none" poster="/assets/video/mnq-master-trader-backtest-poster-1080.jpg" width="1080" height="1350" data-src="/assets/video/mnq-master-trader-backtest-1080.mp4" data-src-small="/assets/video/mnq-master-trader-backtest-720.mp4" aria-label="Backtest replay of the automated MNQ strategies on the 1-minute chart: entries, scale-ins, stops moved to break-even and closed positions"></video>
+    <script>(function(){var v=document.getElementById('rv');if(!v)return;v.src=v.getAttribute(window.innerWidth<700?'data-src-small':'data-src');})();</script>
+    <figcaption>A bar-by-bar replay of a TradingView backtest. Every entry, scale-in, stop move and exit is placed by the strategy's own rules. Backtest results are hypothetical and do not represent actual trading.</figcaption>
+  </figure>
 
   <p class="kicker">First in line</p>
   <h2>The first three strategies</h2>
