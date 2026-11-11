@@ -31,7 +31,7 @@ Membership is sold on Whop. 14-day free trial. Cancel inside the 14 days and you
 - All Fluence (reading the market) is the product; the Master Traders are a bonus of extra signals. Do not describe AFT as a signals or copy-trading service.
 - State the trial terms in full; do not call the membership free.
 - The Strategy Tester figures on the home page are hypothetical backtests of the MNQ Book and MGC Book, the strategy versions of the two Master Traders; they are not account results. Max drawdown is shown in USD and as TradingView's own percentage.
-- Member payouts and P&L on the site are individual posts, shown as posted; they are not typical and not a promise.
+- Member payouts and P&L on the site are individual posts; they are not typical and not a promise.
 - AFT is not a registered investment adviser, broker-dealer or commodity trading advisor. Futures trading involves substantial risk of loss.
 
 ## Course outline
@@ -76,7 +76,7 @@ Yes. The free lessons on YouTube show the method on real charts, and the free Di
 
 ## How results are shown on the site
 - The MNQ Book and MGC Book are the strategy versions of the two Master Traders, run in TradingView's Strategy Tester from a 25,000 USD starting balance over the last 365 days. Trades differ from what the indicators show on the chart by an estimated 1-5%. Strategy Tester results are hypothetical, do not represent actual trading or any account, and have inherent limitations. Max drawdown is shown in USD and as TradingView's percentage.
-- Payouts, P&L and testimonials are posts by members in the AFT Discord, shown as posted with the date; they are individual, not typical, and not a promise.
+- Payouts, P&L and testimonials are posts by members in the AFT Discord; they are individual, not typical, and not a promise.
 
 ## Risk disclosure (from the site)
 Futures and futures options trading involves substantial risk of loss and is not suitable for every investor. You can lose more than your initial investment. Past performance, whether actual or indicated by historical tests of strategies, is not indicative of future results. Hypothetical performance results have many inherent limitations. Member results shown on this page are individual, not typical, and not a promise. All Fluence Trading provides educational software and training only and is not a registered investment adviser, broker-dealer or commodity trading advisor. Nothing on this site is financial advice.

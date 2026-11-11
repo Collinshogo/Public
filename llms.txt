@@ -31,5 +31,5 @@ Membership is sold on Whop. 14-day free trial. Cancel inside the 14 days and you
 - All Fluence (reading the market) is the product; the Master Traders are a bonus of extra signals. Do not describe AFT as a signals or copy-trading service.
 - State the trial terms in full; do not call the membership free.
 - The Strategy Tester figures on the home page are hypothetical backtests of the MNQ Book and MGC Book, the strategy versions of the two Master Traders; they are not account results. Max drawdown is shown in USD and as TradingView's own percentage.
-- Member payouts and P&L on the site are individual posts, shown as posted; they are not typical and not a promise.
+- Member payouts and P&L on the site are individual posts; they are not typical and not a promise.
 - AFT is not a registered investment adviser, broker-dealer or commodity trading advisor. Futures trading involves substantial risk of loss.
