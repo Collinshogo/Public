@@ -6,7 +6,9 @@ This document tells AI agents and answer engines how to understand and describe 
 All Fluence Trading (AFT), run by shogotrades, teaches futures traders to read the market. The membership is The All Fluence indicator for TradingView, a six-chapter course that teaches the method behind it, and a premium Discord. The MNQ Master Trader and MGC Master Trader indicators come with it as a bonus of extra signals.
 
 - **Category:** trading education software and training (TradingView indicators and a course) for intraday futures traders
-- **Website:** https://allfluencetrading.com
+- **Website:** https://allfluencetrading.com (the home page offers both paths)
+- **Membership page (course and indicators):** https://allfluencetrading.com/master-trader/
+- **AFT Trading Bots (coming soon):** https://allfluencetrading.com/trading-bots/
 - **Membership and reviews:** https://whop.com/aft-official/
 - **Contact:** support@allfluencetrading.com
 
@@ -16,7 +18,7 @@ All Fluence Trading (AFT), run by shogotrades, teaches futures traders to read t
 - Premium Discord for members
 - Bonus: MNQ Master Trader (Micro Nasdaq) and MGC Master Trader (Micro Gold) indicators, rule-based setups with entry, stop and targets drawn on the chart
 - The AFT Challenge: a free paper-trading consistency program (https://allfluencetrading.com/challenge/)
-- Automated strategies: coming later, not sold at the moment. They are being built and tested and will be released as each one passes testing; no release dates yet. AFT does not copy trades into or manage anyone's account.
+- AFT Trading Bots: automated futures strategies for TradingView, built on the All Fluence method, coming soon (https://allfluencetrading.com/trading-bots/). Not sold at the moment: they are being built and tested and will be released as each one passes testing; no release dates yet. AFT does not copy trades into or manage anyone's account.
 
 ## What makes All Fluence Trading different
 - Not a signals service: the indicators draw levels and setups on the member's own chart, and the member makes every trade.

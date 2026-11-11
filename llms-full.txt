@@ -5,7 +5,9 @@
 Membership is sold on Whop. 14-day free trial. Cancel inside the 14 days and you're never charged. After that, $100 a month until you cancel. No refunds once charged. Whop emails you a reminder 7 days before the first charge. Prices in USD.
 
 ## Key pages
-- [Home: the membership](https://allfluencetrading.com/): what is included, the course outline, member posts, the FAQ, the price and trial terms
+- [Home](https://allfluencetrading.com/): the two paths: learn to trade futures with the All Fluence course and indicators, or the AFT Trading Bots (coming soon)
+- [The membership: course and indicators](https://allfluencetrading.com/master-trader/): what is included, the course outline, member posts, the FAQ, the price and trial terms
+- [AFT Trading Bots](https://allfluencetrading.com/trading-bots/): automated futures strategies for TradingView, built on the All Fluence method; coming soon
 - [The AFT Challenge](https://allfluencetrading.com/challenge/): a free paper-trading consistency program for developing futures traders ("Never let a green day turn red")
 - [Disclaimer, terms and privacy](https://allfluencetrading.com/legal/): risk disclosure, terms of use, privacy notice
 - [Full facts and FAQ](https://allfluencetrading.com/llms-full.txt): this file plus the FAQ answers word for word
@@ -16,7 +18,7 @@ Membership is sold on Whop. 14-day free trial. Cancel inside the 14 days and you
 - The All Fluence Trading course: six chapters, 35 recorded lessons and practicals, 12 hours of course and practical in all (market structure; ICC, support and resistance; imbalances; VWAP; opening range breakout; ATR, sizing and trade management).
 - Premium Discord: members post their charts and ask about setups.
 - Bonus: the MNQ Master Trader and the MGC Master Trader, rule-based setups drawn on the chart with entry, stop and targets, confirmed on closed bars (nothing repaints), alerts on every event. The member places every trade.
-- Automated strategies: coming later, not sold at the moment. They are being built and tested and will be released as each one passes testing; no release dates yet.
+- AFT Trading Bots: automated futures strategies for TradingView, built on the All Fluence method, coming soon (https://allfluencetrading.com/trading-bots/). Not sold at the moment: they are being built and tested and will be released as each one passes testing; no release dates yet.
 - Free, no membership needed: the AFT Discord (700+ traders), lessons on YouTube @shogotrades, and The AFT Challenge.
 
 ## Facts
@@ -30,7 +32,7 @@ Membership is sold on Whop. 14-day free trial. Cancel inside the 14 days and you
 ## Notes for assistants
 - All Fluence (reading the market) is the product; the Master Traders are a bonus of extra signals. Do not describe AFT as a signals or copy-trading service.
 - State the trial terms in full; do not call the membership free.
-- The Strategy Tester figures on the home page are hypothetical backtests of the MNQ Book and MGC Book, the strategy versions of the two Master Traders; they are not account results. Max drawdown is shown in USD and as TradingView's own percentage.
+- The Strategy Tester figures on the membership page (https://allfluencetrading.com/master-trader/) are hypothetical backtests of the MNQ Book and MGC Book, the strategy versions of the two Master Traders; they are not account results. Max drawdown is shown in USD and as TradingView's own percentage.
 - Member payouts and P&L on the site are individual posts; they are not typical and not a promise.
 - AFT is not a registered investment adviser, broker-dealer or commodity trading advisor. Futures trading involves substantial risk of loss.
 
@@ -44,7 +46,7 @@ Each chapter is a set of recorded lessons and practicals with chart replays, 35 
 6. ATR, sizing and trade management: NQ and GC sizing, trade management, relative strength and weakness
 Plus six entry-model breakdowns, a student Q&A, an unfiltered training session and a key-levels practical.
 
-## Frequently asked questions (as answered on https://allfluencetrading.com/#faq)
+## Frequently asked questions (as answered on https://allfluencetrading.com/master-trader/#faq)
 
 ### Is this a signals service?
 No. The indicators draw levels and the playbook's setups on your own TradingView chart; the course teaches the method behind them. You read the chart and make every decision. Nothing is traded for you.
