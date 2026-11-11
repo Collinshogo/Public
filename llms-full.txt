@@ -2,7 +2,7 @@
 
 > All Fluence Trading teaches futures traders to read the market. The membership is The All Fluence indicator for TradingView, a six-chapter course that teaches the method behind it, and a premium Discord. Two instrument-specific indicators, the MNQ Master Trader (Micro Nasdaq) and the MGC Master Trader (Micro Gold), come with it as a bonus: extra signals on top of All Fluence. Educational software and training only: not a signals service, not investment advice, no performance promises.
 
-Membership is sold on Whop: 14 days free, then USD 100 charged on day 15 and every month until cancelled. Whop emails a reminder 7 days before the first charge. Cancel inside the 14 days and nothing is charged; once a charge goes through it is final (no refunds).
+Membership is sold on Whop. 14-day free trial. Cancel inside the 14 days and you're never charged. After that, $100 a month until you cancel. No refunds once charged. Whop emails you a reminder 7 days before the first charge. Prices in USD.
 
 ## Key pages
 - [Home: the membership](https://allfluencetrading.com/): what is included, the course outline, member posts, the FAQ, the price and trial terms
@@ -13,7 +13,7 @@ Membership is sold on Whop: 14 days free, then USD 100 charged on day 15 and eve
 
 ## Products and services
 - The All Fluence indicator: a TradingView overlay that reads the market: structure on 2H and 4H, imbalances across eight timeframes, VWAP with sigma bands, five session opening ranges, session liquidity.
-- The All Fluence Trading course: six chapters, 35 recorded lessons and practicals (market structure; ICC, support and resistance; imbalances; VWAP; opening range breakout; ATR, sizing and trade management).
+- The All Fluence Trading course: six chapters, 35 recorded lessons and practicals, roughly 13 hours in all (market structure; ICC, support and resistance; imbalances; VWAP; opening range breakout; ATR, sizing and trade management).
 - Premium Discord: members post their charts and ask about setups.
 - Bonus: the MNQ Master Trader and the MGC Master Trader, rule-based setups drawn on the chart with entry, stop and targets, confirmed on closed bars (nothing repaints), alerts on every event. The member places every trade.
 - Automated strategies: coming later, not sold at the moment. They are being built and tested and will be released as each one passes testing; no release dates yet.
@@ -35,7 +35,7 @@ Membership is sold on Whop: 14 days free, then USD 100 charged on day 15 and eve
 - AFT is not a registered investment adviser, broker-dealer or commodity trading advisor. Futures trading involves substantial risk of loss.
 
 ## Course outline
-Each chapter is a set of recorded lessons and practicals with chart replays, 35 lessons in all. Every chapter is open from day one of the 14-day trial.
+Each chapter is a set of recorded lessons and practicals with chart replays, 35 lessons and roughly 13 hours in all. Every chapter is open from day one of the 14-day trial.
 1. Market structure: fundamentals, bias on all timeframes, a practical
 2. ICC, support and resistance: two lessons and a practical
 3. Imbalances: two lessons, including bias and direction, and three practicals
@@ -56,10 +56,10 @@ We recommend one. Bar history sets how far back All Fluence can compile data to 
 MNQ (Micro Nasdaq) and MGC (Micro Gold) are the instruments the Master Trader indicators are built on. The same charts apply to NQ and GC at full size. The All Fluence indicator itself is a general-purpose overlay.
 
 ### Can I cancel? Is there a refund?
-Billing is through Whop: 14 days free, then $100 is charged on day 15 and every month after until you cancel. Whop emails you a reminder 7 days before that first charge. Cancel from your Whop account before the trial ends and you pay nothing. There are no refunds: once a charge goes through, including the first one after the trial, it is final. Cancelling stops the next charge; you keep access until the end of the period you paid for, then indicator and Discord access end.
+Billing is through Whop. 14-day free trial. Cancel inside the 14 days and you're never charged. After that, $100 a month until you cancel. No refunds once charged. Whop emails you a reminder 7 days before the first charge. You can cancel any time in your Whop account; cancelling stops the next charge, and you keep access until the end of the period you paid for, then indicator and Discord access end.
 
 ### Do you promise results?
-No. These are educational tools. Futures trading involves substantial risk of loss and is not suitable for every investor. Nothing on this site or in the membership is financial advice.
+No. Futures trading involves substantial risk of loss and is not suitable for every investor. Nothing on this site or in the membership is financial advice.
 
 ### What about automated trading bots?
 Automated strategies are being built and tested. They are released to members only as each one passes testing, with no release dates promised. Membership includes them when they ship.

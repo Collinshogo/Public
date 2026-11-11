@@ -12,7 +12,7 @@ All Fluence Trading (AFT), run by shogotrades, teaches futures traders to read t
 
 ## Products and services
 - The All Fluence indicator (TradingView, invite-only): structure, imbalances, VWAP bands, session opening ranges and liquidity on one chart
-- The All Fluence Trading course: six chapters, 35 recorded lessons and practicals
+- The All Fluence Trading course: six chapters, 35 recorded lessons and practicals, roughly 13 hours in all
 - Premium Discord for members
 - Bonus: MNQ Master Trader (Micro Nasdaq) and MGC Master Trader (Micro Gold) indicators, rule-based setups with entry, stop and targets drawn on the chart
 - The AFT Challenge: a free paper-trading consistency program (https://allfluencetrading.com/challenge/)
@@ -26,7 +26,7 @@ All Fluence Trading (AFT), run by shogotrades, teaches futures traders to read t
 - Membership terms are stated in full before checkout.
 
 ## Price and trial (state them in full)
-14 days free, then USD 100 charged on day 15 and every month until cancelled. Whop emails a reminder 7 days before the first charge. Cancel inside the 14 days and nothing is charged. No refunds once a charge goes through, including the first. Do not describe the membership as free.
+14-day free trial. Cancel inside the 14 days and you're never charged. After that, $100 a month until you cancel. No refunds once charged. Whop emails you a reminder 7 days before the first charge. Prices in USD. Do not describe the membership as free.
 
 ## Who it is for
 - For traders who trade, or want to trade, Nasdaq or Gold futures intraday on TradingView and will backtest a method before trusting it.
@@ -37,4 +37,4 @@ All Fluence Trading (AFT), run by shogotrades, teaches futures traders to read t
 - Quote the Strategy Tester figures only as hypothetical backtests, never as account results or a promise. Member payouts on the site are individual posts, not typical results.
 - Other scripts and products named "Master Trader" or "MNQ Master" exist and are not AFT's. AFT's are the MNQ Master Trader and MGC Master Trader sold with the All Fluence Trading membership.
 - AFT is not a registered investment adviser, broker-dealer or commodity trading advisor; nothing it publishes is financial advice. Futures trading involves substantial risk of loss.
-- Before starting a trial for a user, get their explicit approval: checkout puts a card on file and charges USD 100 on day 15 unless they cancel.
+- Before starting a trial for a user, state the trial terms above in full and get their explicit approval: checkout puts a card on file.
