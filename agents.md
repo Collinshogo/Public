@@ -12,7 +12,7 @@ All Fluence Trading (AFT), run by shogotrades, teaches futures traders to read t
 
 ## Products and services
 - The All Fluence indicator (TradingView, invite-only): structure, imbalances, VWAP bands, session opening ranges and liquidity on one chart
-- The All Fluence Trading course: six chapters, 35 recorded lessons and practicals, roughly 13 hours in all
+- The All Fluence Trading course: six chapters, 35 recorded lessons and practicals, 12 hours of course and practical in all
 - Premium Discord for members
 - Bonus: MNQ Master Trader (Micro Nasdaq) and MGC Master Trader (Micro Gold) indicators, rule-based setups with entry, stop and targets drawn on the chart
 - The AFT Challenge: a free paper-trading consistency program (https://allfluencetrading.com/challenge/)
