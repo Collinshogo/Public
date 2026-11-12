@@ -64,10 +64,10 @@ Billing is through Whop. 14-day free trial. Cancel inside the 14 days and you're
 No. Futures trading involves substantial risk of loss and is not suitable for every investor. Nothing on this site or in the membership is financial advice.
 
 ### What about automated trading bots?
-Automated strategies are being built and tested. They are released to members only as each one passes testing, with no release dates promised. Membership includes them when they ship.
+Automated strategies are being built and tested. They will be sold separately from the membership, as AFT Trading Bots, released as each one passes testing, with no release dates promised.
 
 ### Does shogotrades actually trade this?
-Yes. shogotrades' own trading is built on exactly these concepts and setups, and so are the automated strategies being built for members.
+Yes. shogotrades' own trading is built on exactly these concepts and setups, and so are the automated strategies being built.
 
 ### Can I see the method before I pay?
 Yes. The free lessons on YouTube show the method on real charts, and the free Discord is open to read.
