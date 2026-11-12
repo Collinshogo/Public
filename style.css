@@ -212,6 +212,7 @@ body.noscroll{overflow:hidden}
 .price-card{min-width:0}
 .price-card .btn{white-space:normal}
 @media(max-width:380px){.price-card{padding:26px 18px}}
+@media(max-width:380px){.price-card .btn{padding-left:14px;padding-right:14px;text-align:center}}
 @media(min-width:900px){.pricing-grid{grid-template-columns:1fr 440px;gap:72px;align-items:start}}
 .pricing-grid .sec-head{margin-bottom:0}
 .pricing-grid .sec-head .lead{margin-bottom:18px}
