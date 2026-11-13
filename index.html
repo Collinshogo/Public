@@ -101,6 +101,10 @@
 .hub-btn-red{background:#d4161b;border-color:#ff5257;box-shadow:0 12px 34px -12px rgba(225,25,30,.95)}
 .hub-btn-red:hover{background:#e61d23}
 .or{position:absolute;left:50%;top:0;transform:translate(-50%,-50%);z-index:3;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#0b0c14;border:2px solid #7b3ceb;box-shadow:0 0 0 4px rgba(11,12,20,.6),0 0 24px rgba(123,60,235,.75);font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#fff}
+.art-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.66;pointer-events:none;background:#000}
+.half::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none}
+.half-blue::after{background:linear-gradient(180deg,rgba(7,20,51,.82) 0%,rgba(10,31,82,.62) 55%,rgba(14,45,116,.5) 100%)}
+.half-red::after{background:linear-gradient(180deg,rgba(28,5,7,.84) 0%,rgba(70,9,16,.64) 55%,rgba(105,11,18,.5) 100%)}
 .draw{stroke-dasharray:1500;stroke-dashoffset:0}
 .candles>g{opacity:1}
 @media (prefers-reduced-motion:no-preference){
@@ -131,29 +135,7 @@
 
   <div class="halves">
     <section class="half half-blue" id="learn" aria-labelledby="learn-title">
-<svg class="art" viewBox="0 0 600 800" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
-<defs><pattern id="gb" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#7ab6ff" stroke-opacity=".10"/></pattern>
-<linearGradient id="pb" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#10c0fd"/><stop offset="1" stop-color="#5b8cff"/></linearGradient></defs>
-<rect width="600" height="800" fill="url(#gb)"/>
-<g stroke="#5aa8ff" stroke-opacity=".55" stroke-width="1.5" stroke-dasharray="9 7">
-<line x1="0" y1="349" x2="600" y2="349"/>
-<line x1="0" y1="494" x2="600" y2="494"/>
-<line x1="0" y1="630" x2="600" y2="630"/>
-<line x1="0" y1="765" x2="600" y2="765"/>
-</g><g fill="#5aa8ff" fill-opacity=".55">
-<rect x="548" y="340" width="40" height="18" rx="2"/>
-<rect x="548" y="485" width="40" height="18" rx="2"/>
-<rect x="548" y="621" width="40" height="18" rx="2"/>
-<rect x="548" y="756" width="40" height="18" rx="2"/>
-</g>
-<path class="draw glow" d="M0 726 L30 702 L55 717 L85 668 L110 634 L130 649 L160 688 L190 760 L215 741 L240 688 L265 634 L285 625 L305 634 L330 601 L360 552 L385 499 L405 514 L430 489 L455 436 L480 402 L500 417 L525 369 L550 351 L575 364 L600 330" fill="none" stroke="#3d9bff" stroke-opacity=".55" stroke-width="10" stroke-linejoin="round" stroke-linecap="round"/>
-<path class="draw" d="M0 726 L30 702 L55 717 L85 668 L110 634 L130 649 L160 688 L190 760 L215 741 L240 688 L265 634 L285 625 L305 634 L330 601 L360 552 L385 499 L405 514 L430 489 L455 436 L480 402 L500 417 L525 369 L550 351 L575 364 L600 330" fill="none" stroke="url(#pb)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-<g class="dots" fill="#ffffff">
-<circle cx="190" cy="760" r="5"/>
-<circle cx="305" cy="634" r="5"/>
-<circle cx="405" cy="514" r="5"/>
-<circle cx="550" cy="351" r="5"/>
-</g></svg>
+<video class="art-vid" muted loop playsinline preload="none" poster="/assets/video/home-half-learn-poster.jpg" data-src="/assets/video/home-half-learn.mp4" aria-hidden="true" tabindex="-1" disablepictureinpicture></video>
       <div class="half-in">
         <p class="kicker">Learn to trade futures</p>
         <h2 id="learn-title">You learn it.</h2>
@@ -167,33 +149,7 @@
     </section>
 
     <section class="half half-red" id="bots" aria-labelledby="bots-title">
-<svg class="art" viewBox="0 0 600 800" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
-<defs><pattern id="gr" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#ff8a8d" stroke-opacity=".09"/></pattern></defs>
-<rect width="600" height="800" fill="url(#gr)"/>
-<rect x="180" y="620" width="210" height="60" fill="#ffffff" fill-opacity=".07"/>
-<rect x="180" y="680" width="210" height="30" fill="#e1191e" fill-opacity=".18"/>
-<g stroke-width="1.5" stroke-dasharray="7 6"><line x1="180" y1="620" x2="390" y2="620" stroke="#ffffff" stroke-opacity=".7"/><line x1="180" y1="680" x2="390" y2="680" stroke="#ffd0d1" stroke-opacity=".6"/><line x1="180" y1="710" x2="390" y2="710" stroke="#ff3b3f" stroke-opacity=".85"/></g>
-<g class="candles">
-<g style="--i:0"><line x1="40" y1="730" x2="40" y2="764" stroke="#ffe3e4" stroke-opacity=".8" stroke-width="2"/><rect x="32" y="740" width="16" height="15" rx="1.5" fill="#ffe3e4" fill-opacity=".8"/></g>
-<g style="--i:1"><line x1="75" y1="712" x2="75" y2="751" stroke="#ffe3e4" stroke-opacity=".8" stroke-width="2"/><rect x="67" y="720" width="16" height="20" rx="1.5" fill="#ffe3e4" fill-opacity=".8"/></g>
-<g style="--i:2"><line x1="110" y1="708" x2="110" y2="735" stroke="#ff2d33" stroke-opacity=".9" stroke-width="2"/><rect x="102" y="720" width="16" height="8" rx="1.5" fill="#ff2d33" fill-opacity=".9"/></g>
-<g style="--i:3"><line x1="145" y1="693" x2="145" y2="738" stroke="#ffe3e4" stroke-opacity=".8" stroke-width="2"/><rect x="137" y="702" width="16" height="26" rx="1.5" fill="#ffe3e4" fill-opacity=".8"/></g>
-<g style="--i:4"><line x1="180" y1="669" x2="180" y2="714" stroke="#ffe3e4" stroke-opacity=".8" stroke-width="2"/><rect x="172" y="680" width="16" height="22" rx="1.5" fill="#ffe3e4" fill-opacity=".8"/></g>
-<g style="--i:5"><line x1="215" y1="673" x2="215" y2="700" stroke="#ff2d33" stroke-opacity=".9" stroke-width="2"/><rect x="207" y="680" width="16" height="12" rx="1.5" fill="#ff2d33" fill-opacity=".9"/></g>
-<g style="--i:6"><line x1="250" y1="656" x2="250" y2="701" stroke="#ffe3e4" stroke-opacity=".8" stroke-width="2"/><rect x="242" y="666" width="16" height="26" rx="1.5" fill="#ffe3e4" fill-opacity=".8"/></g>
-<g style="--i:7"><line x1="285" y1="638" x2="285" y2="677" stroke="#ffe3e4" stroke-opacity=".8" stroke-width="2"/><rect x="277" y="650" width="16" height="16" rx="1.5" fill="#ffe3e4" fill-opacity=".8"/></g>
-<g style="--i:8"><line x1="320" y1="642" x2="320" y2="666" stroke="#ff2d33" stroke-opacity=".9" stroke-width="2"/><rect x="312" y="650" width="16" height="8" rx="1.5" fill="#ff2d33" fill-opacity=".9"/></g>
-<g style="--i:9"><line x1="355" y1="623" x2="355" y2="668" stroke="#ffe3e4" stroke-opacity=".8" stroke-width="2"/><rect x="347" y="632" width="16" height="26" rx="1.5" fill="#ffe3e4" fill-opacity=".8"/></g>
-<g style="--i:10"><line x1="390" y1="601" x2="390" y2="641" stroke="#ffe3e4" stroke-opacity=".8" stroke-width="2"/><rect x="382" y="612" width="16" height="20" rx="1.5" fill="#ffe3e4" fill-opacity=".8"/></g>
-<g style="--i:11"><line x1="425" y1="604" x2="425" y2="636" stroke="#ff2d33" stroke-opacity=".9" stroke-width="2"/><rect x="417" y="612" width="16" height="12" rx="1.5" fill="#ff2d33" fill-opacity=".9"/></g>
-<g style="--i:12"><line x1="460" y1="590" x2="460" y2="632" stroke="#ffe3e4" stroke-opacity=".8" stroke-width="2"/><rect x="452" y="600" width="16" height="24" rx="1.5" fill="#ffe3e4" fill-opacity=".8"/></g>
-<g style="--i:13"><line x1="495" y1="573" x2="495" y2="610" stroke="#ffe3e4" stroke-opacity=".8" stroke-width="2"/><rect x="487" y="582" width="16" height="18" rx="1.5" fill="#ffe3e4" fill-opacity=".8"/></g>
-<g style="--i:14"><line x1="530" y1="570" x2="530" y2="600" stroke="#ff2d33" stroke-opacity=".9" stroke-width="2"/><rect x="522" y="582" width="16" height="10" rx="1.5" fill="#ff2d33" fill-opacity=".9"/></g>
-<g style="--i:15"><line x1="565" y1="558" x2="565" y2="604" stroke="#ffe3e4" stroke-opacity=".8" stroke-width="2"/><rect x="557" y="566" width="16" height="26" rx="1.5" fill="#ffe3e4" fill-opacity=".8"/></g>
-</g>
-<path d="M180 730 l9 14 h-18 z" fill="#ffffff"/>
-<circle cx="390" cy="620" r="6" fill="#ffffff"/>
-</svg>
+<video class="art-vid" muted loop playsinline preload="none" poster="/assets/video/home-half-bots-poster.jpg" data-src="/assets/video/home-half-bots.mp4" aria-hidden="true" tabindex="-1" disablepictureinpicture></video>
       <div class="or" aria-hidden="true">or</div>
       <div class="half-in">
         <p class="kicker">AFT Trading Bots <span class="soon">Coming soon</span></p>
@@ -243,6 +199,15 @@
   </div>
 </footer>
 
+<script>
+(function(){
+var vs=document.querySelectorAll('.art-vid');if(!vs.length)return;
+var c=navigator.connection||{};
+if(matchMedia('(prefers-reduced-motion:reduce)').matches||c.saveData)return;
+function go(v){if(v.getAttribute('src'))return;v.src=v.getAttribute('data-src');var p=v.play();if(p&&p.catch)p.catch(function(){});}
+if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;if(e.isIntersecting){go(v);}else if(v.getAttribute('src')){v.pause();}if(e.isIntersecting&&v.paused&&v.getAttribute('src')){var p=v.play();if(p&&p.catch)p.catch(function(){});}});},{rootMargin:'200px'});vs.forEach(function(v){io.observe(v);});}
+})();
+</script>
 <script>
 document.getElementById('y').textContent=new Date().getFullYear();
 </script>
