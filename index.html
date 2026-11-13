@@ -101,10 +101,15 @@
 .hub-btn-red{background:#d4161b;border-color:#ff5257;box-shadow:0 12px 34px -12px rgba(225,25,30,.95)}
 .hub-btn-red:hover{background:#e61d23}
 .or{position:absolute;left:50%;top:0;transform:translate(-50%,-50%);z-index:3;width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#0b0c14;border:2px solid #7b3ceb;box-shadow:0 0 0 4px rgba(11,12,20,.6),0 0 24px rgba(123,60,235,.75);font-family:var(--display);font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:#fff}
-.art-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.66;pointer-events:none;background:#000}
-.half::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none}
-.half-blue::after{background:linear-gradient(180deg,rgba(7,20,51,.82) 0%,rgba(10,31,82,.62) 55%,rgba(14,45,116,.5) 100%)}
-.half-red::after{background:linear-gradient(180deg,rgba(28,5,7,.84) 0%,rgba(70,9,16,.64) 55%,rgba(105,11,18,.5) 100%)}
+.half{flex-direction:column;justify-content:flex-start}
+.half-vid{position:relative;align-self:stretch;margin:36px -20px -52px;height:250px;overflow:hidden;background:#000}
+.half-vid::before{content:"";position:absolute;left:0;right:0;top:0;height:44px;z-index:1;pointer-events:none}
+.half-blue .half-vid::before{background:linear-gradient(180deg,#0e2d74,rgba(14,45,116,0))}
+.half-red .half-vid::before{background:linear-gradient(180deg,#690b12,rgba(105,11,18,0))}
+.art-vid{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 0}
+.half-red .art-vid{object-position:0 50%}
+.half-blue .half-vid{margin-bottom:-20px}
+@media(min-width:900px){.half-vid,.half-blue .half-vid{flex:1 1 auto;margin:44px -56px -96px;height:auto;min-height:400px}}
 .draw{stroke-dasharray:1500;stroke-dashoffset:0}
 .candles>g{opacity:1}
 @media (prefers-reduced-motion:no-preference){
@@ -135,7 +140,6 @@
 
   <div class="halves">
     <section class="half half-blue" id="learn" aria-labelledby="learn-title">
-<video class="art-vid" muted loop playsinline preload="none" poster="/assets/video/home-half-learn-poster.jpg" data-src="/assets/video/home-half-learn.mp4" aria-hidden="true" tabindex="-1" disablepictureinpicture></video>
       <div class="half-in">
         <p class="kicker">Learn to trade futures</p>
         <h2 id="learn-title">You learn it.</h2>
@@ -146,10 +150,10 @@
         </ul>
         <a class="btn hub-btn hub-btn-blue" href="/master-trader/" data-ev="content" data-name="hub-learn">See the course and indicators</a>
       </div>
+      <div class="half-vid" aria-hidden="true"><video class="art-vid" muted loop playsinline preload="none" poster="/assets/video/home-half-learn-poster.jpg" data-src="/assets/video/home-half-learn.mp4" aria-hidden="true" tabindex="-1" disablepictureinpicture></video></div>
     </section>
 
     <section class="half half-red" id="bots" aria-labelledby="bots-title">
-<video class="art-vid" muted loop playsinline preload="none" poster="/assets/video/home-half-bots-poster.jpg" data-src="/assets/video/home-half-bots.mp4" aria-hidden="true" tabindex="-1" disablepictureinpicture></video>
       <div class="or" aria-hidden="true">or</div>
       <div class="half-in">
         <p class="kicker">AFT Trading Bots <span class="soon">Coming soon</span></p>
@@ -161,6 +165,7 @@
         </ul>
         <a class="btn hub-btn hub-btn-red" href="/trading-bots/" data-ev="content" data-name="hub-bots">See the trading bots</a>
       </div>
+      <div class="half-vid" aria-hidden="true"><video class="art-vid" muted loop playsinline preload="none" poster="/assets/video/home-half-bots-poster.jpg" data-src="/assets/video/home-half-bots.mp4" aria-hidden="true" tabindex="-1" disablepictureinpicture></video></div>
     </section>
   </div>
 </main>
