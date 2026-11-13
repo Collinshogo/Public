@@ -220,6 +220,7 @@ body.noscroll{overflow:hidden}
 .price{display:flex;align-items:baseline;gap:10px;margin:0 0 4px}
 .price .amt{font-family:var(--display);font-size:66px;font-weight:600;color:var(--bright);letter-spacing:-.04em;line-height:1}
 .price .per{color:var(--dim);font-size:16px}
+.price{flex-wrap:wrap}.price .tax{font-size:18px;font-weight:500;color:var(--dim);white-space:nowrap}
 .price-alt{font-size:14px;color:var(--faint);margin:0 0 24px}
 .inc{list-style:none;padding:0;margin:22px 0 6px;display:grid;gap:10px}
 .inc li{padding-left:26px;position:relative;font-size:16px}
