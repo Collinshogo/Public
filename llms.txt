@@ -24,7 +24,7 @@ Membership is sold on Whop. 14-day free trial. Cancel inside the 14 days and you
 ## Facts
 - Run by: shogotrades. Contact: support@allfluencetrading.com
 - Instruments: MNQ and MGC (CME micro futures); the same charts apply to NQ and GC at full size. The All Fluence indicator itself is general-purpose.
-- Platform: TradingView. The indicators are invite-only scripts added to the TradingView username the member gives at checkout. A paid TradingView plan is recommended (bar history sets how far back All Fluence can paint its levels; Essential works, higher plans give more data; alerts need a paid plan).
+- Platform: TradingView. The indicators are invite-only scripts added to the TradingView username the member submits in the Whop membership after joining. A paid TradingView plan is recommended (bar history sets how far back All Fluence can paint its levels; Essential works, higher plans give more data; alerts need a paid plan).
 - Timezone used throughout: America/New_York. Daily VWAP is anchored at the CME 18:00 ET open.
 - Reviews: 5.0 from 11 reviews on Whop as of 2026-11-10 (https://whop.com/aft-official/reviews).
 - Community and video: Discord https://discord.gg/aft-traders, YouTube and TikTok @shogotrades, Whop https://whop.com/aft-official/
