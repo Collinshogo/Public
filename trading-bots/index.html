@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AFT Trading Bots: Coming Soon | All Fluence Trading</title>
+<title>AFT Trading Bots | All Fluence Trading</title>
 <link rel="canonical" href="https://allfluencetrading.com/trading-bots/">
 <meta name="robots" content="index,follow">
 <meta name="theme-color" content="#0e0f16">
@@ -11,140 +11,263 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="bots.css">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="All Fluence Trading">
-<meta property="og:title" content="AFT Trading Bots: coming soon">
-<meta property="og:description" content="Automated futures strategies for TradingView, built on the All Fluence method. Coming soon.">
+<meta property="og:title" content="AFT Trading Bots">
+<meta property="og:description" content="Automated futures strategies for TradingView, built on the All Fluence method. Sold in three tiers.">
 <meta property="og:url" content="https://allfluencetrading.com/trading-bots/">
 <meta property="og:image" content="https://allfluencetrading.com/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="AFT Trading Bots: coming soon">
-<meta name="twitter:description" content="Automated futures strategies for TradingView, built on the All Fluence method. Coming soon.">
+<meta name="twitter:title" content="AFT Trading Bots">
+<meta name="twitter:description" content="Automated futures strategies for TradingView, built on the All Fluence method. Sold in three tiers.">
 <meta name="twitter:image" content="https://allfluencetrading.com/assets/og.png">
 <script src="/config.js"></script>
 <script src="/tracking.js" defer></script>
-<meta name="description" content="AFT Trading Bots: automated MNQ and MGC futures strategies for TradingView, built on the All Fluence method. Coming soon.">
-<style>
-  :root{
-    --bg:#0e0f16; --panel:#171925; --line:#23263a; --line2:#2f3349;
-    --text:#d8dbe6; --bright:#ffffff; --dim:#9a9fb3; --faint:#80859c;
-    --green:#34c27a; --green-tint:rgba(52,194,122,.08);
-    --display:"Archivo","Helvetica Neue",Arial,sans-serif;
-    --sans:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;font-size:17px;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:760px;margin:0 auto;padding:28px 20px 56px}
-  a{color:var(--bright);text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:3px}
-  a:hover{text-decoration-color:var(--bright)}
-  strong{color:var(--bright)}
-  .brand{display:block;width:max-content;margin-bottom:36px}
-  .brand img{height:34px;width:auto;display:block}
-  .badge{display:inline-block;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--green);border:1px solid var(--green);background:var(--green-tint);border-radius:999px;padding:4px 12px;margin:0 0 16px}
-  h1{font-family:var(--display);font-size:clamp(36px,6vw,54px);line-height:1.05;margin:0 0 10px;color:var(--bright);font-weight:700;letter-spacing:-.03em}
-  .tagline{color:var(--dim);margin:0 0 30px;font-size:19px}
-  .kicker{font-size:15px;color:var(--dim);margin:48px 0 6px;font-weight:500}
-  h2{font-family:var(--display);font-size:clamp(26px,3.6vw,34px);color:var(--bright);margin:0 0 16px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
-  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:22px 0}
-  .card{background:var(--panel);padding:18px 18px 16px}
-  .card .k{font-size:13px;color:var(--dim);margin:0 0 6px}
-  .card .v{font-family:var(--display);font-size:22px;color:var(--bright);font-weight:600;margin:0 0 8px;letter-spacing:-.02em}
-  .card .n{font-size:14.5px;color:var(--dim);line-height:1.5;margin:0}
-  .steps{list-style:none;margin:22px 0 0;padding:0;counter-reset:step}
-  .steps li{display:grid;grid-template-columns:44px 1fr;gap:0 16px;margin:0 0 24px;counter-increment:step}
-  .steps li::before{content:counter(step);font-family:var(--display);color:var(--bright);font-size:22px;font-weight:600;line-height:1.1;border-top:2px solid var(--line2);padding-top:6px}
-  .steps h3{margin:0 0 6px;font-size:18px;color:var(--bright);font-family:var(--display);font-weight:600;letter-spacing:-.01em}
-  .steps p{margin:0;color:var(--dim);font-size:15.5px}
-  .replay{margin:22px auto 0;max-width:720px}
-  .replay video{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:10px;background:#000}
-  .replay figcaption{font-size:14px;color:var(--dim);margin:10px 0 0;line-height:1.5}
-  .callout{border:1px solid var(--line);border-left:3px solid var(--green);background:var(--green-tint);padding:20px 22px;margin:30px 0;border-radius:10px}
-  .callout .label{font-weight:600;color:var(--bright);margin:0 0 8px;font-size:16px}
-  .callout p{margin:0 0 12px}
-  .callout p:last-child{margin-bottom:0}
-  .cta{margin:24px 0 0;display:flex;flex-wrap:wrap;gap:12px}
-  .btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 22px;border-radius:8px;font-weight:600;font-size:16px;text-decoration:none}
-  .btn-primary{background:var(--bright);color:#0e0f16;border:1px solid var(--bright)}
-  .btn-ghost{background:transparent;color:var(--bright);border:1px solid var(--line2)}
-  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line)}
-  footer .line{font-size:14px;color:var(--dim);margin:0 0 8px;font-weight:500}
-  footer p{font-size:13px;color:var(--faint);margin:0 0 10px}
-  footer p a{display:inline-block;padding:12px 4px}
-  @media (max-width:640px){
-    .wrap{padding:22px 16px 40px}
-    .cards{grid-template-columns:1fr}
-  }
-</style>
+<meta name="description" content="AFT Trading Bots: automated MNQ and MGC futures strategies for TradingView, built on the All Fluence method and sold in three monthly tiers.">
 </head>
-<body>
-<div class="wrap">
-  <a class="brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
-  <p class="badge">Coming soon</p>
-  <h1>AFT Trading Bots</h1>
-  <p class="tagline">Automated futures strategies for TradingView, built on the All Fluence method.</p>
-  <p>The AFT trading bots are rule-based strategies that run in TradingView on the 1-minute chart. They are built on the same concepts taught in the All Fluence course and used by the Master Trader indicators: market structure, imbalances and session timing. Every entry, stop and target is decided by fixed rules on closed bars, and nothing repaints.</p>
-  <p>Each strategy can run on its own as a TradingView strategy, and it can also send its orders to your own futures broker through a third-party automation service you set up and control.</p>
+<body class="bots">
 
-  <p class="kicker">Watch them trade</p>
-  <h2>Continuum on the MNQ 1-minute chart: selected backtest trades</h2>
-  <figure class="replay">
-    <video id="rv" controls playsinline muted preload="none" poster="/assets/video/continuum-backtest-poster-1080.jpg" width="1080" height="738" data-src="/assets/video/continuum-backtest-1080.mp4" data-src-small="/assets/video/continuum-backtest-720.mp4" aria-label="Backtest of the Continuum strategy on the MNQ 1-minute chart: selected trades, each from entry to exit with its result as the strategy prints it"></video>
-    <script>(function(){var v=document.getElementById('rv');if(!v)return;v.src=v.getAttribute(window.innerWidth<700?'data-src-small':'data-src');})();</script>
-    <figcaption>Continuum, an AFT strategy, on a TradingView backtest of the MNQ 1-minute chart. These are selected trades from the backtest, not all of its trades. Each is shown from entry to exit with its result as the strategy prints it, and the quiet stretches between trades are sped up. Backtest results are hypothetical and do not represent actual trading.</figcaption>
-  </figure>
-
-  <p class="kicker">First in line</p>
-  <h2>The first three strategies</h2>
-  <div class="cards">
-    <div class="card">
-      <p class="k">MNQ · Micro Nasdaq</p>
-      <p class="v">Continuum</p>
-      <p class="n">Several MNQ models run together in one strategy, one position at a time, through the full futures day.</p>
-    </div>
-    <div class="card">
-      <p class="k">MNQ · Micro Nasdaq</p>
-      <p class="v">Slipstream</p>
-      <p class="n">A single MNQ model that trades the continuation of fresh price imbalances.</p>
-    </div>
-    <div class="card">
-      <p class="k">MGC · Micro Gold</p>
-      <p class="v">Midas</p>
-      <p class="n">Gold models for the Tokyo, London and New York sessions, combined in one strategy.</p>
-    </div>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
+    <nav class="nav-links" aria-label="On this page">
+      <a href="#plans">Tiers</a>
+      <a href="#strategies">Strategies</a>
+      <a href="#method">How results are shown</a>
+      <a href="#how">How it works</a>
+    </nav>
   </div>
-  <p>More strategies follow once each one has passed its own testing. No release dates are promised.</p>
+</header>
 
-  <p class="kicker">How it will work</p>
-  <h2>From access to your chart</h2>
-  <ol class="steps">
-    <li><div>
-      <h3>Access on TradingView</h3>
-      <p>Each strategy is an invite-only script on TradingView. Access is granted to your TradingView username.</p>
-    </div></li>
-    <li><div>
-      <h3>Read it before you run it</h3>
-      <p>Every strategy's TradingView page explains what it trades, when it trades, how it exits and what the Strategy Tester assumes for costs.</p>
-    </div></li>
-    <li><div>
-      <h3>Paper first, then your call</h3>
-      <p>Run it in TradingView's Strategy Tester or on a paper account first. You choose the contract size, and you decide whether to connect it to a broker at all.</p>
-    </div></li>
-  </ol>
+<main>
 
-  <div class="callout">
-    <p class="label">Be first to hear when they open</p>
-    <p>Pricing and access details will be posted on this page and announced in the free Discord first.</p>
+<section class="bx-hero">
+  <div class="wrap">
+    <p class="bx-kicker">AFT Trading Bots</p>
+    <h1>Automated futures strategies for TradingView.</h1>
+    <p class="bx-lead">Rules-based strategies built on the All Fluence method, sold in three tiers. Open any strategy right where you are to read what it trades and see its record.</p>
+    <p class="bx-cta"><a class="btn bx-btn-red btn-lg" href="#plans">See the tiers</a><a class="btn btn-ghost btn-lg" href="#strategies">See the strategies</a></p>
+    <ul class="bx-facts">
+      <li>Runs in TradingView on the 1-minute chart</li>
+      <li>Fixed rules on closed bars. Nothing repaints.</li>
+      <li>Sold separately from the All Fluence membership</li>
+    </ul>
   </div>
+</section>
 
-  <p class="cta"><a class="btn btn-primary" data-dest="discordInvite" data-ev="lead" data-name="bots-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Join the free Discord</a><a class="btn btn-ghost" href="/" data-ev="content" data-name="bots-home">See the Master Traders</a></p>
+<section id="plans" class="bx-plans">
+  <div class="wrap">
+    <div class="bx-head">
+      <h2>Choose a tier</h2>
+      <p class="bx-sub">Strategies are sold as bundles, not one at a time, and each higher tier includes the ones below it. Tap any strategy to open it right here. Your choice stays in the bar at the bottom.</p>
+    </div>
 
-  <footer>
-    <p class="line">All Fluence Trading · AFT Trading Bots</p>
-    <p><a href="/">Front page</a> · <a href="/challenge/">AFT Challenge</a> · <a data-dest="discordInvite" data-ev="lead" data-name="bots-footer-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a> · <a href="/legal/">Disclaimer</a> · <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a></p>
+    <div class="bx-plan-grid" id="plan-grid">
+
+      <article class="bx-plan" data-plan="base" data-name="Base" data-price="197" data-kind="monthly" data-rank="1">
+        <header>
+          <h3>Base</h3>
+          <p class="bx-plan-for">Single-model strategies.</p>
+        </header>
+        <p class="bx-price"><span class="bx-amt">$197</span><span class="bx-per">a month</span></p>
+        <div class="bx-strats">
+          <p class="bx-list-h">In this tier</p>
+          <ul data-tier-list="base">
+            <li class="bx-srow"><p class="bx-tba">Single-model strategies<small>Named here at release</small></p></li>
+          </ul>
+        </div>
+        <ul class="bx-inc">
+          <li>Every strategy in this tier, as invite-only TradingView scripts</li>
+          <li>Each new strategy placed in this tier</li>
+          <li>Every update to every strategy in it</li>
+        </ul>
+        <button class="btn btn-ghost bx-choose" type="button" data-choose="base">Choose Base</button>
+      </article>
+
+      <article class="bx-plan" data-plan="select" data-name="Select" data-price="397" data-kind="monthly" data-rank="2">
+        <header>
+          <h3>Select</h3>
+          <p class="bx-plan-for">A further set of single-model strategies.</p>
+        </header>
+        <p class="bx-price"><span class="bx-amt">$397</span><span class="bx-per">a month</span></p>
+        <div class="bx-strats">
+          <p class="bx-list-h">In this tier</p>
+          <ul data-tier-list="select">
+            <li class="bx-srow"><p class="bx-tba">More in this tier<small>Named here at release</small></p></li>
+          </ul>
+          <p class="bx-plus">Plus everything in Base</p>
+        </div>
+        <ul class="bx-inc">
+          <li>Every strategy in this tier and in Base, as invite-only TradingView scripts</li>
+          <li>Each new strategy placed in this tier or below</li>
+          <li>Every update to every strategy in it</li>
+        </ul>
+        <button class="btn btn-ghost bx-choose" type="button" data-choose="select">Choose Select</button>
+      </article>
+
+      <article class="bx-plan" data-plan="supreme" data-name="Supreme" data-price="997" data-kind="monthly" data-rank="3">
+        <header>
+          <h3>Supreme</h3>
+          <p class="bx-plan-for">The combined strategies: several models in one.</p>
+        </header>
+        <p class="bx-price"><span class="bx-amt">$997</span><span class="bx-per">a month</span></p>
+        <div class="bx-strats">
+          <p class="bx-list-h">In this tier</p>
+          <ul data-tier-list="supreme">
+            <li class="bx-srow"><p class="bx-tba">More combined strategies<small>Named here at release</small></p></li>
+          </ul>
+          <p class="bx-plus">Plus everything in Select and Base</p>
+        </div>
+        <ul class="bx-inc">
+          <li>Every strategy AFT releases, in every tier, as invite-only TradingView scripts</li>
+          <li>Each new strategy as it is released</li>
+          <li>Every update to every strategy</li>
+        </ul>
+        <button class="btn btn-ghost bx-choose" type="button" data-choose="supreme">Choose Supreme</button>
+      </article>
+
+    </div>
+
+    <div class="bx-rule">
+      <h3>What sets the tiers apart</h3>
+      <p>The strategies in them. Supreme adds the combined strategies, which run several models in one. Select and Base hold the single-model strategies. Each strategy's own record, once it is published, is on this page to read before you choose. A tier is a grouping of strategies. It is not a forecast, and no tier is a promise of any result.</p>
+    </div>
+
+    <div class="bx-open-note">
+      <p class="bx-open-h">Checkout is not open yet</p>
+      <p>You can pick a tier now and it stays in the bar. When checkout opens, the button there takes you to it, and it is announced in the free Discord first.</p>
+      <p class="bx-open-cta"><a class="btn btn-primary" data-dest="discordInvite" data-ev="lead" data-name="bots-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Join the free Discord</a></p>
+    </div>
+
+    <p class="bx-fine">The bots are sold separately from the All Fluence membership. Billing and cancellation terms are posted here before checkout opens.</p>
+  </div>
+</section>
+
+<section id="strategies" class="bx-strategies">
+  <div class="wrap">
+    <div class="bx-head">
+      <h2>The strategies</h2>
+      <p class="bx-sub">The strategies named so far. More follow once each one has passed its own testing. No release dates are promised.</p>
+    </div>
+    <div class="bx-strat-grid" id="strat-grid"></div>
+    <noscript><p class="bx-sub">Turn on JavaScript to list the strategies and open each one's record.</p></noscript>
+  </div>
+</section>
+
+<section id="watch" class="bx-watch">
+  <div class="wrap">
+    <div class="bx-head">
+      <p class="bx-kicker">Watch it trade</p>
+      <h2>Continuum on the MNQ 1-minute chart: selected backtest trades</h2>
+    </div>
+    <figure class="bx-replay">
+      <video id="rv" controls playsinline muted preload="none" poster="/assets/video/continuum-backtest-poster-1080.jpg" width="1080" height="738" data-src="/assets/video/continuum-backtest-1080.mp4" data-src-small="/assets/video/continuum-backtest-720.mp4" aria-label="Backtest of the Continuum strategy on the MNQ 1-minute chart: selected trades, each from entry to exit with its result as the strategy prints it"></video>
+      <script>(function(){var v=document.getElementById('rv');if(!v)return;v.src=v.getAttribute(window.innerWidth<700?'data-src-small':'data-src');})();</script>
+      <figcaption>Continuum, an AFT strategy, on a TradingView backtest of the MNQ 1-minute chart. These are selected trades from the backtest, not all of its trades. Each is shown from entry to exit with its result as the strategy prints it, and the quiet stretches between trades are sped up. Backtest results are hypothetical and do not represent actual trading.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="method" class="bx-method">
+  <div class="wrap">
+    <div class="bx-head">
+      <h2>Every strategy is shown the same way</h2>
+      <p class="bx-sub">The same parts in the same order, so you can put any two side by side.</p>
+    </div>
+    <ol class="bx-six">
+      <li><h3>What it is</h3><p>The market, the timeframe, the session, and what it trades in one sentence.</p></li>
+      <li><h3>The label</h3><p>Every figure sits under the words Hypothetical backtest. A backtest is not a trading result.</p></li>
+      <li><h3>The four figures</h3><p>Net profit, win rate, profit factor and max drawdown, exactly as TradingView's Strategy Tester reports them.</p></li>
+      <li><h3>The pictures</h3><p>The equity curve day by day and every month on a grid. Losing months show as plainly as winning ones.</p></li>
+      <li><h3>The test</h3><p>The window, the starting balance, the order size, and the commission and slippage assumed.</p></li>
+      <li><h3>The proof</h3><p>The date the test was run, so you can see how current the record is.</p></li>
+    </ol>
+    <p class="bx-fine">A strategy with no published record says so. No number is estimated, and none is carried over from another strategy.</p>
+  </div>
+</section>
+
+<section id="how" class="bx-how">
+  <div class="wrap">
+    <div class="bx-head">
+      <h2>From checkout to your chart</h2>
+    </div>
+    <ol class="bx-steps">
+      <li><h3>Access on TradingView</h3><p>Each strategy is an invite-only script on TradingView. Access is granted to your TradingView username.</p></li>
+      <li><h3>Read it before you run it</h3><p>Every strategy's TradingView page explains what it trades, when it trades, how it exits and what the Strategy Tester assumes for costs.</p></li>
+      <li><h3>Paper first, then your call</h3><p>Run it in TradingView's Strategy Tester or on a paper account first. You choose the contract size, and you decide whether to connect it to a broker at all.</p></li>
+    </ol>
+    <p class="bx-guide" id="guide-line" hidden></p>
+    <div class="bx-faq">
+      <details>
+        <summary>Can I buy one strategy on its own?</summary>
+        <p>No. Strategies are sold as tiers, not one at a time. Each tier is a bundle, and each higher tier includes the ones below it.</p>
+      </details>
+      <details>
+        <summary>When does checkout open?</summary>
+        <p>Checkout is not open yet. When it opens, the button in the bar at the bottom of this page takes you to it, and it is announced in the free Discord first. No date is promised.</p>
+      </details>
+      <details>
+        <summary>Is this part of the All Fluence membership?</summary>
+        <p>No. The trading bots are sold separately from the membership.</p>
+      </details>
+      <details>
+        <summary>Does a strategy place trades at my broker?</summary>
+        <p>Each strategy can run on its own as a TradingView strategy, and it can also send its orders to your own futures broker through a third-party automation service you set up and control.</p>
+      </details>
+      <details>
+        <summary>Are the figures on this page real results?</summary>
+        <p>No. Each strategy's figures are labelled hypothetical backtest. A backtest is hypothetical and does not represent actual trading.</p>
+      </details>
+    </div>
+    <p class="bx-cta bx-cta-end"><a class="btn btn-ghost" href="/master-trader/" data-ev="content" data-name="bots-home">See the Master Traders</a></p>
+  </div>
+</section>
+
+</main>
+
+<footer class="site bx-foot">
+  <div class="wrap">
+    <p class="bx-foot-line">All Fluence Trading · AFT Trading Bots</p>
+    <p class="bx-foot-links"><a href="/">Front page</a> · <a href="/challenge/">AFT Challenge</a> · <a data-dest="discordInvite" data-ev="lead" data-name="bots-footer-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a> · <a href="/legal/">Disclaimer</a> · <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a></p>
     <p>For education only. Trading futures involves substantial risk of loss and is not suitable for every investor. You can lose more than your initial investment. Automated strategies can lose money, and an order routed to a broker can fail, be delayed or fill at a different price. Strategy Tester results are hypothetical, have inherent limitations and do not represent actual trading. All Fluence Trading provides educational software and training only and is not a registered investment adviser, broker-dealer or commodity trading advisor. Nothing here is financial advice.</p>
-  </footer>
+  </div>
+</footer>
+
+<!-- The selection bar: the buyer's one "cart" line. It stays on screen, under the open strategy too,
+     where it also carries the button that chooses the open strategy's tier. -->
+<div class="bx-bar" id="bar" role="region" aria-label="Your selection">
+  <div class="bx-bar-in">
+    <div class="bx-bar-sel" aria-live="polite">
+      <p class="bx-bar-plan" id="bar-plan">No tier chosen yet</p>
+      <p class="bx-bar-detail" id="bar-detail">Pick one above</p>
+    </div>
+    <p class="bx-bar-price" id="bar-price" hidden></p>
+    <div class="bx-bar-acts">
+      <button class="btn btn-ghost bx-bar-btn bx-bar-alt" type="button" id="bar-alt" hidden></button>
+      <a class="btn bx-btn-red bx-bar-btn" role="button" href="#plans" id="bar-btn">See tiers</a>
+    </div>
+  </div>
 </div>
+
+<!-- The open strategy: a bottom sheet on phones, a full view on desktop. Filled from data/<slug>.json.
+     First screen: the name, the chart, the four-figure bar and the monthly P&L. The rest scrolls below. -->
+<div class="bx-backdrop" id="backdrop" hidden></div>
+<aside class="bx-sheet" id="sheet" role="dialog" aria-labelledby="sheet-title" hidden>
+  <div class="bx-sheet-head">
+    <div class="bx-sheet-id">
+      <p class="bx-sheet-k" id="sheet-k"></p>
+      <h2 class="bx-wm" id="sheet-title" tabindex="-1"></h2>
+    </div>
+    <button class="bx-x" type="button" id="sheet-close" aria-label="Close and go back to the tiers"><span class="bx-x-t" aria-hidden="true">Back to tiers</span><span class="bx-x-i" aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="bx-sheet-body" id="sheet-body"></div>
+</aside>
+
+<script src="bots-config.js"></script>
+<script src="data/catalog.js"></script>
+<script src="bots.js"></script>
 </body>
 </html>

@@ -1,0 +1,19 @@
+{
+ "schema": "aft.strategy-performance/1",
+ "slug": "continuum",
+ "name": "Continuum",
+ "tier": "supreme",
+ "what": {
+  "market_line": "MNQ · Micro Nasdaq",
+  "sentence": "Several MNQ models run together in one strategy, one position at a time, through the full futures day.",
+  "timeframe": "1-minute chart"
+ },
+ "status": "no_figures",
+ "label": {
+  "kind": "none",
+  "text": "No figures published yet"
+ },
+ "source": {
+  "generated_by": "aft_strategy_export.py"
+ }
+}
