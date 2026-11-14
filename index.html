@@ -151,7 +151,7 @@
         </ul>
         <a class="btn hub-btn hub-btn-blue" href="/master-trader/" data-ev="content" data-name="hub-learn">See the course and indicators</a>
       </div>
-      <div class="half-vid" aria-hidden="true"><video class="art-vid" muted loop playsinline preload="none" poster="/assets/video/home-half-learn-poster.jpg" data-src="/assets/video/home-half-learn.mp4" aria-hidden="true" tabindex="-1" disablepictureinpicture></video></div>
+      <div class="half-vid" aria-hidden="true"><video class="art-vid" muted loop playsinline preload="none" poster="/assets/video/home-half-learn-poster.jpg" data-src="/assets/video/home-half-learn.mp4" data-src-narrow="/assets/video/home-half-learn-narrow.mp4" data-poster-narrow="/assets/video/home-half-learn-narrow-poster.jpg" aria-hidden="true" tabindex="-1" disablepictureinpicture></video></div>
     </section>
 
     <section class="half half-red" id="bots" aria-labelledby="bots-title">
@@ -210,6 +210,7 @@
 var vs=document.querySelectorAll('.art-vid');if(!vs.length)return;
 var c=navigator.connection||{};
 if(c.saveData)return;
+var nar=window.matchMedia&&window.matchMedia('(max-width:767px)').matches;vs.forEach(function(v){if(nar&&v.getAttribute('data-src-narrow')){v.setAttribute('data-src',v.getAttribute('data-src-narrow'));v.setAttribute('poster',v.getAttribute('data-poster-narrow'));}});
 function go(v){if(v.getAttribute('src'))return;v.src=v.getAttribute('data-src');var p=v.play();if(p&&p.catch)p.catch(function(){});}
 if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;if(e.isIntersecting){go(v);}else if(v.getAttribute('src')){v.pause();}if(e.isIntersecting&&v.paused&&v.getAttribute('src')){var p=v.play();if(p&&p.catch)p.catch(function(){});}});},{rootMargin:'400px'});vs.forEach(function(v){io.observe(v);});}
 })();
