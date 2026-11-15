@@ -240,6 +240,10 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
   .bx-cmp thead th{width:84px;line-height:1.3}
   .bx-cmp thead th span{writing-mode:horizontal-tb;transform:none}
 }
+/* Under 380 px the four tier columns give up 6 px each, so the longest line still keeps to two rows. */
+@media(max-width:379.98px){
+  .bx-cmp thead th{width:24px;line-height:24px}
+}
 .bots .bx-choose{width:100%}
 /* while a list is open the cards stop stretching to the tallest one (the page script holds each at its closed height) */
 .bx-plan-grid.has-open{align-items:start}
