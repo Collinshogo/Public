@@ -38,22 +38,20 @@
   // The lettering ladder (bots.css): the LEVEL is the strategy's tier, the PALETTE is the strategy's own
   // three colours. Both come from the catalog, so moving a strategy to another tier there changes its
   // lettering everywhere on the page with no style edit.
-  function glow(hex) {           // the middle colour at under half strength, for the soft glow behind a Supreme name
-    var h = String(hex).slice(1);
-    if (h.length === 3) h = h.replace(/./g, '$&$&');
-    if (h.length < 6) return '';
-    return 'rgba(' + parseInt(h.slice(0, 2), 16) + ',' + parseInt(h.slice(2, 4), 16) + ',' + parseInt(h.slice(4, 6), 16) + ',.45)';
-  }
   function palette(s) {          // [custom property, value] pairs for one name
     var g = s.lettering, out = [['--n', String(String(s.name).length)]];
     if (g && g.length === 3 && g.every(colour)) {
       out.push(['--c0', g[0]], ['--c1', g[1]], ['--c2', g[2]]);
-      if (glow(g[1])) out.push(['--glow', glow(g[1])]);
     }
     return out;
   }
   function lettering(s) {        // the attributes that letter a name: its level and its palette
     return ' data-lvl="' + esc(s.tier) + '" style="' + palette(s).map(function (p) { return p[0] + ':' + p[1]; }).join(';') + '"';
+  }
+  // The sheen on a Supreme name (bots.css): an empty element over the name that carries the name again as data,
+  // hidden from screen readers and from selection. It goes on a name only when the strategy's tier is supreme.
+  function sheen(s) {
+    return s.tier === 'supreme' ? '<span class="bx-sh" aria-hidden="true" data-t="' + esc(s.name) + '"></span>' : '';
   }
 
   /* ---------- the page's switches ---------- */
@@ -95,7 +93,7 @@
   });
   named.forEach(function (s) { names[s.slug] = s.name; tiers[s.slug] = s.tier; slugs.push(s.slug); });
 
-  function nameSpan(s) { return '<span class="bx-sname bx-wm"' + lettering(s) + '>' + esc(s.name) + '</span>'; }
+  function nameSpan(s) { return '<span class="bx-sname bx-wm"' + lettering(s) + '>' + esc(s.name) + sheen(s) + '</span>'; }
   function chip(s) { return s.chip ? '<span class="bx-chip">' + esc(s.chip) + '</span>' : ''; }
 
   // Tier cards: each named strategy is a row above its tier's unnamed line.
@@ -121,7 +119,7 @@
     stratGrid.innerHTML = named.map(function (s) {
       return '<a class="bx-strat" href="#' + s.slug + '" data-slug="' + s.slug + '" data-tier="' + esc(s.tier) + '">' +
         '<p class="bx-strat-k"><span>' + esc(s.market_line || '') + '</span><span class="bx-tier" data-lvl="' + esc(s.tier) + '">' + esc(plans[s.tier].name) + '</span></p>' +
-        '<h3><span class="bx-wm"' + lettering(s) + '>' + esc(s.name) + '</span></h3>' +
+        '<h3><span class="bx-wm"' + lettering(s) + '>' + esc(s.name) + sheen(s) + '</span></h3>' +
         '<p class="bx-strat-n">' + esc(s.sentence || '') + '</p>' +
         '<div class="bx-spark" data-spark="' + s.slug + '" aria-hidden="true"></div>' +
         '<p class="bx-strat-go"><span class="bx-status" data-status="' + s.slug + '"></span><span class="bx-open">Open strategy</span></p>' +
@@ -261,8 +259,11 @@
     sheetTitle.textContent = names[slug];
     var s = named.filter(function (x) { return x.slug === slug; })[0];
     sheetTitle.setAttribute('data-lvl', tiers[slug]);
-    ['--n', '--c0', '--c1', '--c2', '--glow'].forEach(function (k) { sheetTitle.style.removeProperty(k); });
-    if (s) palette(s).forEach(function (p) { sheetTitle.style.setProperty(p[0], p[1]); });
+    ['--n', '--c0', '--c1', '--c2'].forEach(function (k) { sheetTitle.style.removeProperty(k); });
+    if (s) {
+      palette(s).forEach(function (p) { sheetTitle.style.setProperty(p[0], p[1]); });
+      if (sheen(s)) sheetTitle.insertAdjacentHTML('beforeend', sheen(s));
+    }
     sheetK.textContent = plans[tiers[slug]].name + ' tier';
     sheetBody.innerHTML = '<p class="bx-note">Loading…</p>';
     render();

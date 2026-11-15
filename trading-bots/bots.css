@@ -30,9 +30,10 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
    catalog and its lettering follows; nothing here changes.
      base     one near-solid tone, sentence case, the page's heading weight
      select   the product's gradient, upper case, wide tracking, weight 800 (the lettering the page had before)
-     supreme  wide heavy letters, the palette doubled into bands under a light-only sheen, a wide soft glow behind
-              the letters (kept faint enough that the letters stay 4.5:1 against the glow itself), a mark before the name and a slow band of light across it
-   Every colour stop is at least 4.5:1 on --bg, --bg2 and --panel; the sheen and the band only add light. */
+     supreme  the same letters as select (same size, width, weight and spacing) with a polished finish: the product's
+              two stronger colours under a light-only polish, and a sheen that travels across the letters and back
+   Level is carried by the finish, never by size. Every colour stop is at least 4.5:1 on --bg, --bg2 and --panel;
+   the polish and the sheen only add light, so they only raise contrast. */
 .bx-wm{font-family:var(--display);font-weight:800;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;
   background-image:linear-gradient(90deg,var(--c0,#f2f6f3),var(--c1,#8ea0ff) 55%,var(--c2,#3ddc84));
   background-repeat:no-repeat;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
@@ -44,35 +45,48 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
   .bx-wm[data-lvl="base"]{background-image:linear-gradient(90deg,var(--c0,#f2f6f3) 30%,color-mix(in srgb,var(--c0,#f2f6f3) 62%,var(--c1,#8ea0ff)))}
 }
 
-.bx-wm[data-lvl="supreme"]{font-weight:900;font-stretch:125%;letter-spacing:.11em;
+/* Supreme, the polish: a band 1.2em tall centred on the line (the capitals sit between about 21% and 78% of it).
+   Light on the upper half of the letters, brightening to a crisp line at the middle, the bare colour under it,
+   then lifting again toward the foot: the way light sits on polished metal. White only, over the product's colours. */
+.bx-wm[data-lvl="supreme"]{position:relative;overflow:hidden;overflow:clip;
   background-image:
-    linear-gradient(100deg,rgba(255,255,255,0) 43%,rgba(255,255,255,.8) 50%,rgba(255,255,255,0) 57%),
-    linear-gradient(180deg,rgba(255,255,255,.5) 14%,rgba(255,255,255,.14) 46%,rgba(255,255,255,0) 51%,rgba(255,255,255,0) 72%,rgba(255,255,255,.26) 84%),
-    linear-gradient(90deg,var(--c0,#f2f6f3),var(--c1,#8ea0ff) 24%,var(--c0,#f2f6f3) 47%,var(--c1,#8ea0ff) 66%,var(--c2,#3ddc84));
-  background-size:260% 100%,100% 100%,100% 100%;
-  background-position:100% 0,0 0,0 0;
-  filter:drop-shadow(0 0 .6em var(--glow,rgba(142,160,255,.45)));
-  animation:bx-sweep 8s ease-in-out infinite}
-/* the mark before a Supreme name: a four-point glint in the product's colours; drawn, not text */
-.bx-wm[data-lvl="supreme"]::before{content:"";display:inline-block;width:.62em;height:.62em;margin-right:.4em;vertical-align:.02em;
-  background:linear-gradient(135deg,#fff 20%,var(--c1,#8ea0ff) 62%,var(--c2,#3ddc84));
-  clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%)}
-/* the band of light rests off the letters, then crosses them left to right; only background-position moves, so nothing shifts */
-@keyframes bx-sweep{0%,60%{background-position:100% 0,0 0,0 0}100%{background-position:0% 0,0 0,0 0}}
-@media(prefers-reduced-motion:reduce){.bx-wm[data-lvl="supreme"]{animation:none}}
+    linear-gradient(180deg,rgba(255,255,255,.28) 20%,rgba(255,255,255,.55) 43%,rgba(255,255,255,.82) 50%,rgba(255,255,255,0) 50.5%,rgba(255,255,255,0) 63%,rgba(255,255,255,.4) 80%),
+    linear-gradient(90deg,var(--c1,#8ea0ff),var(--c2,#3ddc84));
+  background-size:100% 1.2em,100% 100%;
+  background-position:0 50%,0 0}
+/* Supreme, the sheen: a soft slanted band of light that travels across the letters and back again, without end.
+   .bx-sh is an empty element over the name, hidden from screen readers; its ::before repeats the name (from data-t)
+   in white, and a mask shows a band of it. The band slides one way while the lit letters
+   slide the other by the same amount, so the letters stay exactly on the name and only the light appears to move.
+   Only transform is animated: no layout, nothing shifts. Without overflow:clip there is no sheen, only the polish. */
+.bx-sh{display:none}
+@supports (overflow:clip){
+  .bx-wm[data-lvl="supreme"]>.bx-sh{display:block;position:absolute;inset:0;pointer-events:none;-webkit-user-select:none;user-select:none;
+    -webkit-mask:linear-gradient(105deg,rgba(0,0,0,0) 26%,#000 46%,#000 54%,rgba(0,0,0,0) 74%) 50% 0/2.8em 100% no-repeat;
+    mask:linear-gradient(105deg,rgba(0,0,0,0) 26%,#000 46%,#000 54%,rgba(0,0,0,0) 74%) 50% 0/2.8em 100% no-repeat;
+    transform:translateX(-18%);animation:bx-sheen 3.4s ease-in-out infinite alternate}
+  .bx-wm[data-lvl="supreme"]>.bx-sh::before{content:attr(data-t);position:absolute;inset:0;
+    color:#fff;-webkit-text-fill-color:#fff;
+    transform:translateX(18%);animation:bx-sheen-hold 3.4s ease-in-out infinite alternate}
+}
+@keyframes bx-sheen{from{transform:translateX(-50%)}to{transform:translateX(50%)}}
+@keyframes bx-sheen-hold{from{transform:translateX(50%)}to{transform:translateX(-50%)}}
+/* reduced motion: the sheen stops and rests as one still highlight on the polished letters */
+@media(prefers-reduced-motion:reduce){.bx-wm[data-lvl="supreme"]>.bx-sh,.bx-wm[data-lvl="supreme"]>.bx-sh::before{animation:none}}
 
 @supports not ((-webkit-background-clip:text) or (background-clip:text)){
-  .bx-wm,.bx-wm[data-lvl]{background-image:none;color:var(--bright);-webkit-text-fill-color:currentColor;animation:none}
+  .bx-wm,.bx-wm[data-lvl]{background-image:none;color:var(--bright);-webkit-text-fill-color:currentColor}
+  .bx-wm>.bx-sh{display:none}
 }
 @media(forced-colors:active){
-  .bx-wm,.bx-wm[data-lvl]{background-image:none;color:CanvasText;-webkit-text-fill-color:CanvasText;filter:none;animation:none}
-  .bx-wm[data-lvl="supreme"]::before{background:CanvasText}
+  .bx-wm,.bx-wm[data-lvl]{background-image:none;color:CanvasText;-webkit-text-fill-color:CanvasText}
+  .bx-wm>.bx-sh{display:none}
 }
 
 /* the tier titles and their cards follow the same ladder; each tier has its own palette */
 .bx-tname[data-lvl="base"]{--c0:#ffffff;--c1:#ffffff;--c2:#ffffff}
 .bx-tname[data-lvl="select"]{--c0:#f4f7ff;--c1:#b9c6ff;--c2:#7f9cff}
-.bx-tname[data-lvl="supreme"]{--c0:#fff7df;--c1:#f7c948;--c2:#ff9d47;--glow:rgba(247,201,72,.45)}
+.bx-tname[data-lvl="supreme"]{--c0:#fff7df;--c1:#f7c948;--c2:#ff9d47}
 
 /* buttons */
 .bots .bx-btn-red{background:var(--red-btn);border-color:var(--red-edge);color:#fff}
@@ -101,15 +115,14 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bx-plan-grid{display:grid;gap:16px}
 .bx-plan{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px 20px;display:flex;flex-direction:column;gap:18px;min-width:0;transition:border-color .15s,box-shadow .15s}
 .bx-plan[data-plan="select"]{border-color:#39415f;background:linear-gradient(180deg,rgba(127,156,255,.06),rgba(127,156,255,0) 150px),var(--panel)}
-.bx-plan[data-plan="supreme"]{border-color:transparent;box-shadow:0 24px 64px -36px rgba(247,201,72,.6);
-  background:linear-gradient(180deg,rgba(247,201,72,.075),rgba(247,201,72,0) 170px) padding-box,
+.bx-plan[data-plan="supreme"]{border-color:transparent;box-shadow:0 20px 48px -38px rgba(247,201,72,.32);
+  background:linear-gradient(180deg,rgba(247,201,72,.04),rgba(247,201,72,0) 140px) padding-box,
     linear-gradient(var(--panel),var(--panel)) padding-box,
     linear-gradient(165deg,#f7c948,rgba(247,201,72,.3) 34%,var(--line2) 68%,rgba(255,157,71,.6)) border-box}
 .bx-plan.is-chosen,.bx-plan[data-plan].is-chosen{border-color:var(--red-edge);box-shadow:0 0 0 1px var(--red-edge) inset,0 14px 44px -20px rgba(225,25,30,.6)}
 /* one line height for all three titles, so the prices stay level across the cards */
 .bx-plan h3{width:fit-content;max-width:100%;font-size:27px;line-height:34px;margin:0}
-.bx-plan h3.bx-tname[data-lvl="select"]{font-size:25px}
-.bx-plan h3.bx-tname[data-lvl="supreme"]{font-size:31px}
+.bx-plan h3.bx-tname[data-lvl="select"],.bx-plan h3.bx-tname[data-lvl="supreme"]{font-size:25px}
 .bx-plan-for{margin:6px 0 0;color:var(--dim);font-size:16px}
 .bx-price{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:0}
 .bx-amt{font-family:var(--display);font-size:44px;font-weight:700;color:var(--bright);letter-spacing:-.03em;line-height:1}
@@ -123,15 +136,11 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 /* --n is the name's letter count (set by the page script): a long name is set smaller instead of running out of its row */
 .bx-sname.bx-wm{font-size:17px;font-size:min(17px,calc((100cqw - 150px)/(var(--n,9)*.84)));line-height:1.2}
 .bx-sname.bx-wm[data-lvl="base"]{font-size:17.5px;font-size:min(17.5px,calc((100cqw - 150px)/(var(--n,9)*.6)))}
-/* a Supreme row is taller: the name has a line to itself, its market chip and "See it" sit under it */
-.bots .bx-srow[data-lvl="supreme"] .bx-slink{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:7px 10px;padding-top:13px;padding-bottom:12px}
-.bx-srow[data-lvl="supreme"] .bx-see{justify-self:end}
-.bx-srow[data-lvl="supreme"] .bx-sname.bx-wm{grid-column:1/-1;justify-self:start;font-size:21px;font-size:min(21px,calc((100cqw - 30px)/(var(--n,9)*1.06 + 1.1)))}
-/* a narrow tier card (three across on a small laptop, a 360px phone): a Select name takes its own line at full size instead of shrinking */
+/* a narrow tier card (three across on a small laptop, a 360px phone): a Select or Supreme name takes its own line at full size instead of shrinking */
 @container (max-width:299.98px){
-  .bots .bx-srow[data-lvl="select"] .bx-slink{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 10px}
-  .bx-srow[data-lvl="select"] .bx-see{justify-self:end}
-  .bx-srow[data-lvl="select"] .bx-sname.bx-wm{grid-column:1/-1;justify-self:start;font-size:17px;font-size:min(17px,calc((100cqw - 30px)/(var(--n,9)*.84)))}
+  .bots .bx-srow:is([data-lvl="select"],[data-lvl="supreme"]) .bx-slink{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 10px}
+  .bx-srow:is([data-lvl="select"],[data-lvl="supreme"]) .bx-see{justify-self:end}
+  .bx-srow:is([data-lvl="select"],[data-lvl="supreme"]) .bx-sname.bx-wm{grid-column:1/-1;justify-self:start;font-size:17px;font-size:min(17px,calc((100cqw - 30px)/(var(--n,9)*.84)))}
 }
 .bots .bx-slink:hover{text-decoration:none;background:rgba(255,255,255,.045)}
 .bx-tba{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;min-height:52px;box-sizing:border-box;margin:0;padding:8px 14px;color:var(--dim);font-size:15.5px;font-weight:500;line-height:1.3}
@@ -171,7 +180,7 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bx-strat-k{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px;font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--red-soft)}
 .bx-tier{flex:none;font-size:11.5px;letter-spacing:.06em;color:var(--bright);border:1px solid var(--line2);border-radius:999px;padding:1px 9px}
 .bx-tier[data-lvl="select"]{color:#d5dcff;border-color:#55629a}
-.bx-tier[data-lvl="supreme"]{color:#ffe08a;border-color:rgba(247,201,72,.7);box-shadow:0 0 14px -5px rgba(247,201,72,.9)}
+.bx-tier[data-lvl="supreme"]{color:#ffe08a;border-color:rgba(247,201,72,.7)}
 .bots .bx-strat[data-tier="select"]{border-color:#39415f}
 .bots .bx-strat[data-tier="supreme"]{border-color:rgba(247,201,72,.34)}
 .bots .bx-strat[data-tier]:hover{border-color:var(--red-edge)}
@@ -179,7 +188,6 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bx-strat h3{font-size:27px;margin:0 0 8px;display:flex;align-items:center;height:34px;container-type:inline-size}
 .bx-strat h3 .bx-wm{font-size:25px;font-size:min(25px,calc(100cqw/(var(--n,9)*.84)));line-height:1.15}
 .bx-strat h3 .bx-wm[data-lvl="base"]{font-size:26px;font-size:min(26px,calc(100cqw/(var(--n,9)*.6)))}
-.bx-strat h3 .bx-wm[data-lvl="supreme"]{font-size:30px;font-size:min(30px,calc(100cqw/(var(--n,9)*1.06 + 1.1)))}
 .bx-strat-n{color:var(--dim);font-size:16px;margin:0 0 18px}
 .bx-spark{position:relative;height:68px;margin:auto 0 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg2);overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--faint);font-size:13.5px}
 .bx-spark svg{position:absolute;inset:0;width:100%;height:100%}
@@ -245,11 +253,9 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bx-sheet-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px var(--gut);border-bottom:1px solid var(--line)}
 .bx-sheet-id{flex:1 1 auto;min-width:0;container-type:inline-size}
 .bx-sheet-k{margin:0 0 5px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--red-soft);line-height:1.3}
-/* the name's line keeps one height at every level (30px here, 44px from 900px), so a larger Supreme name
-   never moves the chart, the figures or the months under it */
+/* the name's line keeps one height at every level (29.7px here, 44px from 900px); Select and Supreme share one size */
 .bx-sheet h2{width:fit-content;max-width:100%;font-size:27px;font-size:min(27px,calc(100cqw/(var(--n,9)*.84)));line-height:29.7px;margin:0;outline:0}
 .bx-sheet h2[data-lvl="base"]{font-size:28px;font-size:min(28px,calc(100cqw/(var(--n,9)*.6)))}
-.bx-sheet h2[data-lvl="supreme"]{font-size:31px;font-size:min(31px,calc(100cqw/(var(--n,9)*1.06 + 1.1)))}
 .bx-x{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:44px;height:44px;padding:0 10px;border-radius:10px;border:1px solid var(--line2);background:transparent;color:var(--bright);cursor:pointer;font-family:var(--sans)}
 .bx-x:hover{border-color:var(--dim)}
 .bx-x-t{display:none;font-size:15.5px;font-weight:600}
@@ -262,7 +268,6 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
   .bx-sheet-k{font-size:12.5px;margin-bottom:7px}
   .bx-sheet h2{font-size:40px;font-size:min(40px,calc(100cqw/(var(--n,9)*.84)));line-height:44px}
   .bx-sheet h2[data-lvl="base"]{font-size:40px;font-size:min(40px,calc(100cqw/(var(--n,9)*.6)))}
-  .bx-sheet h2[data-lvl="supreme"]{font-size:48px;font-size:min(48px,calc(100cqw/(var(--n,9)*1.06 + 1.1)))}
   .bx-x{padding:0 14px 0 16px}
   .bx-x-t{display:inline}
   .bx-sheet-body{padding-top:16px;padding-bottom:28px}
