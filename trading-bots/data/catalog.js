@@ -1,6 +1,8 @@
 // AFT Trading Bots: which strategies the page names, and the tier each one is in.
 // One entry per strategy. named: true puts the name on the page; named: false (or no entry) keeps it
 // under its tier's unnamed line ("Named here at release"). tier is base, select or supreme.
+// tier also sets how the name is lettered (the ladder in bots.css): base is plain, select is the gradient,
+// supreme is the most striking. lettering is the strategy's own three colours, used at every level.
 // Each named strategy also needs its data file beside this one: data/<slug>.json, written by the importer
 // (aft_strategy_export.py). Nothing else on the page has to change to name a strategy or move it to another tier.
 window.AFT_BOTS_CATALOG = {
