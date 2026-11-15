@@ -56,10 +56,12 @@
   function lettering(s) {        // the attributes that letter a name: its level and its palette
     return ' data-lvl="' + finish(s.tier) + '" style="' + palette(s).map(function (p) { return p[0] + ':' + p[1]; }).join(';') + '"';
   }
-  // The sheen on a top-tier name (bots.css): an empty element over the name that carries the name again as data,
-  // hidden from screen readers and from selection. It goes on a name only when its tier is the top one.
+  // The sheen on a name (bots.css): an empty element over the name that carries the name again as data,
+  // hidden from screen readers and from selection. It goes on a name only when its tier's finish is lit:
+  // the top tier (sheen) and, with four or more tiers, the one under it (polished, a slower and fainter pass).
   function sheenSpan(text) { return '<span class="bx-sh" aria-hidden="true" data-t="' + esc(text) + '"></span>'; }
-  function sheen(s) { return finish(s.tier) === 'sheen' ? sheenSpan(s.name) : ''; }
+  function lit(fin) { return fin === 'sheen' || fin === 'polished'; }
+  function sheen(s) { return lit(finish(s.tier)) ? sheenSpan(s.name) : ''; }
 
   /* ---------- the page's switches ---------- */
   // The one-time plan: built here and added to the page only when the config switches it on,
@@ -94,9 +96,10 @@
       kind: el.dataset.kind, rank: Number(el.dataset.rank), el: el };
   });
 
-  // The ladder: the monthly tiers, lowest first. A tier's place on it is its finish (bots.css): the lowest is plain,
-  // the top one is polished with the moving sheen, with four or more the one under the top is polished and still,
-  // and every tier between is the gradient. Add a tier card, take one away or change a rank and the finishes follow.
+  // The ladder: the monthly tiers, lowest first. A tier's place on it is its finish (bots.css), and each step up
+  // adds light: the lowest is plain, the top one is the mirror polish with the glow and the bright sheen, with four
+  // or more the one under the top is the satin polish with the slow sheen, and every tier between is the quiet
+  // gradient. Add a tier card, take one away or change a rank and the finishes follow.
   var ladder = Object.keys(plans).map(function (id) { return plans[id]; })
     .filter(function (p) { return p.kind === 'monthly'; }).sort(function (a, b) { return a.rank - b.rank; });
   var FIN = {};
@@ -107,8 +110,8 @@
     if (!t) return;
     var sh = $('.bx-sh', t);
     t.setAttribute('data-lvl', FIN[p.id]);
-    if (FIN[p.id] === 'sheen' && !sh) t.insertAdjacentHTML('beforeend', sheenSpan(p.name));
-    if (FIN[p.id] !== 'sheen' && sh) t.removeChild(sh);
+    if (lit(FIN[p.id]) && !sh) t.insertAdjacentHTML('beforeend', sheenSpan(p.name));
+    if (!lit(FIN[p.id]) && sh) t.removeChild(sh);
   });
   function finish(tier) { return FIN[tier] || 'plain'; }
   // What a chosen tier holds, for the bar: its own strategies and those of every tier under it.

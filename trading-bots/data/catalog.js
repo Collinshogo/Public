@@ -3,8 +3,8 @@
 // under its tier's unnamed line ("Named here at release"). tier is the data-plan of a tier card in index.html:
 // base, select, supreme or ultimate.
 // tier also sets how the name is lettered (the ladder in bots.css), by the tier's place among the tiers: the lowest
-// is plain, then the gradient, then polished and still, and the top tier polished with a moving sheen, all at the
-// same size. lettering is the strategy's own three colours, used at every level.
+// is plain, then the quiet gradient, then a satin polish with a slow sheen, and the top tier a mirror polish with a
+// glow and a bright sheen, all at the same size. lettering is the strategy's own three colours, used at every level.
 // Each named strategy also needs its data file beside this one: data/<slug>.json, written by the importer
 // (aft_strategy_export.py). Nothing else on the page has to change to name a strategy or move it to another tier.
 window.AFT_BOTS_CATALOG = {

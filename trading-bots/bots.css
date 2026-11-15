@@ -31,13 +31,14 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
    (--c0 near-white, --c1 middle, --c2 end), from data/catalog.js; a tier title has its finish's palette.
    Move a product to another tier in the catalog, or add a tier card, and the lettering follows; nothing here changes.
      plain     one near-solid tone, sentence case, the page's heading weight
-     gradient  the product's gradient, upper case, wide tracking, weight 800
-     polished  the same letters as gradient (same size, width, weight and spacing) with a polished finish: the
-               product's two stronger colours under a light-only satin polish. Nothing moves.
-     sheen     the same letters under a mirror polish, and a sheen that travels across them and back.
-               The only finish that moves.
-   Level is carried by the finish, never by size. Every colour stop is at least 4.5:1 on --bg, --bg2 and --panel;
-   the polish and the sheen only add light, so they only raise contrast.
+     gradient  the quiet step: upper case, wide tracking, weight 800, the product's gradient under a matte white
+               veil, so the colours are soft. No polish, no light, nothing moves.
+     polished  the same letters (same size, width, weight and spacing) in the product's two stronger colours at
+               full strength under a satin polish, and a faint sheen that crosses them slowly.
+     sheen     the same letters under a mirror polish with a crisp line of light, a soft glow in the product's
+               own colour, and a bright sheen that crosses twice as fast. The top tier alone.
+   Level is carried by the finish, never by size: each step up adds light. Every colour stop is at least 4.5:1
+   on --bg, --bg2 and --panel; the veil, the polish and the sheen only add light, so they only raise contrast.
    A name that has to be cut (a tier row with no room left) ends in an ellipsis; the lit copy is cut the same way. */
 .bx-wm{font-family:var(--display);font-weight:800;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;
   background-image:linear-gradient(90deg,var(--c0,#f2f6f3),var(--c1,#8ea0ff) 55%,var(--c2,#3ddc84));
@@ -50,12 +51,16 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
   .bx-wm[data-lvl="plain"]{background-image:linear-gradient(90deg,var(--c0,#f2f6f3) 30%,color-mix(in srgb,var(--c0,#f2f6f3) 62%,var(--c1,#8ea0ff)))}
 }
 
+/* The veil (gradient, the quiet step): one even layer of white over the product's gradient. It softens the colours
+   to a matte pastel; no light falls on the letters. */
+.bx-wm[data-lvl="gradient"]{background-image:
+    linear-gradient(rgba(255,255,255,.4),rgba(255,255,255,.4)),
+    linear-gradient(90deg,var(--c0,#f2f6f3),var(--c1,#8ea0ff) 55%,var(--c2,#3ddc84))}
 /* The polish (polished and sheen): a band 1.2em tall centred on the line (the capitals sit between about 21% and 78% of it).
-   White only, over the product's colours. Two strengths, so the two top finishes differ in a still picture too:
+   White only, over the product's colours at full strength. Two strengths, so the two top finishes differ in a still picture too:
      sheen     a mirror polish: light on the upper half of the letters, brightening to a crisp line at the middle,
                the bare colour under it, then lifting again toward the foot
-     polished  a satin polish, the quieter one: the light falls off evenly from the top of the letters to the foot,
-               with no bright line */
+     polished  a satin polish: the light falls off evenly from the top of the letters to the foot, with no bright line */
 .bx-wm[data-lvl="polished"],.bx-wm[data-lvl="sheen"]{position:relative;overflow:hidden;overflow:clip;
   background-image:
     linear-gradient(180deg,rgba(255,255,255,.28) 20%,rgba(255,255,255,.55) 43%,rgba(255,255,255,.82) 50%,rgba(255,255,255,0) 50.5%,rgba(255,255,255,0) 63%,rgba(255,255,255,.4) 80%),
@@ -63,27 +68,37 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
   background-size:100% 1.2em,100% 100%;
   background-position:0 50%,0 0}
 .bx-wm[data-lvl="polished"]{background-image:
-    linear-gradient(180deg,rgba(255,255,255,.66) 22%,rgba(255,255,255,.32) 48%,rgba(255,255,255,0) 77%),
+    linear-gradient(180deg,rgba(255,255,255,.7) 22%,rgba(255,255,255,.34) 48%,rgba(255,255,255,0) 77%),
     linear-gradient(90deg,var(--c1,#8ea0ff),var(--c2,#3ddc84))}
-/* The sheen (the top tier only): a soft slanted band of light that travels across the letters and back again, without end.
+/* The glow (sheen only): a soft light in the name's own middle colour, behind the letters. A filter, so it is drawn
+   outside the clipped box and nothing is laid out for it. */
+.bx-wm[data-lvl="sheen"]{filter:drop-shadow(0 0 .42em rgba(255,255,255,.2))}
+@supports (color:color-mix(in srgb,red,blue)){
+  .bx-wm[data-lvl="sheen"]{filter:drop-shadow(0 0 .42em color-mix(in srgb,var(--c1,#8ea0ff) 46%,transparent))}
+}
+/* The sheen (the two top finishes): a soft slanted band of light that travels across the letters and back again, without end.
    .bx-sh is an empty element over the name, hidden from screen readers; its ::before repeats the name (from data-t)
    in white, and a mask shows a band of it. The band slides one way while the lit letters
    slide the other by the same amount, so the letters stay exactly on the name and only the light appears to move.
-   Only transform is animated: no layout, nothing shifts. Without overflow:clip there is no sheen, only the polish. */
+   Only transform is animated: no layout, nothing shifts. Without overflow:clip there is no sheen, only the polish.
+   The top finish crosses in 3.4s at full strength. The one under it travels the same path in 6.8s, a narrower band
+   at under half the strength: it never moves more than the top one. */
 .bx-sh{display:none}
 @supports (overflow:clip){
-  .bx-wm[data-lvl="sheen"]>.bx-sh{display:block;position:absolute;inset:0;pointer-events:none;-webkit-user-select:none;user-select:none;
+  .bx-wm[data-lvl="polished"]>.bx-sh,.bx-wm[data-lvl="sheen"]>.bx-sh{display:block;position:absolute;inset:0;pointer-events:none;-webkit-user-select:none;user-select:none;
     -webkit-mask:linear-gradient(105deg,rgba(0,0,0,0) 26%,#000 46%,#000 54%,rgba(0,0,0,0) 74%) 50% 0/2.8em 100% no-repeat;
     mask:linear-gradient(105deg,rgba(0,0,0,0) 26%,#000 46%,#000 54%,rgba(0,0,0,0) 74%) 50% 0/2.8em 100% no-repeat;
     transform:translateX(-18%);animation:bx-sheen 3.4s ease-in-out infinite alternate}
-  .bx-wm[data-lvl="sheen"]>.bx-sh::before{content:attr(data-t);position:absolute;inset:0;overflow:hidden;text-overflow:ellipsis;
+  .bx-wm[data-lvl="polished"]>.bx-sh::before,.bx-wm[data-lvl="sheen"]>.bx-sh::before{content:attr(data-t);position:absolute;inset:0;overflow:hidden;text-overflow:ellipsis;
     color:#fff;-webkit-text-fill-color:#fff;
     transform:translateX(18%);animation:bx-sheen-hold 3.4s ease-in-out infinite alternate}
+  .bx-wm[data-lvl="polished"]>.bx-sh{opacity:.45;-webkit-mask-size:2em 100%;mask-size:2em 100%;animation-duration:6.8s}
+  .bx-wm[data-lvl="polished"]>.bx-sh::before{animation-duration:6.8s}
 }
 @keyframes bx-sheen{from{transform:translateX(-50%)}to{transform:translateX(50%)}}
 @keyframes bx-sheen-hold{from{transform:translateX(50%)}to{transform:translateX(-50%)}}
 /* reduced motion: the sheen stops and rests as one still highlight on the polished letters */
-@media(prefers-reduced-motion:reduce){.bx-wm[data-lvl="sheen"]>.bx-sh,.bx-wm[data-lvl="sheen"]>.bx-sh::before{animation:none}}
+@media(prefers-reduced-motion:reduce){.bx-wm[data-lvl]>.bx-sh,.bx-wm[data-lvl]>.bx-sh::before{animation:none}}
 
 @supports not ((-webkit-background-clip:text) or (background-clip:text)){
   .bx-wm,.bx-wm[data-lvl]{background-image:none;color:var(--bright);-webkit-text-fill-color:currentColor}
@@ -95,11 +110,11 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 }
 
 /* the tier titles and their cards follow the same ladder; each finish has its own palette:
-   white, then blue, then platinum (a cool, quiet metal), and gold for the top tier alone */
+   white, then a matte slate, then bright polished silver, and gold for the top tier alone */
 .bx-tname[data-lvl="plain"]{--c0:#ffffff;--c1:#ffffff;--c2:#ffffff}
-.bx-tname[data-lvl="gradient"]{--c0:#f4f7ff;--c1:#b9c6ff;--c2:#7f9cff}
-.bx-tname[data-lvl="polished"]{--c0:#f3f6fa;--c1:#c6cfdd;--c2:#93a1b8}
-.bx-tname[data-lvl="sheen"]{--c0:#fff7df;--c1:#f7c948;--c2:#ff9d47}
+.bx-tname[data-lvl="gradient"]{--c0:#9ba7c3;--c1:#7687ad;--c2:#536799}
+.bx-tname[data-lvl="polished"]{--c0:#ffffff;--c1:#f2f5fa;--c2:#c9d3e4;filter:drop-shadow(0 0 .5em rgba(214,224,242,.2))}
+.bx-tname[data-lvl="sheen"]{--c0:#fff7df;--c1:#f7c948;--c2:#ffa24f;filter:drop-shadow(0 0 .5em rgba(247,201,72,.22))}
 
 /* buttons */
 .bots .bx-btn-red{background:var(--red-btn);border-color:var(--red-edge);color:#fff}
@@ -127,15 +142,23 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 /* plans */
 .bx-plan-grid{display:grid;gap:16px}
 .bx-plan{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px 20px;display:flex;flex-direction:column;gap:18px;min-width:0;transition:border-color .15s,box-shadow .15s}
-.bx-plan[data-lvl="gradient"]{border-color:#39415f;background:linear-gradient(180deg,rgba(127,156,255,.06),rgba(127,156,255,0) 150px),var(--panel)}
+/* The card ladder, each step adding light and never size:
+     plain     the page's own panel and hairline
+     gradient  the same flat panel with a slate edge. Not lit.
+     polished  a bright silver edge all the way round, light falling in from the top, a soft silver glow
+     sheen     a gold edge with a second gold line inside it, gold light from the top corner, the strongest glow */
+.bx-plan[data-lvl="gradient"]{border-color:#444d6c}
 .bx-plan[data-lvl="polished"]{border-color:transparent;
-  background:linear-gradient(180deg,rgba(198,207,221,.05),rgba(198,207,221,0) 140px) padding-box,
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 0 26px -10px rgba(206,218,242,.34),0 22px 52px -30px rgba(190,206,238,.5);
+  background:linear-gradient(180deg,rgba(214,224,242,.1),rgba(214,224,242,0) 170px) padding-box,
     linear-gradient(var(--panel),var(--panel)) padding-box,
-    linear-gradient(165deg,rgba(214,222,236,.8),rgba(160,172,196,.26) 34%,var(--line2) 68%,rgba(160,172,196,.5)) border-box}
-.bx-plan[data-lvl="sheen"]{border-color:transparent;box-shadow:0 20px 48px -38px rgba(247,201,72,.32);
-  background:linear-gradient(180deg,rgba(247,201,72,.04),rgba(247,201,72,0) 140px) padding-box,
+    linear-gradient(165deg,#f6f8fc,rgba(196,206,226,.62) 30%,rgba(150,162,190,.42) 62%,rgba(228,234,246,.9)) border-box}
+.bx-plan[data-lvl="sheen"]{border-color:transparent;
+  box-shadow:inset 0 0 0 1px rgba(247,201,72,.24),inset 0 1px 0 rgba(255,236,170,.34),0 0 38px -8px rgba(247,201,72,.46),0 28px 66px -28px rgba(255,157,71,.62);
+  background:radial-gradient(130% 240px at 0 0,rgba(247,201,72,.15),rgba(247,201,72,0) 70%) padding-box,
+    linear-gradient(180deg,rgba(247,201,72,.07),rgba(247,201,72,0) 260px) padding-box,
     linear-gradient(var(--panel),var(--panel)) padding-box,
-    linear-gradient(165deg,#f7c948,rgba(247,201,72,.3) 34%,var(--line2) 68%,rgba(255,157,71,.6)) border-box}
+    linear-gradient(165deg,#ffe58a,#f7c948 24%,rgba(247,201,72,.6) 50%,rgba(255,157,71,.66) 74%,#ffbe5c) border-box}
 .bx-plan.is-chosen,.bx-plan[data-plan].is-chosen{border-color:var(--red-edge);box-shadow:0 0 0 1px var(--red-edge) inset,0 14px 44px -20px rgba(225,25,30,.6)}
 /* one line height for every title, so the prices stay level across the cards */
 .bx-plan h3{width:fit-content;max-width:100%;font-size:27px;line-height:34px;margin:0}
@@ -228,12 +251,12 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bots .bx-strat:hover{text-decoration:none;border-color:var(--red-edge)}
 .bx-strat-k{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px;font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--red-soft)}
 .bx-tier{flex:none;font-size:11.5px;letter-spacing:.06em;color:var(--bright);border:1px solid var(--line2);border-radius:999px;padding:1px 9px}
-.bx-tier[data-lvl="gradient"]{color:#d5dcff;border-color:#55629a}
-.bx-tier[data-lvl="polished"]{color:#e3e8f1;border-color:rgba(176,188,208,.62)}
-.bx-tier[data-lvl="sheen"]{color:#ffe08a;border-color:rgba(247,201,72,.7)}
-.bots .bx-strat[data-lvl="gradient"]{border-color:#39415f}
-.bots .bx-strat[data-lvl="polished"]{border-color:rgba(176,188,208,.3)}
-.bots .bx-strat[data-lvl="sheen"]{border-color:rgba(247,201,72,.34)}
+.bx-tier[data-lvl="gradient"]{color:#c3cbe0;border-color:#4d5778}
+.bx-tier[data-lvl="polished"]{color:#f4f7fc;border-color:rgba(222,230,244,.82);background:rgba(214,224,242,.09);box-shadow:0 0 10px -3px rgba(206,218,242,.55)}
+.bx-tier[data-lvl="sheen"]{color:#ffe08a;border-color:#f7c948;background:rgba(247,201,72,.13);box-shadow:0 0 12px -2px rgba(247,201,72,.7)}
+.bots .bx-strat[data-lvl="gradient"]{border-color:#3b4360}
+.bots .bx-strat[data-lvl="polished"]{border-color:rgba(214,224,242,.5);box-shadow:0 0 22px -12px rgba(206,218,242,.42)}
+.bots .bx-strat[data-lvl="sheen"]{border-color:rgba(247,201,72,.66);box-shadow:inset 0 1px 0 rgba(255,236,170,.2),0 0 28px -10px rgba(247,201,72,.5)}
 .bots .bx-strat[data-lvl]:hover{border-color:var(--red-edge)}
 /* one height for the name at every level, so the cards' text stays level */
 .bx-strat h3{font-size:27px;margin:0 0 8px;display:flex;align-items:center;height:34px;container-type:inline-size}
