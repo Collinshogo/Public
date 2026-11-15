@@ -1,8 +1,10 @@
 // AFT Trading Bots: which strategies the page names, and the tier each one is in.
 // One entry per strategy. named: true puts the name on the page; named: false (or no entry) keeps it
-// under its tier's unnamed line ("Named here at release"). tier is base, select or supreme.
-// tier also sets how the name is lettered (the ladder in bots.css): base is plain, select is the gradient,
-// supreme is polished with a moving sheen, at the same size. lettering is the strategy's own three colours, used at every level.
+// under its tier's unnamed line ("Named here at release"). tier is the data-plan of a tier card in index.html:
+// base, select, supreme or ultimate.
+// tier also sets how the name is lettered (the ladder in bots.css), by the tier's place among the tiers: the lowest
+// is plain, then the gradient, then polished and still, and the top tier polished with a moving sheen, all at the
+// same size. lettering is the strategy's own three colours, used at every level.
 // Each named strategy also needs its data file beside this one: data/<slug>.json, written by the importer
 // (aft_strategy_export.py). Nothing else on the page has to change to name a strategy or move it to another tier.
 window.AFT_BOTS_CATALOG = {
@@ -12,7 +14,7 @@ window.AFT_BOTS_CATALOG = {
       slug: "continuum",
       named: true,
       name: "Continuum",
-      tier: "supreme",
+      tier: "ultimate",
       chip: "MNQ",
       market_line: "MNQ · Micro Nasdaq",
       sentence: "Several MNQ models run together in one strategy, one position at a time, through the full futures day.",
@@ -22,7 +24,7 @@ window.AFT_BOTS_CATALOG = {
       slug: "midas",
       named: true,
       name: "Midas",
-      tier: "supreme",
+      tier: "ultimate",
       chip: "MGC",
       market_line: "MGC · Micro Gold",
       sentence: "Gold models for the Tokyo, London and New York sessions, combined in one strategy.",

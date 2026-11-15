@@ -6,6 +6,10 @@
    - Tiers and the selection bar: one choice, kept in localStorage. Tiers are bundles: each higher tier
      includes the ones below it (data-rank on each tier card). A tier with no checkout link yet shows
      "Opening soon" in the bar, and that button does nothing.
+   - A tier is defined once, by its card in index.html (name, rank, price, its lines) and its checkout key in
+     bots-config.js. Its look follows its place among the tiers, worked out here: the lettering of its title and
+     of its strategies' names, the card's finish, the tier pill, the bar and the open strategy's tier line.
+     A card with no data-price reads "Price to be set" wherever its price would stand.
    - A tier's list: one row per named strategy, each on one line. A list longer than SHOW rows shows SHOW
      and a "Show all <count>" button that opens the rest in place. While an opened list is on screen and its
      card's own Choose button is not, the bar offers that tier.
@@ -36,11 +40,12 @@
   var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   function day(iso) { var p = String(iso).split('-'); return MON[Number(p[1]) - 1] + ' ' + Number(p[2]) + ', ' + p[0]; }
   function month(ym) { var p = ym.split('-'); return MON[Number(p[1]) - 1] + ' ' + p[0]; }
-  function priceWords(p) { return '$' + p.price.toLocaleString('en-US') + (p.kind === 'lifetime' ? ' once' : ' a month'); }
+  var TBS = 'Price to be set';   // a tier whose card carries no data-price
+  function priceWords(p) { return p.price === null ? TBS : '$' + p.price.toLocaleString('en-US') + (p.kind === 'lifetime' ? ' once' : ' a month'); }
   function colour(c) { return /^#[0-9a-f]{3,8}$/i.test(String(c)); }
-  // The lettering ladder (bots.css): the LEVEL is the strategy's tier, the PALETTE is the strategy's own
-  // three colours. Both come from the catalog, so moving a strategy to another tier there changes its
-  // lettering everywhere on the page with no style edit.
+  // The lettering ladder (bots.css): the LEVEL is the finish of the strategy's tier (finish(), below), the
+  // PALETTE is the strategy's own three colours. The tier and the colours come from the catalog, so moving a
+  // strategy to another tier there changes its lettering everywhere on the page with no style edit.
   function palette(s) {          // [custom property, value] pairs for one name
     var g = s.lettering, out = [['--n', String(String(s.name).length)]];
     if (g && g.length === 3 && g.every(colour)) {
@@ -49,24 +54,24 @@
     return out;
   }
   function lettering(s) {        // the attributes that letter a name: its level and its palette
-    return ' data-lvl="' + esc(s.tier) + '" style="' + palette(s).map(function (p) { return p[0] + ':' + p[1]; }).join(';') + '"';
+    return ' data-lvl="' + finish(s.tier) + '" style="' + palette(s).map(function (p) { return p[0] + ':' + p[1]; }).join(';') + '"';
   }
-  // The sheen on a Supreme name (bots.css): an empty element over the name that carries the name again as data,
-  // hidden from screen readers and from selection. It goes on a name only when the strategy's tier is supreme.
-  function sheen(s) {
-    return s.tier === 'supreme' ? '<span class="bx-sh" aria-hidden="true" data-t="' + esc(s.name) + '"></span>' : '';
-  }
+  // The sheen on a top-tier name (bots.css): an empty element over the name that carries the name again as data,
+  // hidden from screen readers and from selection. It goes on a name only when its tier is the top one.
+  function sheenSpan(text) { return '<span class="bx-sh" aria-hidden="true" data-t="' + esc(text) + '"></span>'; }
+  function sheen(s) { return finish(s.tier) === 'sheen' ? sheenSpan(s.name) : ''; }
 
   /* ---------- the page's switches ---------- */
   // The one-time plan: built here and added to the page only when the config switches it on,
   // so with the switch off nothing about it is in the page at all.
   if (CFG.lifetime === true) {
     var grid = $('#plan-grid');
-    if (grid) {
+    var topCard = $$('#plan-grid .bx-plan[data-rank]').sort(function (a, b) { return Number(b.dataset.rank) - Number(a.dataset.rank); })[0];
+    if (grid && topCard) {     // it stands level with the top tier, whichever tier that is
       grid.insertAdjacentHTML('afterend',
-        '<article class="bx-plan bx-life" data-plan="lifetime" data-name="Lifetime" data-price="10000" data-kind="lifetime" data-rank="3">' +
+        '<article class="bx-plan bx-life" data-plan="lifetime" data-name="Lifetime" data-price="10000" data-kind="lifetime" data-rank="' + esc(topCard.dataset.rank) + '">' +
         '<div class="bx-life-main"><header><h3>Lifetime</h3>' +
-        '<p class="bx-plan-for">Pay once. Everything in Supreme, with no monthly payment.</p></header>' +
+        '<p class="bx-plan-for">Pay once. Everything in ' + esc(topCard.dataset.name) + ', with no monthly payment.</p></header>' +
         '<ul class="bx-life-strats" data-life-list aria-label="Strategies named so far"></ul></div>' +
         '<div class="bx-life-buy"><p class="bx-price"><span class="bx-amt">$10,000</span><span class="bx-per">once</span></p>' +
         '<button class="btn btn-ghost bx-choose" type="button" data-choose="lifetime">Choose Lifetime</button></div>' +
@@ -85,8 +90,35 @@
 
   var plans = {};
   $$('.bx-plan[data-plan]').forEach(function (el) {
-    plans[el.dataset.plan] = { id: el.dataset.plan, name: el.dataset.name, price: Number(el.dataset.price), kind: el.dataset.kind, rank: Number(el.dataset.rank), el: el };
+    plans[el.dataset.plan] = { id: el.dataset.plan, name: el.dataset.name, price: el.hasAttribute('data-price') ? Number(el.dataset.price) : null,
+      kind: el.dataset.kind, rank: Number(el.dataset.rank), el: el };
   });
+
+  // The ladder: the monthly tiers, lowest first. A tier's place on it is its finish (bots.css): the lowest is plain,
+  // the top one is polished with the moving sheen, with four or more the one under the top is polished and still,
+  // and every tier between is the gradient. Add a tier card, take one away or change a rank and the finishes follow.
+  var ladder = Object.keys(plans).map(function (id) { return plans[id]; })
+    .filter(function (p) { return p.kind === 'monthly'; }).sort(function (a, b) { return a.rank - b.rank; });
+  var FIN = {};
+  ladder.forEach(function (p, i) {
+    var n = ladder.length, t = $('.bx-tname', p.el);
+    FIN[p.id] = i === 0 ? 'plain' : (i === n - 1 ? 'sheen' : (n >= 4 && i === n - 2 ? 'polished' : 'gradient'));
+    p.el.setAttribute('data-lvl', FIN[p.id]);
+    if (!t) return;
+    var sh = $('.bx-sh', t);
+    t.setAttribute('data-lvl', FIN[p.id]);
+    if (FIN[p.id] === 'sheen' && !sh) t.insertAdjacentHTML('beforeend', sheenSpan(p.name));
+    if (FIN[p.id] !== 'sheen' && sh) t.removeChild(sh);
+  });
+  function finish(tier) { return FIN[tier] || 'plain'; }
+  // What a chosen tier holds, for the bar: its own strategies and those of every tier under it.
+  function holds(p) {
+    if (p.kind === 'lifetime') return 'Every strategy, paid once';
+    if (ladder.length > 1 && p === ladder[ladder.length - 1]) return 'Every strategy';
+    var ns = ladder.filter(function (q) { return q.rank <= p.rank; }).map(function (q) { return q.name; }).reverse();
+    if (ns.length > 2) return ns.slice(0, -1).join(', ') + ' and ' + ns[ns.length - 1];   // three names fill the bar's line on a phone
+    return ns.join(' and ') + ' strategies';
+  }
 
   /* ---------- the named strategies, from the catalog ---------- */
   var names = {}, tiers = {}, slugs = [];
@@ -108,7 +140,7 @@
     if (!ul) return;
     var li = document.createElement('li');
     li.className = 'bx-srow';
-    li.setAttribute('data-lvl', s.tier);
+    li.setAttribute('data-lvl', finish(s.tier));
     li.innerHTML = '<a class="bx-slink" href="#' + s.slug + '">' + nameSpan(s) + GAP + chip(s) + GAP2 +
       '<span class="bx-see"><span>See it</span></span><span class="bx-arw" aria-hidden="true">›</span></a>';
     var last = ul.lastElementChild;
@@ -144,7 +176,8 @@
     }
   }
   $$('[data-tier-list]').forEach(function (ul) {
-    var rows = namedRows(ul);
+    var rows = namedRows(ul), head = ul.previousElementSibling;
+    if (!ul.children.length && head && head.classList.contains('bx-list-h')) head.hidden = true;   // nothing to list yet
     if (rows.length <= SHOW) return;
     if (!ul.id) ul.id = 'tier-list-' + ul.dataset.tierList;
     var btn = document.createElement('button');
@@ -177,8 +210,8 @@
   var stratGrid = $('#strat-grid');
   if (stratGrid) {
     stratGrid.innerHTML = named.map(function (s) {
-      return '<a class="bx-strat" href="#' + s.slug + '" data-slug="' + s.slug + '" data-tier="' + esc(s.tier) + '">' +
-        '<p class="bx-strat-k"><span>' + esc(s.market_line || '') + '</span><span class="bx-tier" data-lvl="' + esc(s.tier) + '">' + esc(plans[s.tier].name) + '</span></p>' +
+      return '<a class="bx-strat" href="#' + s.slug + '" data-slug="' + s.slug + '" data-tier="' + esc(s.tier) + '" data-lvl="' + finish(s.tier) + '">' +
+        '<p class="bx-strat-k"><span>' + esc(s.market_line || '') + '</span><span class="bx-tier" data-lvl="' + finish(s.tier) + '">' + esc(plans[s.tier].name) + '</span></p>' +
         '<h3><span class="bx-wm"' + lettering(s) + '>' + esc(s.name) + sheen(s) + '</span></h3>' +
         '<p class="bx-strat-n">' + esc(s.sentence || '') + '</p>' +
         '<div class="bx-spark" data-spark="' + s.slug + '" aria-hidden="true"></div>' +
@@ -195,13 +228,6 @@
   var bar = $('#bar'), barPlan = $('#bar-plan'), barDetail = $('#bar-detail'), barPrice = $('#bar-price'), barBtn = $('#bar-btn'), barAlt = $('#bar-alt');
   var sheet = $('#sheet'), backdrop = $('#backdrop'), sheetK = $('#sheet-k'), sheetTitle = $('#sheet-title');
   var sheetBody = $('#sheet-body');
-
-  var DETAIL = {
-    base: 'Base strategies',
-    select: 'Select and Base strategies',
-    supreme: 'Every strategy',
-    lifetime: 'Every strategy, paid once'
-  };
 
   /* ---------- the selection ---------- */
   function load() {
@@ -264,16 +290,17 @@
     } else {
       barPlan.innerHTML = esc(p.name) + '<span class="bx-bp-price"> · ' + esc(priceWords(p)) + '</span>';
       barPrice.hidden = false;
-      barPrice.innerHTML = '$' + p.price.toLocaleString('en-US') + '<small>' + (p.kind === 'lifetime' ? 'once' : 'a month') + '</small>';
+      barPrice.innerHTML = p.price === null ? '<small class="bx-tbs-bar">' + TBS + '</small>'
+        : '$' + p.price.toLocaleString('en-US') + '<small>' + (p.kind === 'lifetime' ? 'once' : 'a month') + '</small>';
       var link = checkoutLink(p.id);
       if (link) setBtn('checkout', 'Checkout', link); else setBtn('soon', 'Opening soon');
       if (!own || (!openSlug && own.id === p.id)) {
-        barDetail.textContent = DETAIL[p.id];
+        barDetail.textContent = holds(p);
       } else if (openSlug && includes(p.id, openSlug)) {
         barDetail.textContent = '✓ Includes ' + nm;
       } else {
         barDetail.textContent = openSlug ? nm + ' is in ' + own.name : 'Viewing the ' + own.name + ' list';
-        barAlt.textContent = 'Switch to ' + own.name + ' · $' + own.price.toLocaleString('en-US');
+        barAlt.textContent = 'Switch to ' + own.name + (own.price === null ? '' : ' · $' + own.price.toLocaleString('en-US'));
         barAlt.dataset.plan = own.id;
         barAlt.hidden = false;
         two = true;
@@ -346,7 +373,7 @@
     openSlug = slug;
     sheetTitle.textContent = names[slug];
     var s = named.filter(function (x) { return x.slug === slug; })[0];
-    sheetTitle.setAttribute('data-lvl', tiers[slug]);
+    sheetTitle.setAttribute('data-lvl', finish(tiers[slug]));
     ['--n', '--c0', '--c1', '--c2'].forEach(function (k) { sheetTitle.style.removeProperty(k); });
     if (s) {
       palette(s).forEach(function (p) { sheetTitle.style.setProperty(p[0], p[1]); });

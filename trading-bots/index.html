@@ -17,16 +17,16 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="All Fluence Trading">
 <meta property="og:title" content="AFT Trading Bots">
-<meta property="og:description" content="Automated futures strategies for TradingView, built on the All Fluence method. Sold in three tiers.">
+<meta property="og:description" content="Automated futures strategies for TradingView, built on the All Fluence method. Sold in four tiers.">
 <meta property="og:url" content="https://allfluencetrading.com/trading-bots/">
 <meta property="og:image" content="https://allfluencetrading.com/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AFT Trading Bots">
-<meta name="twitter:description" content="Automated futures strategies for TradingView, built on the All Fluence method. Sold in three tiers.">
+<meta name="twitter:description" content="Automated futures strategies for TradingView, built on the All Fluence method. Sold in four tiers.">
 <meta name="twitter:image" content="https://allfluencetrading.com/assets/og.png">
 <script src="/config.js"></script>
 <script src="/tracking.js" defer></script>
-<meta name="description" content="AFT Trading Bots: automated MNQ and MGC futures strategies for TradingView, built on the All Fluence method and sold in three monthly tiers.">
+<meta name="description" content="AFT Trading Bots: automated MNQ and MGC futures strategies for TradingView, built on the All Fluence method and sold in four tiers.">
 </head>
 <body class="bots">
 
@@ -48,7 +48,7 @@
   <div class="wrap">
     <p class="bx-kicker">AFT Trading Bots</p>
     <h1>Automated futures strategies for TradingView.</h1>
-    <p class="bx-lead">Rules-based strategies built on the All Fluence method, sold in three tiers. Open any strategy right where you are to read what it trades and see its record.</p>
+    <p class="bx-lead">Rules-based strategies built on the All Fluence method, sold in four tiers. Open any strategy right where you are to read what it trades and see its record.</p>
     <p class="bx-cta"><a class="btn bx-btn-red btn-lg" href="#plans">See the tiers</a><a class="btn btn-ghost btn-lg" href="#strategies">See the strategies</a></p>
     <ul class="bx-facts">
       <li>Runs in TradingView on the 1-minute chart</li>
@@ -65,11 +65,16 @@
       <p class="bx-sub">Strategies are sold as bundles, not one at a time, and each higher tier includes the ones below it. Tap any strategy to open it right here. Your choice stays in the bar at the bottom.</p>
     </div>
 
+    <!-- One article per tier, lowest first. An article is the whole definition of its tier: data-name, data-rank
+         (the order the tiers nest in), data-price (left out while a price is not set), the line under the title,
+         the "Plus everything in" line and the three bullets. Its checkout link is the key of the same name in
+         bots-config.js. The lettering, the card finish, the tier pill, the bar and the open strategy's tier line
+         all follow data-rank (bots.js); data-lvl is written here only so the first paint already has it. -->
     <div class="bx-plan-grid" id="plan-grid">
 
-      <article class="bx-plan" data-plan="base" data-name="Base" data-price="197" data-kind="monthly" data-rank="1">
+      <article class="bx-plan" data-plan="base" data-name="Base" data-price="197" data-kind="monthly" data-rank="1" data-lvl="plain">
         <header>
-          <h3 class="bx-wm bx-tname" data-lvl="base">Base</h3>
+          <h3 class="bx-wm bx-tname" data-lvl="plain">Base</h3>
           <p class="bx-plan-for">Single-model strategies.</p>
         </header>
         <p class="bx-price"><span class="bx-amt">$197</span><span class="bx-per">a month</span></p>
@@ -87,9 +92,9 @@
         </ul>
       </article>
 
-      <article class="bx-plan" data-plan="select" data-name="Select" data-price="397" data-kind="monthly" data-rank="2">
+      <article class="bx-plan" data-plan="select" data-name="Select" data-price="397" data-kind="monthly" data-rank="2" data-lvl="gradient">
         <header>
-          <h3 class="bx-wm bx-tname" data-lvl="select">Select</h3>
+          <h3 class="bx-wm bx-tname" data-lvl="gradient">Select</h3>
           <p class="bx-plan-for">A further set of single-model strategies.</p>
         </header>
         <p class="bx-price"><span class="bx-amt">$397</span><span class="bx-per">a month</span></p>
@@ -108,19 +113,38 @@
         </ul>
       </article>
 
-      <article class="bx-plan" data-plan="supreme" data-name="Supreme" data-price="997" data-kind="monthly" data-rank="3">
+      <article class="bx-plan" data-plan="supreme" data-name="Supreme" data-price="997" data-kind="monthly" data-rank="3" data-lvl="polished">
         <header>
-          <h3 class="bx-wm bx-tname" data-lvl="supreme">Supreme<span class="bx-sh" aria-hidden="true" data-t="Supreme"></span></h3>
-          <p class="bx-plan-for">The combined strategies: several models in one.</p>
+          <h3 class="bx-wm bx-tname" data-lvl="polished">Supreme</h3>
+          <p class="bx-plan-for">The combination strategies: a few models in one.</p>
         </header>
         <p class="bx-price"><span class="bx-amt">$997</span><span class="bx-per">a month</span></p>
         <button class="btn btn-ghost bx-choose" type="button" data-choose="supreme">Choose Supreme</button>
         <div class="bx-strats">
           <p class="bx-list-h">In this tier</p>
           <ul data-tier-list="supreme">
-            <li class="bx-srow"><p class="bx-tba">More combined strategies<small>Named here at release</small></p></li>
+            <li class="bx-srow"><p class="bx-tba">Combination strategies<small>Named here at release</small></p></li>
           </ul>
           <p class="bx-plus">Plus everything in Select and Base</p>
+        </div>
+        <ul class="bx-inc">
+          <li>Every strategy in this tier, in Select and in Base, as invite-only TradingView scripts</li>
+          <li>Each new strategy placed in this tier or below</li>
+          <li>Every update to every strategy in it</li>
+        </ul>
+      </article>
+
+      <article class="bx-plan" data-plan="ultimate" data-name="Ultimate" data-kind="monthly" data-rank="4" data-lvl="sheen">
+        <header>
+          <h3 class="bx-wm bx-tname" data-lvl="sheen">Ultimate<span class="bx-sh" aria-hidden="true" data-t="Ultimate"></span></h3>
+          <p class="bx-plan-for">The full books: every model for one market in a single strategy.</p>
+        </header>
+        <p class="bx-price"><span class="bx-tbs">Price to be set</span></p>
+        <button class="btn btn-ghost bx-choose" type="button" data-choose="ultimate">Choose Ultimate</button>
+        <div class="bx-strats">
+          <p class="bx-list-h">In this tier</p>
+          <ul data-tier-list="ultimate"></ul>
+          <p class="bx-plus">Plus everything in Supreme, Select and Base</p>
         </div>
         <ul class="bx-inc">
           <li>Every strategy AFT releases, in every tier, as invite-only TradingView scripts</li>
@@ -133,7 +157,7 @@
 
     <div class="bx-rule">
       <h3>What sets the tiers apart</h3>
-      <p>The strategies in them. Supreme adds the combined strategies, which run several models in one. Select and Base hold the single-model strategies. Each strategy's own record, once it is published, is on this page to read before you choose. A tier is a grouping of strategies. It is not a forecast, and no tier is a promise of any result.</p>
+      <p>The strategies in them. Base and Select hold the single-model strategies. Supreme adds the combination strategies, which run a few models in one. Ultimate adds the full books, where a single strategy runs every model for one market. Each strategy's own record, once it is published, is on this page to read before you choose. A tier is a grouping of strategies. It is not a forecast, and no tier is a promise of any result.</p>
     </div>
 
     <div class="bx-open-note">

@@ -13,6 +13,7 @@ window.AFT_BOTS_CONFIG = {
     base: "",
     select: "",
     supreme: "",
+    ultimate: "",
     lifetime: ""
   }
 };

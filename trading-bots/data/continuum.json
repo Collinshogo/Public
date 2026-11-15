@@ -2,7 +2,7 @@
  "schema": "aft.strategy-performance/1",
  "slug": "continuum",
  "name": "Continuum",
- "tier": "supreme",
+ "tier": "ultimate",
  "what": {
   "market_line": "MNQ · Micro Nasdaq",
   "sentence": "Several MNQ models run together in one strategy, one position at a time, through the full futures day.",

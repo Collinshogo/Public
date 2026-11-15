@@ -2,7 +2,7 @@
  "schema": "aft.strategy-performance/1",
  "slug": "midas",
  "name": "Midas",
- "tier": "supreme",
+ "tier": "ultimate",
  "what": {
   "market_line": "MGC · Micro Gold",
   "sentence": "Gold models for the Tokyo, London and New York sessions, combined in one strategy.",
