@@ -67,8 +67,10 @@
 
     <!-- One article per tier, lowest first. An article is the whole definition of its tier: data-name, data-rank
          (the order the tiers nest in), data-price (left out while a price is not set), the line under the title,
-         the "Plus everything in" line and the three bullets. Its checkout link is the key of the same name in
-         bots-config.js. The lettering, the card finish, the tier pill, the bar and the open strategy's tier line
+         the "Plus everything in" line, the three bullets and, under "Support and access", the lines this tier
+         adds beyond its strategies (its own lines only: the page script lists the lines of the tiers under it
+         after them, and builds the table under the cards from the same lines). Its checkout link is the key of
+         the same name in bots-config.js. The lettering, the card finish, the tier pill, the bar and the open strategy's tier line
          all follow data-rank (bots.js); data-lvl is written here only so the first paint already has it. -->
     <div class="bx-plan-grid" id="plan-grid">
 
@@ -90,6 +92,14 @@
           <li>Each new strategy placed in this tier</li>
           <li>Every update to every strategy in it</li>
         </ul>
+        <div class="bx-perks">
+          <p class="bx-perks-h">Support and access</p>
+          <ul data-perks>
+            <li>Setup guide and videos</li>
+            <li>Bots channel in the AFT Discord</li>
+            <li>Support by email</li>
+          </ul>
+        </div>
       </article>
 
       <article class="bx-plan" data-plan="select" data-name="Select" data-price="397" data-kind="monthly" data-rank="2" data-lvl="gradient">
@@ -111,6 +121,14 @@
           <li>Each new strategy placed in this tier or below</li>
           <li>Every update to every strategy in it</li>
         </ul>
+        <div class="bx-perks">
+          <p class="bx-perks-h">Support and access</p>
+          <ul data-perks>
+            <li>Priority support</li>
+            <li>A setup check before you go live</li>
+          </ul>
+          <p class="bx-perks-plus">Plus everything in Base</p>
+        </div>
       </article>
 
       <article class="bx-plan" data-plan="supreme" data-name="Supreme" data-price="897" data-kind="monthly" data-rank="3" data-lvl="polished">
@@ -132,6 +150,14 @@
           <li>Each new strategy placed in this tier or below</li>
           <li>Every update to every strategy in it</li>
         </ul>
+        <div class="bx-perks">
+          <p class="bx-perks-h">Support and access</p>
+          <ul data-perks>
+            <li>A one-to-one setup call</li>
+            <li>A private Discord channel</li>
+          </ul>
+          <p class="bx-perks-plus">Plus everything in Select and Base</p>
+        </div>
       </article>
 
       <article class="bx-plan" data-plan="ultimate" data-name="Ultimate" data-price="1197" data-kind="monthly" data-rank="4" data-lvl="sheen">
@@ -151,6 +177,15 @@
           <li>Each new strategy as it is released</li>
           <li>Every update to every strategy</li>
         </ul>
+        <div class="bx-perks">
+          <p class="bx-perks-h">Support and access</p>
+          <ul data-perks>
+            <li>A direct line to shogotrades</li>
+            <li>A monthly live session with shogotrades</li>
+            <li>A first look at each new strategy</li>
+          </ul>
+          <p class="bx-perks-plus">Plus everything in Supreme, Select and Base</p>
+        </div>
       </article>
 
     </div>

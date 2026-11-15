@@ -209,6 +209,37 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bx-inc{list-style:none;margin:0;padding:0;display:grid;gap:9px;font-size:15.5px;color:var(--text)}
 .bx-inc li{position:relative;padding-left:24px;margin:0}
 .bx-inc li::before{content:"";position:absolute;left:3px;top:.42em;width:10px;height:5px;border-left:2px solid var(--red-soft);border-bottom:2px solid var(--red-soft);transform:rotate(-45deg)}
+/* What a tier gives beyond its strategies. Its own lines come first: with a tier under it they are the lines it
+   adds, bright, each behind a plus sign in the tier's own colour. Then the lines it takes from the tiers under it,
+   quieter, behind a tick. The same lines again as a table under the cards (.bx-cmp): tier names upright on a
+   phone, so the four columns stay narrow and a line keeps to two rows. */
+.bx-perks{display:grid;gap:10px;margin:0;padding-top:18px;border-top:1px solid var(--line)}
+.bx-perks-h,.bx-rule .bx-perks-h{margin:0;font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--red-soft)}
+.bx-perks ul{list-style:none;margin:0;padding:0;display:grid;gap:9px;font-size:15.5px;color:var(--text)}
+.bx-perks li{position:relative;padding-left:24px;margin:0}
+.bx-perks li::before{content:"";position:absolute;left:3px;top:.42em;width:10px;height:5px;border-left:2px solid var(--red-soft);border-bottom:2px solid var(--red-soft);transform:rotate(-45deg)}
+.bx-perks ul.is-add li{color:var(--bright);font-weight:500}
+.bx-perks ul.is-add li::before{content:"+";left:2px;top:-.1em;width:auto;height:auto;border:0;transform:none;font-size:1.16em;font-weight:700;color:var(--perk,var(--red-soft))}
+.bx-plan[data-lvl="gradient"]{--perk:#aab5d0}
+.bx-plan[data-lvl="polished"]{--perk:#f2f5fa}
+.bx-plan[data-lvl="sheen"]{--perk:#f7c948}
+.bx-perks-plus{margin:4px 0 0;font-size:14px;font-weight:500;color:var(--dim)}
+.bx-perks ul.bx-perks-low{gap:7px;font-size:14.5px;color:var(--dim)}
+.bx-perks-low li::before{border-color:var(--faint)}
+.bx-vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.bx-cmp{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+.bx-cmp table{width:100%;margin:8px 0 0;border-collapse:collapse;font-size:14px;color:var(--text)}
+.bx-cmp th,.bx-cmp td{position:relative;padding:7px 0;border-top:1px solid var(--line);text-align:center;vertical-align:middle;font-weight:400}
+.bx-cmp thead th,.bx-cmp thead td{padding:0 0 8px;border-top:0;vertical-align:bottom}
+.bx-cmp thead th{width:30px;font-size:12.5px;font-weight:600;line-height:30px;color:var(--bright)}
+.bx-cmp thead th span{display:inline-block;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap}
+.bx-cmp tbody th{padding-right:10px;text-align:left}
+.bx-cmp td.is-in::before{content:"";display:inline-block;width:10px;height:5px;margin-bottom:3px;border-left:2px solid var(--red-soft);border-bottom:2px solid var(--red-soft);transform:rotate(-45deg)}
+.bx-cmp tbody td:not(.is-in)::before{content:"";display:inline-block;width:8px;height:0;margin-bottom:4px;border-top:1px solid var(--line2)}
+@media(min-width:560px){
+  .bx-cmp thead th{width:84px;line-height:1.3}
+  .bx-cmp thead th span{writing-mode:horizontal-tb;transform:none}
+}
 .bots .bx-choose{width:100%}
 /* while a list is open the cards stop stretching to the tallest one (the page script holds each at its closed height) */
 .bx-plan-grid.has-open{align-items:start}

@@ -114,6 +114,33 @@
     if (!lit(FIN[p.id]) && sh) t.removeChild(sh);
   });
   function finish(tier) { return FIN[tier] || 'plain'; }
+
+  // What a tier gives beyond its strategies. A tier's own lines are the items of the [data-perks] list in its card
+  // (index.html), and a tier has every line of the tiers under it as well. Its card shows its own lines first,
+  // marked as added where there is a tier under it, then the lines it takes from below, quieter. The block under
+  // the cards shows the same lines as a table. Change a line in its card and both follow; a new tier card needs
+  // nothing here.
+  var perkRows = [];             // every line once, lowest tier first: {text, from: its tier's place on the ladder}
+  ladder.forEach(function (p, i) {
+    var ul = $('[data-perks]', p.el), plus = $('.bx-perks-plus', p.el);
+    var low = perkRows.slice();
+    (ul ? $$('li', ul) : []).forEach(function (li) { perkRows.push({ text: li.textContent.trim(), from: i }); });
+    if (!ul || !low.length) { if (plus) plus.hidden = true; return; }
+    ul.classList.add('is-add');
+    (plus || ul).insertAdjacentHTML('afterend', '<ul class="bx-perks-low">' +
+      low.map(function (r) { return '<li>' + esc(r.text) + '</li>'; }).join('') + '</ul>');
+  });
+  var ruleBox = $('.bx-rule'), perksHead = $('.bx-perks-h');
+  if (ruleBox && perksHead && ladder.length > 1 && perkRows.length) {
+    ruleBox.insertAdjacentHTML('beforeend', '<div class="bx-cmp"><p class="bx-perks-h" id="bx-cmp-h">' + esc(perksHead.textContent) + '</p>' +
+      '<table aria-labelledby="bx-cmp-h"><thead><tr><td></td>' +
+      ladder.map(function (p) { return '<th scope="col"><span>' + esc(p.name) + '</span></th>'; }).join('') + '</tr></thead><tbody>' +
+      perkRows.map(function (r) {
+        return '<tr><th scope="row">' + esc(r.text) + '</th>' + ladder.map(function (p, i) {
+          return i >= r.from ? '<td class="is-in"><span class="bx-vh">Yes</span></td>' : '<td><span class="bx-vh">No</span></td>';
+        }).join('') + '</tr>';
+      }).join('') + '</tbody></table></div>');
+  }
   // What a chosen tier holds, for the bar: its own strategies and those of every tier under it.
   function holds(p) {
     if (p.kind === 'lifetime') return 'Every strategy, paid once';
