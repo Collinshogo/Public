@@ -18,7 +18,7 @@ All Fluence Trading (AFT), run by shogotrades, teaches futures traders to read t
 - Premium Discord for members
 - Bonus: MNQ Master Trader (Micro Nasdaq) and MGC Master Trader (Micro Gold) indicators, rule-based setups with entry, stop and targets drawn on the chart
 - The AFT Challenge: a free paper-trading consistency program (https://allfluencetrading.com/challenge/)
-- AFT Trading Bots: automated futures strategies for TradingView, built on the All Fluence method (https://allfluencetrading.com/trading-bots/). Sold separately from the membership in three monthly tiers, each higher tier including the ones below it: Base $197, Select $397, Supreme $997. Not on sale yet: checkout is not open. Strategies are named and released as each one passes testing; no release dates yet. AFT does not copy trades into or manage anyone's account.
+- AFT Trading Bots: automated futures strategies for TradingView, built on the All Fluence method (https://allfluencetrading.com/trading-bots/). Sold separately from the membership in four monthly tiers, each higher tier including the ones below it: Base $197, Select $397, Supreme $897, Ultimate $1,197. Not on sale yet: checkout is not open. Strategies are named and released as each one passes testing; no release dates yet. AFT does not copy trades into or manage anyone's account.
 
 ## What makes All Fluence Trading different
 - Not a signals service: the indicators draw levels and setups on the member's own chart, and the member makes every trade.

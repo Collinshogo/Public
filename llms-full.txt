@@ -7,7 +7,7 @@ Membership is sold on Whop. 14-day free trial. Cancel inside the 14 days and you
 ## Key pages
 - [Home](https://allfluencetrading.com/): the two paths: learn to trade futures with the All Fluence course and indicators, or the AFT Trading Bots (coming soon)
 - [The membership: course and indicators](https://allfluencetrading.com/master-trader/): what is included, the course outline, member posts, the FAQ, the price and trial terms
-- [AFT Trading Bots](https://allfluencetrading.com/trading-bots/): automated futures strategies for TradingView, built on the All Fluence method, sold in three monthly tiers; checkout is not open yet
+- [AFT Trading Bots](https://allfluencetrading.com/trading-bots/): automated futures strategies for TradingView, built on the All Fluence method, sold in four monthly tiers; checkout is not open yet
 - [The AFT Challenge](https://allfluencetrading.com/challenge/): a free paper-trading consistency program for developing futures traders ("Never let a green day turn red")
 - [Disclaimer, terms and privacy](https://allfluencetrading.com/legal/): risk disclosure, terms of use, privacy notice
 - [Full facts and FAQ](https://allfluencetrading.com/llms-full.txt): this file plus the FAQ answers word for word
@@ -18,7 +18,7 @@ Membership is sold on Whop. 14-day free trial. Cancel inside the 14 days and you
 - The All Fluence Trading course: six chapters, 35 recorded lessons and practicals, 12 hours of course and practical in all (market structure; ICC, support and resistance; imbalances; VWAP; opening range breakout; ATR, sizing and trade management).
 - Premium Discord: members post their charts and ask about setups.
 - Bonus: the MNQ Master Trader and the MGC Master Trader, rule-based setups drawn on the chart with entry, stop and targets, confirmed on closed bars (nothing repaints), alerts on every event. The member places every trade.
-- AFT Trading Bots: automated futures strategies for TradingView, built on the All Fluence method (https://allfluencetrading.com/trading-bots/). Sold separately from the membership in three monthly tiers, each higher tier including the ones below it: Base $197, Select $397, Supreme $997. Not on sale yet: checkout is not open. Strategies are named and released as each one passes testing; no release dates yet.
+- AFT Trading Bots: automated futures strategies for TradingView, built on the All Fluence method (https://allfluencetrading.com/trading-bots/). Sold separately from the membership in four monthly tiers, each higher tier including the ones below it: Base $197, Select $397, Supreme $897, Ultimate $1,197. Not on sale yet: checkout is not open. Strategies are named and released as each one passes testing; no release dates yet.
 - Free, no membership needed: the AFT Discord (700+ traders), lessons on YouTube @shogotrades, and The AFT Challenge.
 
 ## Facts
