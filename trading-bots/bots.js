@@ -69,12 +69,12 @@
   if (CFG.lifetime === true) {
     var grid = $('#plan-grid');
     var topCard = $$('#plan-grid .bx-plan[data-rank]').sort(function (a, b) { return Number(b.dataset.rank) - Number(a.dataset.rank); })[0];
-    if (grid && topCard) {     // it stands level with the top tier, whichever tier that is
+    if (grid && topCard) {     // it stands level with the top tier, whichever tier that is, and wears its finish (wear(), below)
       grid.insertAdjacentHTML('afterend',
         '<article class="bx-plan bx-life" data-plan="lifetime" data-name="Lifetime" data-price="10000" data-kind="lifetime" data-rank="' + esc(topCard.dataset.rank) + '">' +
-        '<div class="bx-life-main"><header><h3>Lifetime</h3>' +
-        '<p class="bx-plan-for">Pay once. Everything in ' + esc(topCard.dataset.name) + ', with no monthly payment.</p></header>' +
-        '<ul class="bx-life-strats" data-life-list aria-label="Strategies named so far"></ul></div>' +
+        '<div class="bx-life-main"><header><h3 class="bx-wm bx-tname">Lifetime</h3>' +
+        '<p class="bx-plan-for">Pay once. Everything in ' + esc(topCard.dataset.name) + ', with no monthly payment.</p>' +
+        '<p class="bx-life-note">Access for as long as <span class="bx-nb">AFT Trading Bots</span> is offered.</p></header></div>' +
         '<div class="bx-life-buy"><p class="bx-price"><span class="bx-amt">$10,000</span><span class="bx-per">once</span></p>' +
         '<button class="btn btn-ghost bx-choose" type="button" data-choose="lifetime">Choose Lifetime</button></div>' +
         '</article>');
@@ -103,16 +103,23 @@
   var ladder = Object.keys(plans).map(function (id) { return plans[id]; })
     .filter(function (p) { return p.kind === 'monthly'; }).sort(function (a, b) { return a.rank - b.rank; });
   var FIN = {};
-  ladder.forEach(function (p, i) {
-    var n = ladder.length, t = $('.bx-tname', p.el);
-    FIN[p.id] = i === 0 ? 'plain' : (i === n - 1 ? 'sheen' : (n >= 4 && i === n - 2 ? 'polished' : 'gradient'));
-    p.el.setAttribute('data-lvl', FIN[p.id]);
+  function wear(p, fin) {        // a finish goes on the plan's card and on its title; a lit title carries the sheen
+    var t = $('.bx-tname', p.el);
+    p.el.setAttribute('data-lvl', fin);
     if (!t) return;
     var sh = $('.bx-sh', t);
-    t.setAttribute('data-lvl', FIN[p.id]);
-    if (lit(FIN[p.id]) && !sh) t.insertAdjacentHTML('beforeend', sheenSpan(p.name));
-    if (!lit(FIN[p.id]) && sh) t.removeChild(sh);
+    t.setAttribute('data-lvl', fin);
+    if (lit(fin) && !sh) t.insertAdjacentHTML('beforeend', sheenSpan(p.name));
+    if (!lit(fin) && sh) t.removeChild(sh);
+  }
+  ladder.forEach(function (p, i) {
+    var n = ladder.length;
+    FIN[p.id] = i === 0 ? 'plain' : (i === n - 1 ? 'sheen' : (n >= 4 && i === n - 2 ? 'polished' : 'gradient'));
+    wear(p, FIN[p.id]);
   });
+  // The one-time plan is the top tier paid once. It has no finish of its own: its card and its title wear the
+  // top tier's, so the top tier's own rules (bots.css) draw them, and it follows the top tier if the tiers change.
+  if (plans.lifetime && ladder.length) wear(plans.lifetime, FIN[ladder[ladder.length - 1].id]);
   function finish(tier) { return FIN[tier] || 'plain'; }
 
   // What a tier gives beyond its strategies. A tier's own lines are the items of the [data-perks] list in its card
@@ -229,13 +236,6 @@
       watchLists();
     });
   });
-  // The one-time plan lists every named strategy.
-  var lifeList = $('[data-life-list]');
-  if (lifeList) {
-    lifeList.innerHTML = named.map(function (s) {
-      return '<li><a class="bx-slink bx-slink-pill" href="#' + s.slug + '">' + nameSpan(s) + chip(s) + '</a></li>';
-    }).join('');
-  }
   // The strategy cards.
   var stratGrid = $('#strat-grid');
   if (stratGrid) {

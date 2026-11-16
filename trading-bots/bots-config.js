@@ -2,7 +2,7 @@
 // Loaded by /trading-bots/ only. The site-wide /config.js is separate and is not touched by this page.
 window.AFT_BOTS_CONFIG = {
   // The one-time Lifetime plan. false = it is not on the page at all.
-  lifetime: false,
+  lifetime: true,
 
   // The link to the set-up guide. false = no link to it anywhere on the page.
   setupGuide: false,
