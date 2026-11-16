@@ -247,6 +247,8 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 /* The short texts of a tier card and of the table under the cards wrap balanced: the lines of a text come out
    near the same length, so none ends on a line that holds one word. Words, sizes and the count of lines stay. */
 .bx-plan .bx-plan-for,.bx-plan .bx-plus,.bx-plan .bx-inc li,.bx-plan .bx-perks li,.bx-plan .bx-perks-plus,.bx-cmp tbody th{text-wrap:balance}
+/* A hyphenated word in those texts stays whole: no line ends at its hyphen. */
+.bx-nb{white-space:nowrap}
 .bots .bx-choose{width:100%}
 /* while a list is open the cards stop stretching to the tallest one (the page script holds each at its closed height) */
 .bx-plan-grid.has-open{align-items:start}
