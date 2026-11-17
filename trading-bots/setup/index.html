@@ -65,11 +65,14 @@
   .start ol{list-style:none;margin:0 0 6px;padding:0;counter-reset:s}
   .start ol li{counter-increment:s;margin:0;border-top:1px solid var(--line)}
   .start ol li:first-child{border-top:0}
-  .start ol a{display:grid;grid-template-columns:22px 1fr;gap:0 6px;padding:4px 0;text-decoration:none;font-weight:500;font-size:15.5px;line-height:1.4}
+  .start ol a{display:grid;grid-template-columns:22px 1fr;gap:0 6px;padding:6px 0;min-height:44px;align-items:center;text-decoration:none;font-weight:500;font-size:15.5px;line-height:1.4}
   .start ol a::before{content:counter(s);font-family:var(--display);font-weight:600;color:var(--green)}
   .start ol a:hover{text-decoration:underline}
   .start hr{border:0;border-top:1px solid var(--line);margin:0}
   .start .help{margin:10px 0}
+  .start .jump{margin:0}
+  .start .jump a{display:inline-block;padding:13px 0}
+  .alt{margin:0 0 12px;font-size:15.5px}
 
   /* callouts */
   .callout{border:1px solid var(--line);border-left:3px solid var(--green);background:var(--green-tint);padding:16px 18px;margin:22px 0;border-radius:10px}
@@ -149,7 +152,7 @@
   .chapters button b{display:inline-block;min-width:20px;color:var(--green);font-family:var(--display);font-weight:600}
   .chapters button .t{color:var(--dim);font-weight:400;font-size:14px;font-variant-numeric:tabular-nums}
   .chapters button.cur{border-color:var(--green);background:var(--green-tint)}
-  a.wl{display:inline-flex;align-items:center;gap:8px;font-size:14.5px;font-weight:600;border:1px solid var(--line2);border-radius:999px;padding:7px 14px;text-decoration:none;margin:0 0 4px}
+  a.wl{display:inline-flex;align-items:center;min-height:44px;gap:8px;font-size:14.5px;font-weight:600;border:1px solid var(--line2);border-radius:999px;padding:7px 14px;text-decoration:none;margin:0 0 4px}
   a.wl::before{content:"";border-style:solid;border-width:5px 0 5px 8px;border-color:transparent transparent transparent var(--green)}
   a.wl:hover{border-color:var(--bright)}
 
@@ -181,10 +184,12 @@
     <ul>
       <li>A <strong>computer</strong> with a web browser.</li>
       <li>A <strong>paid TradingView plan</strong> with two-factor authentication turned on.</li>
+      <li><strong>Real-time futures data</strong> on TradingView, a paid monthly add-on.</li>
       <li>A <strong>Tradovate account</strong> (demo, prop or live).</li>
+      <li>A <strong>CrossTrade plan</strong>: free for 7 days, then a paid monthly plan (step 1).</li>
       <li><strong>Your bot</strong> on your TradingView username.</li>
     </ul>
-    <p><a href="#before">How to get each one ready</a></p>
+    <p class="jump"><a href="#before">How to get each one ready</a></p>
     <hr>
     <h2>The eight steps</h2>
     <ol>
@@ -224,6 +229,8 @@
       <li><button type="button" data-t="307.61"><span><b>7</b>Check the alert says Active</span><span class="t">5:07</span></button></li>
       <li><button type="button" data-t="332.2"><span><b>8</b>Check the connection in CrossTrade</span><span class="t">5:32</span></button></li>
     </ol>
+    <noscript><p class="fine">These buttons need JavaScript. Use the player's own bar to move through the video.</p></noscript>
+    <p class="fine">On a phone, turn it sideways or tap full screen to read the captions.</p>
     <p class="fine">6:46 long, with captions. In the steps below, each "Watch this part" link plays that step here. Your browser's Back button then returns you to the step. <a href="/trading-bots/setup/media/aft-bot-setup.mp4" download>Download the video</a>.</p>
   </div>
   <details>
@@ -250,13 +257,15 @@
       <ul>
         <li><strong>Webhook:</strong> a message one website sends to another by itself. TradingView sends each of the bot's orders to CrossTrade as a webhook. The <strong>webhook URL</strong> is the address those messages go to.</li>
         <li><strong>Contract:</strong> a futures contract for one month, for example Micro Nasdaq for December. Each has its own short code.</li>
+        <li><strong>Root:</strong> the letters that name a futures product: MNQ for Micro Nasdaq, MGC for Micro Gold. Every contract code starts with its root.</li>
+        <li><strong>Front month:</strong> the current contract: the nearest contract month that has not ended yet. It is the one your bot's orders have to name.</li>
         <li><strong>Position:</strong> the contracts your account holds right now.</li>
         <li><strong>Working order</strong> (also called a resting order): an order that is placed but has not filled yet, such as a stop or a target.</li>
         <li><strong>Flat:</strong> no position and no working orders. "The strategy is flat" means the bot holds no trade.</li>
         <li><strong>Demo account:</strong> a practice account with simulated money.</li>
         <li><strong>Prop firm:</strong> a company that gives you an evaluation or funded account to trade under its rules.</li>
         <li><strong>ETH:</strong> extended trading hours, the full trading day including the evening and night. RTH, regular trading hours, is the daytime part only.</li>
-        <li><strong>New York time:</strong> US Eastern time. If you live somewhere else, look up the current time in New York once and note the difference from your own clock. Times on this page use the 24-hour clock: 16:09 is 4:09 in the afternoon.</li>
+        <li><strong>New York time:</strong> US Eastern time. If you live somewhere else, search "time in New York" once and note the difference from your own clock. Times on this page use the 24-hour clock: 16:09 is 4:09 in the afternoon.</li>
         <li><strong>Invite-only:</strong> TradingView's name for a script that is shared privately with chosen usernames. Your bot reaches you this way.</li>
       </ul>
     </div>
@@ -278,7 +287,7 @@
   </ul>
   <div class="callout">
     <p class="label">Do your first run on a demo account</p>
-    <p>Orders sent by a connected bot are real orders. Start on a Tradovate demo account and watch it through at least one full trade. Move to the account you intend to trade only after that. A prop evaluation or funded account is not a practice account: trades there count against your firm's limits.</p>
+    <p>Orders sent by a connected bot are real orders. Start on a Tradovate demo account and watch it through at least one full trade. Move to the account you intend to trade only after that. <strong>A prop evaluation or funded account is not a practice account</strong>: trades there count against your firm's limits.</p>
   </div>
 
   <h3 id="need-bot">Your bot, added to your TradingView username</h3>
@@ -317,14 +326,14 @@
     <li><strong>Link your demo account first.</strong> The first run is on a demo account, not on a prop firm or real-money account. No demo account yet? Get one before you go on: <a href="#need-broker">Before you start</a> says where.</li>
     <li>In CrossTrade, open <span class="ui">My Account</span> with the button below, then click <span class="ui">Brokers</span> in the menu on the left.</li>
     <li>Click <span class="ui">Link Demo</span> for a Tradovate demo account, or for any prop firm login (evaluation and funded alike). <strong>Click <span class="ui">Link Live</span> only for your own real-money Tradovate login.</strong><small>Why a prop firm login uses Link Demo: in CrossTrade, "Demo" is the name of Tradovate's simulation system, and every prop firm account runs on it. Your trades there still count with your prop firm.</small></li>
-    <li>Tradovate's own sign-in page opens. Type your Tradovate username and password there, and click <span class="ui">Login</span>.<small>You type your broker password on Tradovate's page, never into CrossTrade. Nobody at All Fluence Trading will ever ask you for this login.</small></li>
+    <li>Tradovate's own sign-in page opens. Type your Tradovate username and password there, and click <span class="ui">Login</span>.<small>You type your broker password on Tradovate's page, never into CrossTrade. Nobody at All Fluence Trading will ever ask you for this login.</small><small>Beside the sign-in boxes, that page lists what Tradovate will share with CrossTrade, including "Full access including ability to modify" for orders: that is what lets CrossTrade place the bot's orders on your account.</small></li>
     <li>Approve the access the page lists. You are sent straight back to CrossTrade.</li>
     <li>On the <span class="ui">Brokers</span> screen, find your account's row. The <span class="ui">Name</span> column is your account name.<small>A login with several accounts lists every one. Use the row of the account the bot should trade.</small></li>
+    <li>If the name is cut short with dots, <span class="ui">Privacy Mode</span> is on: switch it off before you copy the name.<small>It is a CrossTrade switch that hides part of your account names and key on screen. Click <span class="ui">Security</span> in the same menu, switch <span class="ui">Privacy Mode</span> off at the top of that screen, and come back to <span class="ui">Brokers</span> to read the full name. Switch it back on after you have copied the name.</small></li>
     <li>Copy the account name and keep it for step 5. Copy and paste it, do not retype it.<small>It looks something like <code>DEMO0000000</code>. That one is a made-up example.</small></li>
   </ul>
   <p class="go"><a class="primary" href="https://crosstrade.io/user/my-account" rel="noopener" target="_blank">Open My Account in CrossTrade</a><a href="https://crosstrade.io/docs/tradovate/linking-your-account" rel="noopener" target="_blank">CrossTrade's own walkthrough</a></p>
   <p class="see"><b>You should now see:</b> your account listed on the Brokers screen, with <span class="ui">Active</span> in its <span class="ui">Status</span> column.</p>
-  <p class="fine">If the name is cut short with dots, <span class="ui">Privacy Mode</span> is on. It is a CrossTrade switch that hides part of your account names and key on screen. Click <span class="ui">Security</span> in the same menu, switch <span class="ui">Privacy Mode</span> off at the top of that screen to read the full name, then switch it back on.</p>
   </section>
 
   <!-- ============================== STEP 3 ============================== -->
@@ -342,7 +351,7 @@
     <p class="label">Your key stays with you</p>
     <p>Your <strong>secret key</strong> and <strong>webhook URL</strong> can place orders on your account. Treat them like a password.</p>
     <ul>
-      <li>Never post them, send them to anyone or leave them visible in a screenshot or screen share. That includes a screenshot of the strategy's settings.</li>
+      <li>Never post them, send them to anyone or leave them visible in a screenshot or screen share. That includes a screenshot of the strategy's settings. TradingView also prints your settings, key and account name included, after the alert's name: in the Create alert window, in your Alerts list and in the alert log. Cover that text too.</li>
       <li>All Fluence Trading will never ask for your key, your webhook URL, your broker password or your account number. Anyone who asks is not us.</li>
       <li><span class="ui">Privacy Mode</span>, at the top of the Security page, cuts them short on screen. <span class="ui">Copy</span> still copies the full value.</li>
       <li>Every key, account name and code shown on this page is a made-up example.</li>
@@ -380,7 +389,7 @@
   <p class="kicker">Step 5 of 8</p>
   <h2>Fill in the strategy's settings</h2>
   <p><a class="wl" href="#watch" data-ch="5">Watch this part (3:21)</a></p>
-  <p>Fill the boxes first and tick the last box at the end. The bot sends nothing until the key, the account and the contract are all filled in and that box is ticked.</p>
+  <p>Fill the boxes first. Tick <span class="ui">Send live orders to CrossTrade</span> last: it is the first box of the group. The bot sends nothing until the key, the account and the contract are all filled in and that box is ticked.</p>
   <ul class="do">
     <li>Hover over the strategy's name at the top left of the chart, and click the gear icon (<span class="ui">Settings</span>).</li>
     <li>You are on the <span class="ui">Inputs</span> tab. Under <span class="ui">★ SIZING ★</span>, leave <span class="ui">Multiplier (× the strategy's contracts)</span> at <code>1</code> for your first run.<small>What it does is under <a href="#multiplier">Changing the size</a>, further down this page.</small></li>
@@ -394,7 +403,7 @@
         <div class="row"><div class="name">Midas (AFT)</div><div class="what">The box is <span class="ui">Contract sent to CrossTrade (e.g. MGCG7)</span>. The code inside that label is only an example. Do not leave the box blank: nothing is sent while it is empty.</div></div>
       </div>
     </li>
-    <li>Last, tick <span class="ui">Send live orders to CrossTrade (off = log only)</span>.<small>With it off, nothing is sent to CrossTrade. "Live" here means "send the orders for real". It has nothing to do with Link Live in step 2: tick it for a demo account too.</small></li>
+    <li>Last, scroll back up to the top of the <span class="ui">★ CROSSTRADE ★</span> group and tick <span class="ui">Send live orders to CrossTrade (off = log only)</span>.<small>With it off, nothing is sent to CrossTrade. "Live" here means "send the orders for real". It has nothing to do with Link Live in step 2: tick it for a demo account too.</small></li>
     <li>Leave every other input as it came, and click <span class="ui">OK</span>.</li>
   </ul>
   <p class="see"><b>You should now see:</b> the settings window is closed and the strategy is on the chart with no error message.</p>
@@ -403,8 +412,8 @@
   <h3 id="contract">How to work out your contract code</h3>
   <p>The chart uses a symbol that never expires (<code>MNQ1!</code>, <code>MGC1!</code>). An order has to name one dated contract. The code is the root, then a month letter, then the last digit of the year:</p>
   <div class="panel">
-    <div class="row"><div class="name"><code>MNQZ6</code></div><div class="what">MNQ · Z = December · 6 = 2026</div></div>
-    <div class="row"><div class="name"><code>MGCG7</code></div><div class="what">MGC · G = February · 7 = 2027</div></div>
+    <div class="row"><div class="name"><code>MNQZ6</code> (example)</div><div class="what">MNQ · Z = December · 6 = 2026</div></div>
+    <div class="row"><div class="name"><code>MGCG7</code> (example)</div><div class="what">MGC · G = February · 7 = 2027</div></div>
   </div>
   <ul class="do">
     <li>Sign in to Tradovate's web app at <a href="https://trader.tradovate.com/" rel="noopener" target="_blank">trader.tradovate.com</a>, with the login you linked in step 2.<small>If your prop firm gave you its own address for the Tradovate platform, sign in there instead.</small></li>
@@ -468,6 +477,7 @@
     <li>Find your alert in the list. It carries your strategy's name.</li>
   </ul>
   <p class="see"><b>You should now see:</b> the word <span class="ui">Active</span> on your alert.</p>
+  <p>The long text after the alert's name is the strategy's settings and contains your key. <strong>Never share a picture of it uncovered.</strong></p>
   <p>This is the first place to look whenever something seems off. If the bot is not placing trades, come back here. An alert that does not say Active means the bot is not running: see <a href="#ts-stopped">the alert stopped</a>.</p>
   </section>
 
@@ -608,7 +618,7 @@
       <ul>
         <li><strong>The account name does not match.</strong> Copy it again from My Account, Brokers, and paste it into <span class="ui">Tradovate account</span> in the strategy's settings.</li>
         <li><strong>The Tradovate link expired.</strong> Click Link Demo or Link Live again and sign back in. Messages sent while the link was down are not queued.</li>
-        <li><strong>The Kill Switch is on</strong> in CrossTrade's <span class="ui">Master Controls</span>, on the Webhooks page of your CrossTrade dashboard. It is CrossTrade's own stop switch: while it is on, CrossTrade refuses every alert. Switch it off there.</li>
+        <li><strong>The Kill Switch is on</strong> in CrossTrade's <span class="ui">Master Controls</span>. It is CrossTrade's own stop switch: while it is on, CrossTrade refuses every alert. Switch it off there.</li>
         <li><strong>The key is wrong</strong>, for example it was cut short when pasted.</li>
         <li><strong>The contract code is wrong or expired.</strong> See the next item.</li>
       </ul>
@@ -652,15 +662,15 @@
       <p>Stop the alert first, then check Tradovate for positions and orders you did not expect. In CrossTrade open My Account, Security, and click <span class="ui">Regenerate Key</span>. Put the new key into the strategy's settings (step 5) and create a new alert (step 6). Do not send the old or the new key to anyone, us included.</p>
     </div>
   </details>
-  <p class="next"><strong>Still stuck?</strong> Write to <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a> or ask in the <a data-dest="discordInvite" data-ev="lead" data-name="setup-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a>. Say which bot, which step and what the screen shows. Cover your key, webhook URL and account name in any screenshot.</p>
+  <p class="next"><strong>Still stuck?</strong> Write to <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a> or ask in the <a data-dest="discordInvite" data-name="setup-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a>. Say which bot, which step and what the screen shows. Cover your key, webhook URL, account name and the text after the alert's name in any screenshot.</p>
   </section>
 
   <p class="cta"><a class="btn btn-primary" href="#step-1">Back to step 1</a><a class="btn btn-ghost" href="/trading-bots/setup/multiple-accounts/" data-ev="content" data-name="setup-multiple-accounts">One bot on several accounts</a><a class="btn btn-ghost" href="/trading-bots/" data-ev="content" data-name="setup-bots">AFT Trading Bots</a></p>
 
   <footer>
     <p class="line">All Fluence Trading · AFT Trading Bots · Setup guide</p>
-    <p><a href="/">Front page</a> · <a href="/trading-bots/">Trading Bots</a> · <a href="/challenge/">AFT Challenge</a> · <a data-dest="discordInvite" data-ev="lead" data-name="setup-footer-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a> · <a href="/legal/">Disclaimer</a> · <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a></p>
-    <p>Screen names were checked against TradingView's and CrossTrade's own help pages in November 2026. Those services change their screens; where a label differs, follow the linked help page. TradingView, CrossTrade and Tradovate are trademarks of their owners. All Fluence Trading is in CrossTrade's referral program and is not otherwise affiliated with or endorsed by these companies.</p>
+    <p><a href="/">Front page</a> · <a href="/trading-bots/">Trading Bots</a> · <a href="/challenge/">AFT Challenge</a> · <a data-dest="discordInvite" data-name="setup-footer-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a> · <a href="/legal/">Disclaimer</a> · <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a></p>
+    <p>Screen names were checked against TradingView's and CrossTrade's own help pages and live screens in November 2026. Those services change their screens; where a label differs, follow the linked help page. TradingView, CrossTrade and Tradovate are trademarks of their owners. All Fluence Trading is in CrossTrade's referral program and is not otherwise affiliated with or endorsed by these companies.</p>
     <p>For education only. Trading futures involves substantial risk of loss and is not suitable for every investor. You can lose more than your initial investment. Automated strategies can lose money, and an order routed to a broker can fail, be delayed or fill at a different price. If you connect a strategy to an account, that choice and the size you trade are yours, and you are responsible for every order it sends. Strategy Tester results are hypothetical, have inherent limitations and do not represent actual trading. All Fluence Trading provides educational software and training only and is not a registered investment adviser, broker-dealer or commodity trading advisor. Nothing here is financial advice.</p>
   </footer>
 </div>
@@ -687,6 +697,21 @@
       if(box&&box.aftGo) box.aftGo(parseInt(a.getAttribute('data-ch'),10));
     });
   });
+})();
+/* A link to a fold-out opens it: on a click, and on a load or change of the address with a fragment. */
+(function(){
+  function openAt(h){
+    if(!h||h.length<2) return null;
+    var el; try{ el=document.getElementById(decodeURIComponent(h.slice(1))); }catch(e){ return null; }
+    for(var d=el; d; d=d.parentElement){ if(d.tagName==='DETAILS') d.open=true; }
+    return el;
+  }
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a[href*="#"]');
+    if(a&&a.pathname===location.pathname&&a.hash) openAt(a.hash);
+  });
+  window.addEventListener('hashchange',function(){ openAt(location.hash); });
+  var t=openAt(location.hash); if(t&&t.tagName==='DETAILS') t.scrollIntoView();
 })();
 </script>
 <script>
