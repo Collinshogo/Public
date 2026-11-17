@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Copy trading: CrossTrade's trade copier and account monitor | All Fluence Trading</title>
+<link rel="canonical" href="https://allfluencetrading.com/trading-bots/setup/copy-trading/">
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#0e0f16">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="All Fluence Trading">
+<meta property="og:title" content="Copy trading">
+<meta property="og:description" content="Copy trading for your AFT trading bot: your other Tradovate accounts copy the account your bot trades, through CrossTrade's trade copier. Optional: fixed rules on an account with a monitor.">
+<meta property="og:url" content="https://allfluencetrading.com/trading-bots/setup/copy-trading/">
+<meta property="og:image" content="https://allfluencetrading.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Copy trading">
+<meta name="twitter:description" content="Copy trading for your AFT trading bot: your other Tradovate accounts copy the account your bot trades, through CrossTrade's trade copier. Optional: fixed rules on an account with a monitor.">
+<meta name="twitter:image" content="https://allfluencetrading.com/assets/og.png">
+<script src="/config.js"></script>
+<script src="/tracking.js" defer></script>
+<meta name="description" content="Copy trading for your AFT trading bot: your other Tradovate accounts copy the account your bot trades, through CrossTrade's trade copier, in three steps, in writing and on video. Optional: put fixed rules on an account with CrossTrade's account monitor.">
+<style>
+  :root{
+    --bg:#0e0f16; --panel:#171925; --line:#23263a; --line2:#2f3349;
+    --text:#d8dbe6; --bright:#ffffff; --dim:#9a9fb3; --faint:#80859c;
+    --green:#34c27a; --green-tint:rgba(52,194,122,.08);
+    --amber:#e0a84a; --amber-tint:rgba(224,168,74,.08);
+    --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+    --sans:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;font-size:17px;-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+  .wrap{max-width:760px;margin:0 auto;padding:28px 20px 56px}
+  a{color:var(--bright);text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:3px}
+  a:hover{text-decoration-color:var(--bright)}
+  strong{color:var(--bright)}
+  .brand{display:block;width:max-content;margin-bottom:20px}
+  .brand img{height:34px;width:auto;display:block}
+  .badge{display:inline-block;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--green);border:1px solid var(--green);background:var(--green-tint);border-radius:999px;padding:4px 12px;margin:0 0 12px}
+  h1{font-family:var(--display);font-size:clamp(30px,6vw,52px);line-height:1.05;margin:0 0 10px;color:var(--bright);font-weight:700;letter-spacing:-.03em}
+  .tagline{color:var(--dim);margin:0 0 14px;font-size:17px}
+  .kicker{font-size:15px;color:var(--green);margin:56px 0 6px;font-weight:600}
+  h2{font-family:var(--display);font-size:clamp(26px,3.6vw,34px);color:var(--bright);margin:0 0 14px;font-weight:600;letter-spacing:-.02em;line-height:1.1;scroll-margin-top:18px}
+  h3{font-family:var(--display);font-size:19px;color:var(--bright);margin:30px 0 8px;font-weight:600;letter-spacing:-.01em;scroll-margin-top:18px}
+  section{scroll-margin-top:18px}
+  .ui{color:var(--bright);font-weight:600;white-space:normal}
+  code{font-family:var(--mono);font-size:.88em;background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--bright);overflow-wrap:anywhere}
+  .fine{font-size:13.5px;color:var(--faint);margin:10px 0 0}
+
+  /* the first screen: what you get, what you need, the steps, help */
+  .start{border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:4px 18px;margin:0 0 4px}
+  .start h2{font-size:14px;font-family:var(--sans);font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);margin:12px 0 4px}
+  .start p{margin:0 0 10px;font-size:15.5px}
+  .start ul{margin:0 0 6px;padding-left:20px;font-size:15.5px;line-height:1.45}
+  .start li{margin:0 0 4px}
+  .start ol{list-style:none;margin:0 0 6px;padding:0;counter-reset:s}
+  .start ol li{counter-increment:s;margin:0;border-top:1px solid var(--line)}
+  .start ol li:first-child{border-top:0}
+  .start ol a{display:grid;grid-template-columns:22px 1fr;gap:0 6px;padding:6px 0;min-height:44px;align-items:center;text-decoration:none;font-weight:500;font-size:15.5px;line-height:1.4}
+  .start ol a::before{content:counter(s);font-family:var(--display);font-weight:600;color:var(--green)}
+  .start ol a:hover{text-decoration:underline}
+  .start hr{border:0;border-top:1px solid var(--line);margin:0}
+  .start .help{margin:10px 0}
+  .start .jump{margin:0}
+  .start .jump a{display:inline-block;padding:13px 0}
+  .alt{margin:0 0 12px;font-size:15.5px}
+
+  /* callouts */
+  .callout{border:1px solid var(--line);border-left:3px solid var(--green);background:var(--green-tint);padding:16px 18px;margin:22px 0;border-radius:10px}
+  .callout.warn{border-left-color:var(--amber);background:var(--amber-tint)}
+  .callout .label{font-weight:600;color:var(--bright);margin:0 0 8px;font-size:16px}
+  .callout p{margin:0 0 10px;font-size:16px}
+  .callout p:last-child,.callout ul:last-child{margin-bottom:0}
+  .callout ul{margin:0 0 10px;padding-left:20px;font-size:16px}
+  .callout li{margin:0 0 6px}
+
+  /* one action per line */
+  .do{list-style:none;margin:14px 0 0;padding:0;border-top:1px solid var(--line)}
+  .do>li{position:relative;padding:12px 0 12px 32px;border-bottom:1px solid var(--line);font-size:16.5px}
+  .do>li::before{content:"";position:absolute;left:2px;top:17px;width:15px;height:15px;border:2px solid var(--green);border-radius:4px}
+  .do>li small code{font-size:13.5px}
+  .do>li small{display:block;color:var(--dim);font-size:14.5px;line-height:1.5;margin-top:3px}
+  .do>li .panel{margin:10px 0 2px}
+  .see{border:1px solid var(--line);border-left:3px solid var(--green);background:var(--green-tint);border-radius:10px;padding:12px 16px;margin:16px 0 0;font-size:16px}
+  .see b{color:var(--bright);font-weight:600}
+  .go{margin:14px 0 0}
+  .go a{display:inline-flex;align-items:center;gap:6px;padding:10px 14px;border:1px solid var(--line2);border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;margin:0 8px 8px 0}
+  .go a:hover{border-color:var(--bright)}
+  .go a.primary{background:var(--bright);color:#0e0f16;border-color:var(--bright)}
+
+  /* tables of settings */
+  .panel{border:1px solid var(--line2);border-radius:10px;background:var(--panel);margin:16px 0;overflow:hidden}
+  .panel .ph{padding:10px 16px;border-bottom:1px solid var(--line);font-size:13px;color:var(--dim);font-weight:600;letter-spacing:.04em}
+  .row{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:6px 18px;padding:12px 16px;border-top:1px solid var(--line)}
+  .row:first-of-type{border-top:0}
+  .row .name{color:var(--bright);font-weight:600;font-size:15px;line-height:1.4}
+  .row .name.no{color:var(--dim);font-weight:500}
+  .row .what{color:var(--text);font-size:15px;line-height:1.5}
+  .months{display:grid;grid-template-columns:repeat(12,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:12px 0}
+  .months div{background:var(--panel);text-align:center;padding:7px 2px}
+  .months span{display:block;color:var(--dim);font-size:13px}
+  .months b{display:block;color:var(--bright);font-family:var(--mono);font-size:16px;font-weight:600}
+
+  /* fold-outs: troubleshooting and background */
+  details{border:1px solid var(--line);border-radius:10px;background:var(--panel);margin:10px 0 0}
+  summary{cursor:pointer;padding:14px 18px;font-weight:600;color:var(--bright);font-size:16.5px}
+  details>div{padding:0 18px 14px}
+  details p{margin:0 0 10px;font-size:16px}
+  details ul,details ol{margin:0 0 10px;padding-left:20px;font-size:16px}
+  details li{margin:0 0 6px}
+  .plain{margin:0 0 12px;padding-left:20px}
+  .plain li{margin:0 0 6px}
+  .next{margin:26px 0 0;font-size:16px}
+
+  /* read or watch */
+  .choose{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0 0}
+  .choose a{display:block;border:1px solid var(--line2);border-radius:10px;background:var(--panel);padding:14px 18px;text-decoration:none;font-family:var(--display);font-weight:600;font-size:20px;color:var(--bright);letter-spacing:-.01em}
+  .choose a:hover{border-color:var(--bright)}
+  .choose a small{display:block;font-family:var(--sans);font-weight:400;font-size:14.5px;color:var(--dim);letter-spacing:0;line-height:1.45;margin-top:4px}
+  [hidden]{display:none !important}
+
+  /* TradingView's own videos: nothing loads from the video host until the reader presses play */
+  .vid{margin:14px 0 18px;min-width:0}
+  .vid .frame{border:1px solid var(--line2);border-radius:10px;overflow:hidden;background:#000}
+  .vid button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;width:100%;aspect-ratio:16/9;background:var(--panel);border:0;color:var(--bright);cursor:pointer;font:inherit;padding:14px;text-align:center}
+  .vid button:hover{background:#1c1f2e}
+  .vid .play{width:54px;height:54px;border-radius:50%;background:var(--bright);position:relative;flex:none}
+  .vid .play::after{content:"";position:absolute;left:21px;top:16px;border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent #0e0f16}
+  .vid .vt{font-family:var(--display);font-weight:600;font-size:17px;line-height:1.25;max-width:440px}
+  .vid .vl{font-size:13.5px;color:var(--dim)}
+  .vid iframe{display:block;width:100%;aspect-ratio:16/9;border:0;background:#000}
+  .vid .cap{font-size:13.5px;color:var(--faint);margin:8px 0 0;line-height:1.45}
+  .vgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:16px 0 0}
+  .vgrid .vid{margin:0}
+
+  /* our own video, with section buttons under it */
+  .player{margin:16px 0 0}
+  .player video{display:block;width:100%;aspect-ratio:16/9;border:1px solid var(--line2);border-radius:10px;background:#000}
+  .chl{font-size:14px;color:var(--dim);font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin:18px 0 8px}
+  .chapters{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .chapters button{display:flex;justify-content:space-between;align-items:baseline;gap:10px;width:100%;text-align:left;font:inherit;font-size:15.5px;font-weight:600;color:var(--bright);background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:11px 14px;cursor:pointer}
+  .chapters button:hover{border-color:var(--bright)}
+  .chapters button b{display:inline-block;min-width:20px;color:var(--green);font-family:var(--display);font-weight:600}
+  .chapters button .t{color:var(--dim);font-weight:400;font-size:14px;font-variant-numeric:tabular-nums}
+  .chapters button.cur{border-color:var(--green);background:var(--green-tint)}
+  a.wl{display:inline-flex;align-items:center;min-height:44px;gap:8px;font-size:14.5px;font-weight:600;border:1px solid var(--line2);border-radius:999px;padding:7px 14px;text-decoration:none;margin:0 0 4px}
+  a.wl::before{content:"";border-style:solid;border-width:5px 0 5px 8px;border-color:transparent transparent transparent var(--green)}
+  a.wl:hover{border-color:var(--bright)}
+
+  .cta{margin:24px 0 0;display:flex;flex-wrap:wrap;gap:12px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 22px;border-radius:8px;font-weight:600;font-size:16px;text-decoration:none}
+  .btn-primary{background:var(--bright);color:#0e0f16;border:1px solid var(--bright)}
+  .btn-ghost{background:transparent;color:var(--bright);border:1px solid var(--line2)}
+  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line)}
+  footer .line{font-size:14px;color:var(--dim);margin:0 0 8px;font-weight:500}
+  footer p{font-size:13px;color:var(--faint);margin:0 0 10px}
+  footer p a{display:inline-block;padding:12px 4px}
+  @media (max-width:640px){
+    .wrap{padding:22px 16px 40px}
+    .choose,.vgrid,.chapters{grid-template-columns:1fr}
+    .row{grid-template-columns:1fr}
+    .months{grid-template-columns:repeat(6,1fr)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
+  <p class="badge">Setup guide</p>
+  <h1>Copy trading</h1>
+  <p class="alt">Want the bot on a different account, not on several at once? Use <a href="/trading-bots/setup/#move">Moving the bot to another account</a> in the setup guide instead.</p>
+  <p class="tagline">When you finish, your other Tradovate accounts copy the account your bot trades, through CrossTrade's trade copier. Every account is your own, and you set the bot up once.</p>
+
+  <div class="start">
+    <h2>What you need first</h2>
+    <ul>
+      <li><strong>Your bot already running</strong> (<a href="/trading-bots/setup/">setup guide</a>).</li>
+      <li><strong>A second Tradovate account</strong>, or more.</li>
+      <li><strong>CrossTrade's Pro plan</strong> or higher.</li>
+      <li><strong>Every account in your own name.</strong></li>
+    </ul>
+    <p class="jump"><a href="#before">More on each one</a></p>
+    <hr>
+    <h2>The trade copier: three steps</h2>
+    <ol>
+      <li><a href="#copier-1">Set up the copier</a></li>
+      <li><a href="#copier-2">What Execution mode means for a follower</a></li>
+      <li><a href="#copier-3">Check it is copying</a></li>
+    </ol>
+    <hr>
+    <h2>Optional: an account monitor, three steps</h2>
+    <ol>
+      <li><a href="#monitor-1">Add a monitor and set daily limits</a></li>
+      <li><a href="#monitor-2">The optional rules</a></li>
+      <li><a href="#monitor-3">When a monitor stops an account</a></li>
+    </ol>
+    <hr>
+    <p class="help"><strong>Stuck?</strong> <a href="#troubleshooting">Troubleshooting</a>, then <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a></p>
+  </div>
+
+  <div class="choose">
+    <a href="#before">Read<small>Every step in writing, one action per line</small></a>
+    <a href="#watch">Watch<small>Two short videos with captions: the trade copier (2:42) and the optional monitor (2:19).</small></a>
+  </div>
+
+  <!-- ============================== WATCH ============================== -->
+  <p class="kicker" id="watch">Prefer to watch</p>
+  <h2>The trade copier on video</h2>
+  <p>Every screen in it is a real CrossTrade screen, with private details covered. The buttons under it jump to a step. The optional monitor has <a href="#watch-monitor">its own video</a> further down.</p>
+  <div class="player" id="player">
+    <video controls preload="none" playsinline poster="/trading-bots/setup/media/aft-trade-copier-poster.jpg" aria-label="Copy trading: the trade copier"><source src="/trading-bots/setup/media/aft-trade-copier.mp4" type="video/mp4"></video>
+    <p class="chl">Jump to a step</p>
+    <ol class="chapters">
+      <li><button type="button" data-t="0.0"><span>Start here: what the trade copier does</span><span class="t">0:00</span></button></li>
+      <li><button type="button" data-t="33.73"><span><b>1</b>Set up the copier</span><span class="t">0:33</span></button></li>
+      <li><button type="button" data-t="109.1"><span><b>2</b>What Execution mode means for a follower</span><span class="t">1:49</span></button></li>
+      <li><button type="button" data-t="129.59"><span><b>3</b>Check it is copying</span><span class="t">2:09</span></button></li>
+    </ol>
+    <noscript><p class="fine">These buttons need JavaScript. Use the player's own bar to move through the video.</p></noscript>
+    <p class="fine">On a phone, turn it sideways or tap full screen to read the captions.</p>
+    <p class="fine">2:42 long, with captions. In the steps below, each "Watch this part" link plays that step here. Your browser's Back button then returns you to the step. <a href="/trading-bots/setup/media/aft-trade-copier.mp4" download>Download the video</a>.</p>
+  </div>
+
+  <!-- ============================== BEFORE YOU START ============================== -->
+  <section id="before">
+  <p class="kicker">Before you start</p>
+  <h2>What you need, and two words to know</h2>
+  <p>This guide adds one CrossTrade feature to a bot that is already running: the <strong>trade copier</strong>. It runs on CrossTrade's servers, so your computer can be off.</p>
+  <div class="panel">
+    <div class="row"><div class="name">Leader</div><div class="what">The account your bot trades: the one named in the strategy's <span class="ui">Tradovate account</span> setting. The bot's alert sends its orders here, and only here.</div></div>
+    <div class="row"><div class="name">Follower</div><div class="what">Any other account. CrossTrade trades it for you by repeating what the leader does. You never point the bot or an alert at a follower.</div></div>
+    <div class="row"><div class="name">Fill</div><div class="what">An order that has been carried out. "The leader fills" means its order went through.</div></div>
+    <div class="row"><div class="name">Market order</div><div class="what">An order that is carried out at once, at the current price.</div></div>
+  </div>
+  <ul class="do">
+    <li>Finish the <a href="/trading-bots/setup/">bot setup guide</a> first, and watch the bot take at least one full trade on a single demo account.<small>A copier repeats whatever the first account does, mistakes included.</small></li>
+    <li>Do this guide on a computer, in a web browser, like the first one.</li>
+    <li>Check your CrossTrade plan. The trade copier and the account monitor are part of the Pro plan and higher, not the entry plan.<small>The button under this list opens CrossTrade's plans page, with each plan and its price.</small></li>
+    <li>Check every account is in your own name, and that no two accounts share a name.<small>CrossTrade refuses an account name that appears twice across your linked logins.</small></li>
+    <li><strong>Check your own prop firm's rules first.</strong> Some firms limit or forbid copying trades between accounts, and automated trading.</li>
+    <li>Check which logins your accounts sit under. CrossTrade's Brokers screen lists each login you linked with its accounts under it.<small>A Tradovate demo login and a prop firm login are two different logins. In CrossTrade every prop firm account counts as Demo, like a Tradovate demo account (both are linked with Link Demo).</small></li>
+  </ul>
+  <div class="callout warn" id="logins">
+    <p class="label">Accounts under different logins</p>
+    <p>CrossTrade's help page says what it has validated: a leader and followers <strong>under the same Tradovate login and of the same kind</strong> (Demo to Demo, or Live to Live).</p>
+    <p>Copying between two different logins (two prop firm logins, or a demo login and a prop firm login), or between Live and Demo, it calls "still being validated", and it tells you to check the behaviour with demo accounts before relying on it.</p>
+    <ul>
+      <li><strong>All your accounts under one login:</strong> carry on with step 1.</li>
+      <li><strong>Accounts under different logins:</strong> you can still set the copier up the same way. Treat the first trades as a test: keep the bot's Multiplier at 1, watch the first trade on every account, and read the copier's log after every session. If a follower does not copy correctly, switch the copier off and write to CrossTrade's support. Its address is under Troubleshooting, at the end of this page.</li>
+      <li><strong>One demo account and one prop firm account:</strong> those are two logins, so there is no all-demo practice run for you. Go ahead only if both of these are true: your prop firm's rules allow automated trading and copying between accounts, and you accept that the first copied trades are real trades on the prop firm account. If either is not true, stop here and keep the bot on one account.</li>
+      <li><strong>Which account is the leader:</strong> the one the bot's alert trades today. The other account is the follower. If the bot is still on your demo practice account and you want it on another account, move it first: <a href="/trading-bots/setup/#move">Moving the bot to another account</a>, in the bot setup guide.</li>
+      <li><strong>Only one account so far:</strong> there is nothing to copy to yet. The <a href="#monitor">optional monitor</a> further down still works on one account; apart from that you are done with this guide for now. A Tradovate sign-up opens with one demo account. A second account usually comes from a prop firm. To ask whether your Tradovate login can have another demo account, use the support chat in <a href="https://support.tradovate.com/" rel="noopener" target="_blank">Tradovate's Help Center</a>.</li>
+    </ul>
+  </div>
+  <p class="go"><a class="primary" data-ev="content" data-name="multi-crosstrade-plans" href="https://crosstrade.io/pricing?ref=AFT" rel="noopener" target="_blank">See CrossTrade's plans</a></p>
+  <p class="fine">Referral link: All Fluence Trading earns a commission if you subscribe through it. Your price is the same.</p>
+  </section>
+
+  <!-- ============================== COPIER 1 ============================== -->
+  <section id="copier-1">
+  <p class="kicker">Trade copier · step 1 of 3</p>
+  <h2>Set up the copier</h2>
+  <p><a class="wl" href="#watch" data-ch="1">Watch this part (0:33)</a></p>
+  <p><strong>Before you click anything:</strong> check that your prop firm allows copying between accounts, and if your accounts sit under different logins, read <a href="#logins">the box above</a>.</p>
+  <ul class="do">
+    <li>Connect every account you want to use to CrossTrade: <span class="ui">My Account</span>, then <span class="ui">Brokers</span>, then <span class="ui">Link Demo</span> or <span class="ui">Link Live</span>.<small>It is the same as <a href="/trading-bots/setup/#step-2">step 2 of the bot setup guide</a>. Each Tradovate login is linked once, and all of its accounts then appear under it.</small></li>
+    <li><strong>Wait until the bot holds no trade.</strong> Between 16:09 and 18:00 New York time (US Eastern time) is simplest.<small>To check, look at the leader account in Tradovate's web app: no position and no orders waiting. On a normal trading day the bot holds no trade between those two times.</small><small>A new copier copies what the leader does from then on. It does not pick up a trade that is already open.</small></li>
+    <li>In CrossTrade's sidebar, open <span class="ui">Tradovate Copier</span>.</li>
+    <li>Click <span class="ui">Add Copier</span>.</li>
+    <li>Give the copier a name if you like.</li>
+    <li>Under <span class="ui">Account Selection</span>, pick the leader: the account your bot trades.</li>
+    <li>Pick the follower account, or several.<small>You can pick several followers in one copier. They then share one set of settings. If two followers should trade different sizes, give each its own copier instead. The same leader and follower cannot be put in a second copier.</small></li>
+    <li>Under <span class="ui">Trade Execution</span>, <strong>change the mode from <span class="ui">Signal</span> to <span class="ui">Execution</span>.</strong> It starts on Signal, so do not skip this line.<small>In Execution mode, every fill on the leader is repeated on the followers as a market order. Step 2 explains what that means for you. Signal, the mode it starts on, repeats the messages sent to the leader instead of its fills. This guide does not use it.</small><small>The form also offers a third mode, Order. This guide does not use it.</small></li>
+    <li>Under <span class="ui">Sizing</span>, leave the ratio at <code>1x</code> to copy the leader's size.<small>The ratio is how many contracts the follower trades for each one the leader trades. <code>2</code> doubles it and <code>0.5</code> halves it. If a follower is a prop firm account, keep its size inside that account's contract limit.</small></li>
+    <li>Leave <span class="ui">Max Position Size</span> at <code>0</code>, which means no limit.<small>It is an optional ceiling on the follower's position, counted in contracts. If you do set one, make it at least the largest position your bot takes on the leader. A lower number trims or skips the follower's entries.</small></li>
+    <li>Under <span class="ui">Instrument Filtering</span>, pick the instrument your bot trades: <code>MNQ</code> for Slipstream, <code>MGC</code> for Midas.<small>Anything else on the leader is then not copied. This is the instrument's root, not a dated contract code, so it stays the same when the contract month changes.</small></li>
+    <li>Scroll down to <span class="ui">Account Settings</span>. Leave <span class="ui">Account Management Tandem Mode</span> off for now.<small>It only matters if you add the <a href="#monitor">optional monitor</a> later. Monitor step 2 tells you when to switch it on. Leave <span class="ui">Stealth Mode</span>, in the same block, as it is: it only changes the label on copied orders.</small></li>
+    <li>Under <span class="ui">Safety Features</span>, leave <span class="ui">Auto-Sync</span> enabled.<small>After each copy it checks that the follower matches the leader.</small></li>
+    <li>Leave every other setting as it comes.</li>
+    <li><strong>Before you click the button in the next line, know this: a follower has no stop and no targets of its own at the broker.</strong> It gets in when the leader gets in, and gets out when the leader gets out.<small>Step 2 has the rest of what Execution mode means for a follower.</small></li>
+    <li>Click <span class="ui">Create Copier &amp; Enable</span>, the blue button at the bottom of the window.<small>The button beside it, Create Copier, saves the copier switched off.</small></li>
+  </ul>
+  <p class="see"><b>You should now see:</b> the copier in the list on the Tradovate Copier page, enabled, in Execution mode.</p>
+  <div class="callout warn">
+    <p class="label">Leave the bot's alert exactly as it is</p>
+    <p>Nothing changes in TradingView. The bot keeps its one alert, aimed at the leader. <strong>Never create an alert, or a second copy of the strategy, for an account that is a follower: it would take every trade twice.</strong></p>
+  </div>
+  </section>
+
+  <!-- ============================== COPIER 2 ============================== -->
+  <section id="copier-2">
+  <p class="kicker">Trade copier · step 2 of 3</p>
+  <h2>What Execution mode means for a follower</h2>
+  <p><a class="wl" href="#watch" data-ch="2">Watch this part (1:49)</a></p>
+  <p><strong>Read this before the first copied trade.</strong> There is nothing to click here, but the first line can cost you money if you miss it.</p>
+  <ul class="plain">
+    <li><strong>Do not close a follower by hand in the middle of a trade.</strong> Auto-Sync can put it back to match the leader. To take a follower out, pause its copier first (switch it off in the list on the Tradovate Copier page), then close that account's position yourself in Tradovate.</li>
+    <li><strong>A follower has no stop and no targets of its own at the broker.</strong> It gets in when the leader gets in, and gets out when the leader gets out.</li>
+    <li><strong>Pausing a copier does not close anything.</strong> Positions and orders stay where they are until you close them.</li>
+    <li><strong>A follower's prices differ a little from the leader's.</strong> It enters and exits at market just after the leader fills.</li>
+    <li><strong>Fills that happen while the connection is down are not copied afterwards.</strong> Look at every account after any outage.</li>
+    <li><strong>Each account succeeds or fails separately.</strong> A follower that is rejected does not undo the leader's trade.</li>
+    <li><strong>Unlinking a Tradovate login pauses every copier and every monitor.</strong> Linking it again does not switch them back on: open both pages and enable them again.</li>
+  </ul>
+  </section>
+
+  <!-- ============================== COPIER 3 ============================== -->
+  <section id="copier-3">
+  <p class="kicker">Trade copier · step 3 of 3</p>
+  <h2>Check it is copying</h2>
+  <p><a class="wl" href="#watch" data-ch="3">Watch this part (2:09)</a></p>
+  <ul class="do">
+    <li>Wait for the bot's next trade. That can take hours, and there is nothing to see until then. You can close the browser: the copier runs on CrossTrade's servers. Come back when the leader is in a trade.</li>
+    <li>In Tradovate's web app, look at each follower's position while the leader is in the trade.</li>
+    <li>On CrossTrade's <span class="ui">Tradovate Copier</span> page, click <span class="ui">See Logs</span>, in the toolbar at the top beside <span class="ui">Add Copier</span>.<small>The log has a row for every copy, and the reason for anything that was skipped or rejected.</small></li>
+    <li>When the leader exits, check each follower again: it should hold no position.</li>
+  </ul>
+  <p class="see"><b>You should now see:</b> each follower holding the same position as the leader, at the size you set, and a row for each follower in the log.</p>
+  <p><strong>The test is passed when</strong> each follower took the same trade as the leader at the size you set, the log has a row for it with nothing skipped or rejected, and every account holds no position after the leader exits. If any of those fails, switch the copier off and see Troubleshooting.</p>
+  <p>Read the log after every session for the first week. If you can, do this practice run on demo accounts before you use real ones.</p>
+  <details id="move">
+    <summary>Moving from the practice run to other accounts</summary>
+    <div>
+      <ol>
+        <li>Wait until the bot holds no trade. Between 16:09 and 18:00 New York time is simplest.</li>
+        <li>On the Tradovate Copier page, switch the practice copier off. It can stay in the list, switched off.</li>
+        <li>Make a new copier the same way (step 1), with the new leader and followers.</li>
+        <li>If the leader is a different account from the one the bot trades now, the bot has to trade the new leader. Put the new account name in the strategy's <span class="ui">Tradovate account</span> setting, then delete the alert and create it again (<a href="/trading-bots/setup/#step-5">steps 5 and 6 of the bot setup guide</a>).</li>
+      </ol>
+    </div>
+  </details>
+  </section>
+
+  <!-- ============================== MONITOR ============================== -->
+  <section id="monitor">
+  <p class="kicker">Optional</p>
+  <h2>Put a monitor on an account</h2>
+  <p><strong>You do not need a monitor to run the bot or the copier.</strong> A monitor is an optional CrossTrade feature that puts fixed rules on one account, such as a daily loss limit, a daily profit target or a time of day to hold no position. When a rule is hit, the monitor can close the account's position and block the bot's orders on that account until the monitor is started again. Like the copier, it is part of CrossTrade's Pro plan and higher.</p>
+  <h3 id="watch-monitor">The monitor on video</h3>
+  <div class="player" id="player-monitor">
+    <video controls preload="none" playsinline poster="/trading-bots/setup/media/aft-account-monitor-poster.jpg" aria-label="Optional: put a monitor on an account"><source src="/trading-bots/setup/media/aft-account-monitor.mp4" type="video/mp4"></video>
+    <p class="chl">Jump to a step</p>
+    <ol class="chapters">
+      <li><button type="button" data-t="0.0"><span>Start here: what a monitor is, and do I need one</span><span class="t">0:00</span></button></li>
+      <li><button type="button" data-t="25.74"><span><b>1</b>Add a monitor and set daily limits</span><span class="t">0:25</span></button></li>
+      <li><button type="button" data-t="54.96"><span><b>2</b>The optional rules</span><span class="t">0:54</span></button></li>
+      <li><button type="button" data-t="111.4"><span><b>3</b>When a monitor stops an account</span><span class="t">1:51</span></button></li>
+    </ol>
+    <noscript><p class="fine">These buttons need JavaScript. Use the player's own bar to move through the video.</p></noscript>
+    <p class="fine">On a phone, turn it sideways or tap full screen to read the captions.</p>
+    <p class="fine">2:19 long, with captions. <a href="/trading-bots/setup/media/aft-account-monitor.mp4" download>Download the video</a>.</p>
+  </div>
+  </section>
+
+  <section id="monitor-1">
+  <p class="kicker">Monitor · step 1 of 3</p>
+  <h2>Add a monitor and set daily limits</h2>
+  <p><a class="wl" href="#watch-monitor" data-p="player-monitor" data-ch="1">Watch this part (0:25)</a></p>
+  <p>Steps 1 and 2 fill in one window. Nothing is saved until you click the button at the end of step 2, so do both in one go.</p>
+  <ul class="do">
+    <li>In CrossTrade's sidebar, open <span class="ui">Tradovate Account Manager</span>.</li>
+    <li>Click <span class="ui">Add Monitor</span>.</li>
+    <li>Under <span class="ui">Account Selection</span>, pick the account you want the rules on.<small>Each account takes one monitor. For rules on several accounts, do steps 1 and 2 once for each account. If you use monitors with a copier, give the leader and each follower its own.</small></li>
+    <li>Leave <span class="ui">Monitor Mode</span> on <span class="ui">Standard Mode</span>.<small>The monitor then stops for the day when a daily limit is hit.</small></li>
+    <li>Under <span class="ui">Daily P/L Thresholds</span>, type your <span class="ui">Daily Profit Target</span> and your <span class="ui">Daily Loss Limit</span>.<small>Each is an amount of profit or loss for the whole day, in your account's currency. <strong>A limit left at 0 is switched off.</strong> The amounts are yours to choose: take them from your own account's rules and from what you are prepared to lose in a day. A prop firm states its daily loss limit, if it has one, in the rules for your account: type a smaller amount than that.</small><small>CrossTrade's help page does not show an example amount. Type the loss limit as a plain amount, then prove it on a demo account with the test at the end of step 3 before you rely on it.</small></li>
+    <li>Leave <span class="ui">P/L Basis</span> on <span class="ui">Total</span>.<small>Total counts open trades as well as closed ones, so it sees a losing trade while it is still open.</small></li>
+  </ul>
+  <p class="see"><b>You should now see:</b> your two amounts in the Daily P/L Thresholds boxes. The monitor is not saved yet. Keep the window open and go on to step 2.</p>
+  </section>
+
+  <section id="monitor-2">
+  <p class="kicker">Monitor · step 2 of 3</p>
+  <h2>The optional rules</h2>
+  <p><a class="wl" href="#watch-monitor" data-p="player-monitor" data-ch="2">Watch this part (0:54)</a></p>
+  <p>Everything below the daily limits is optional. If you want none of it, skip the fold-out and click <span class="ui">Create Monitor &amp; Enable</span>, the blue button at the bottom of the window.</p>
+  <details>
+    <summary>What each optional rule does</summary>
+    <div>
+      <ul>
+        <li><strong>Account Floor:</strong> a fixed minimum account value. Below it the monitor cancels working orders, closes the position and blocks the bot's orders. It does not move with your prop firm's own threshold.</li>
+        <li><strong>Minimum Profit:</strong> once the day is up by an amount you set, it stops the day falling back below a level you choose.</li>
+        <li><strong>Trailing Drawdown:</strong> follows the session's high and stops the account if it gives back more than your amount.</li>
+        <li><strong>Position Management</strong> and <strong>Order Management:</strong> what happens when a rule is hit. As they come, the account's position is closed (<span class="ui">Flatten account</span>) and further messages are blocked (<span class="ui">Disable alerts</span>). Leave both as they come.</li>
+        <li><strong>End-of-Day Flattening:</strong> closes the account's position at a time you choose, in Eastern time. The bot already closes everything at 16:09 New York time, so this is a second line only. If you use it, pick a time just after that, for example <code>16:10</code>.</li>
+        <li><strong>News Lockout:</strong> can close the position ahead of major US news and block the bot's orders around it. Leave it off unless you want it: blocking the bot part-way through a trade leaves the account out of step with the chart.</li>
+        <li><strong>Entry Limits</strong> and <strong>Discipline Rules</strong> (both marked BETA): a cap on size, a limit on trades per session, a stop after a run of losses. All off as they come.</li>
+        <li><strong>Trading Windows:</strong> limit the hours the account may trade. Leave these alone, for the same reason as News Lockout.</li>
+      </ul>
+    </div>
+  </details>
+  <ul class="do">
+    <li>When your rules are in, click <span class="ui">Create Monitor &amp; Enable</span>, the blue button at the bottom of the window.<small>The button beside it, Create Monitor, saves the monitor switched off.</small></li>
+    <li><strong>If this account is a follower in a copier, turn on Tandem Mode in that copier.</strong> On the Tradovate Copier page open the copier for editing (the window is titled Edit Copier), scroll to <span class="ui">Account Settings</span>, switch on <span class="ui">Account Management Tandem Mode</span> and save.<small>The follower is then copied to only while its own monitor is active. Without it, a follower whose monitor has stopped is still copied to.</small></li>
+  </ul>
+  <p class="see"><b>You should now see:</b> the monitor in the list, reading <span class="ui">ACTIVE</span>, with no warning beside it.</p>
+  <p class="fine">ACTIVE means switched on and watching the account. PAUSED means you switched it off. STOPPED means a limit was reached and the monitor stopped for the day.</p>
+  </section>
+
+  <section id="monitor-3">
+  <p class="kicker">Monitor · step 3 of 3</p>
+  <h2>When a monitor stops an account</h2>
+  <p><a class="wl" href="#watch-monitor" data-p="player-monitor" data-ch="3">Watch this part (1:51)</a></p>
+  <ul class="plain">
+    <li><strong>CrossTrade blocks the bot's orders for that account</strong> until you start the monitor again. CrossTrade's help says a stopped monitor resumes when you restart it, so do not count on it starting again by itself.</li>
+    <li><strong>The bot on your chart does not know</strong>, and keeps running. For the rest of that day the chart and the account can differ. That is expected.</li>
+    <li><strong>When a follower's monitor stops,</strong> that follower's position is closed and, with Tandem Mode on, it is skipped until its monitor is active again. The leader and the other followers carry on.</li>
+    <li><strong>A monitor is not a stop order</strong> and it does not guarantee a maximum loss. It acts after a limit is crossed, so price can move further first.</li>
+    <li><strong>It does not copy your prop firm's drawdown calculation.</strong> Your firm's own figure is the one that counts. Keep your limits inside it.</li>
+    <li><strong>It stops CrossTrade, not you.</strong> A trade you click inside Tradovate is not blocked in advance.</li>
+  </ul>
+  <ul class="do">
+    <li>To start again: check the account in Tradovate first.</li>
+    <li>Wait until the strategy on the chart is flat. Between 16:09 and 18:00 New York time is the simplest moment.</li>
+    <li>On the <span class="ui">Tradovate Account Manager</span> page, change the limits if needed and restart the monitor.<small>The two small view buttons in the toolbar, beside <span class="ui">See Logs</span>, switch the page between a list and cards. In the card view, the stopped account's card has a restart button.</small></li>
+  </ul>
+  <p class="see"><b>You should now see:</b> the monitor reading <span class="ui">ACTIVE</span> again.</p>
+  <p>Test it on a demo account first: set a small limit, let it be reached, and see for yourself what the monitor does.</p>
+  </section>
+
+  <!-- ============================== TROUBLESHOOTING ============================== -->
+  <section id="troubleshooting">
+  <p class="kicker">If something is wrong</p>
+  <h2>Troubleshooting</h2>
+  <details id="ts-nocopy">
+    <summary>The leader traded and a follower did nothing</summary>
+    <div>
+      <p>Click <span class="ui">See Logs</span> and find that follower and that time. Then check, in this order:</p>
+      <ul>
+        <li>The copier is enabled, and its leader is the account the bot trades.</li>
+        <li>The follower's Tradovate link has not expired (My Account, Brokers).</li>
+        <li>The leader's order has actually filled. In Execution mode the copy happens at the fill, not when the order is placed.</li>
+        <li>Tandem Mode is on and the follower's monitor is STOPPED or PAUSED.</li>
+        <li>The instrument filter does not match the contract, or Max Position Size is too low for the entry.</li>
+        <li>The log shows a rejection from the broker.</li>
+      </ul>
+      <p>If there is no row at all, send CrossTrade's support the mode, the leader, the follower, the contract and the time.</p>
+    </div>
+  </details>
+  <details id="ts-reopen">
+    <summary>A follower reopened after I closed it</summary>
+    <div>
+      <p>Auto-Sync put it back to match the leader, which was still in the trade. Pause that follower's copier first, then close the account's position. Check the position and the working orders afterwards: pausing does not close anything.</p>
+    </div>
+  </details>
+  <details id="ts-size">
+    <summary>A follower holds a different size from the leader</summary>
+    <div>
+      <ul>
+        <li>Its ratio is not 1x.</li>
+        <li><span class="ui">Max Position Size</span> trimmed the entry. The log says so.</li>
+        <li>A copy was skipped or rejected part-way through a trade. With Auto-Sync on, CrossTrade corrects it.</li>
+      </ul>
+    </div>
+  </details>
+  <details id="ts-twice">
+    <summary>A follower took the same trade twice</summary>
+    <div>
+      <p>It is receiving the entry by two routes: the copier, and an alert or a second copy of the strategy aimed at it directly. Stop and delete the extra alert while the strategy is flat, close the position in Tradovate, and keep one alert for the leader only.</p>
+    </div>
+  </details>
+  <details id="ts-skip">
+    <summary>The log says a copy was skipped because the order could not be sent</summary>
+    <div>
+      <p>The order never reached Tradovate. The usual cause is Tradovate's limit on how many requests one login may send. Every follower on a login adds to that count. If skips come in busy sessions, put fewer followers on one login.</p>
+    </div>
+  </details>
+  <details id="ts-stopped">
+    <summary>A monitor says STOPPED</summary>
+    <div>
+      <p>One of its limits was reached today. See <a href="#monitor-3">when a monitor stops an account</a> for what that means and how to start again.</p>
+    </div>
+  </details>
+  <details id="ts-relink">
+    <summary>Everything paused after I linked a login again</summary>
+    <div>
+      <p>Unlinking any Tradovate login pauses all copiers and all monitors, and linking again does not turn them back on. Open <span class="ui">Tradovate Copier</span> and <span class="ui">Tradovate Account Manager</span>, review each one and enable it again, while the strategy is flat.</p>
+    </div>
+  </details>
+  <p class="next"><strong>Still stuck?</strong> Write to <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a> or ask in the <a data-dest="discordInvite" data-name="multi-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a>. Say which bot, which step and what the screen shows. Cover your key, webhook URL, account names and the text after the alert's name in any screenshot. Questions about the copier or the monitor themselves go to CrossTrade's support, at <a href="https://crosstrade.io/contact" rel="noopener" target="_blank">crosstrade.io/contact</a>: we cannot see your CrossTrade account.</p>
+  <p class="go"><a href="https://crosstrade.io/docs/tradovate/trade-copier" rel="noopener" target="_blank">CrossTrade's help: trade copier</a><a href="https://crosstrade.io/docs/tradovate/account-manager" rel="noopener" target="_blank">CrossTrade's help: Account Manager</a></p>
+  </section>
+
+  <p class="cta"><a class="btn btn-primary" href="/trading-bots/setup/" data-ev="content" data-name="multi-setup-guide">Bot setup guide</a><a class="btn btn-ghost" href="/trading-bots/" data-ev="content" data-name="multi-bots">AFT Trading Bots</a></p>
+
+  <footer>
+    <p class="line">All Fluence Trading · AFT Trading Bots · Copy trading</p>
+    <p><a href="/">Front page</a> · <a href="/trading-bots/">Trading Bots</a> · <a href="/trading-bots/setup/">Setup guide</a> · <a href="/challenge/">AFT Challenge</a> · <a data-dest="discordInvite" data-name="multi-footer-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a> · <a href="/legal/">Disclaimer</a> · <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a></p>
+    <p>Screen names and behaviour were checked against CrossTrade's own help pages and live CrossTrade screens in November 2026. CrossTrade changes its screens and features; where a label differs, follow the linked help page. The trade copier and the Account Manager are CrossTrade's products, run by CrossTrade, and All Fluence Trading does not operate or control them. TradingView, CrossTrade and Tradovate are trademarks of their owners. All Fluence Trading is in CrossTrade's referral program and is not otherwise affiliated with or endorsed by these companies.</p>
+    <p>For education only. Trading futures involves substantial risk of loss and is not suitable for every investor. You can lose more than your initial investment. Automated strategies can lose money, and an order routed or copied to a broker account can fail, be delayed or fill at a different price. A monitor does not guarantee a maximum loss. If you connect a strategy to an account or copy it to others, that choice and the size you trade are yours, and you are responsible for every order on every account. Strategy Tester results are hypothetical, have inherent limitations and do not represent actual trading. All Fluence Trading provides educational software and training only and is not a registered investment adviser, broker-dealer or commodity trading advisor. Nothing here is financial advice.</p>
+  </footer>
+</div>
+<script>
+/* Section buttons and 'Watch this part' links: jump a video to a time and play. Works for every .player on the page. */
+(function(){
+  Array.prototype.forEach.call(document.querySelectorAll('.player'),function(box){
+    var v=box.querySelector('video'), btns=box.querySelectorAll('.chapters button');
+    function go(t){
+      function seek(){ try{ v.currentTime=t; }catch(e){} v.play(); }
+      if(v.readyState>=1) seek();
+      else { v.addEventListener('loadedmetadata',seek,{once:true}); v.preload='auto'; v.load(); }
+    }
+    box.aftGo=function(i){ var b=btns[i]; if(b) go(parseFloat(b.getAttribute('data-t'))); };
+    Array.prototype.forEach.call(btns,function(b){ b.addEventListener('click',function(){ go(parseFloat(b.getAttribute('data-t'))); }); });
+    v.addEventListener('timeupdate',function(){
+      var cur=-1; for(var i=0;i<btns.length;i++){ if(v.currentTime+0.25>=parseFloat(btns[i].getAttribute('data-t'))) cur=i; }
+      for(var j=0;j<btns.length;j++){ btns[j].classList.toggle('cur',j===cur); }
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('a.wl[data-ch]'),function(a){
+    a.addEventListener('click',function(){
+      var box=document.getElementById(a.getAttribute('data-p')||'player');
+      if(box&&box.aftGo) box.aftGo(parseInt(a.getAttribute('data-ch'),10));
+    });
+  });
+})();
+/* A link to a fold-out opens it: on a click, and on a load or change of the address with a fragment. */
+(function(){
+  function openAt(h){
+    if(!h||h.length<2) return null;
+    var el; try{ el=document.getElementById(decodeURIComponent(h.slice(1))); }catch(e){ return null; }
+    for(var d=el; d; d=d.parentElement){ if(d.tagName==='DETAILS') d.open=true; }
+    return el;
+  }
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a[href*="#"]');
+    if(a&&a.pathname===location.pathname&&a.hash) openAt(a.hash);
+  });
+  window.addEventListener('hashchange',function(){ openAt(location.hash); });
+  var t=openAt(location.hash); if(t&&t.tagName==='DETAILS') t.scrollIntoView();
+})();
+</script>
+</body>
+</html>
