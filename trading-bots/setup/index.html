@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Set up your AFT trading bot: TradingView, CrossTrade and Tradovate | All Fluence Trading</title>
+<link rel="canonical" href="https://allfluencetrading.com/trading-bots/setup/">
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#0e0f16">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="All Fluence Trading">
+<meta property="og:title" content="Set up your AFT trading bot">
+<meta property="og:description" content="Eight steps, in writing and on video: a CrossTrade account, your Tradovate connection, the strategy on your TradingView chart and the one alert that sends its orders.">
+<meta property="og:url" content="https://allfluencetrading.com/trading-bots/setup/">
+<meta property="og:image" content="https://allfluencetrading.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Set up your AFT trading bot">
+<meta name="twitter:description" content="Eight steps, in writing and on video: a CrossTrade account, your Tradovate connection, the strategy on your TradingView chart and the one alert that sends its orders.">
+<meta name="twitter:image" content="https://allfluencetrading.com/assets/og.png">
+<script src="/config.js"></script>
+<script src="/tracking.js" defer></script>
+<meta name="description" content="Setup guide for an AFT trading bot in eight steps: get a CrossTrade account, connect Tradovate, copy your webhook URL and secret key, add the strategy in TradingView, fill in its settings, create the alert and check the connection.">
+<style>
+  :root{
+    --bg:#0e0f16; --panel:#171925; --line:#23263a; --line2:#2f3349;
+    --text:#d8dbe6; --bright:#ffffff; --dim:#9a9fb3; --faint:#80859c;
+    --green:#34c27a; --green-tint:rgba(52,194,122,.08);
+    --amber:#e0a84a; --amber-tint:rgba(224,168,74,.08);
+    --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+    --sans:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;font-size:17px;-webkit-font-smoothing:antialiased;overflow-wrap:break-word}
+  .wrap{max-width:760px;margin:0 auto;padding:28px 20px 56px}
+  a{color:var(--bright);text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:3px}
+  a:hover{text-decoration-color:var(--bright)}
+  strong{color:var(--bright)}
+  .brand{display:block;width:max-content;margin-bottom:20px}
+  .brand img{height:34px;width:auto;display:block}
+  .badge{display:inline-block;font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--green);border:1px solid var(--green);background:var(--green-tint);border-radius:999px;padding:4px 12px;margin:0 0 12px}
+  h1{font-family:var(--display);font-size:clamp(30px,6vw,52px);line-height:1.05;margin:0 0 10px;color:var(--bright);font-weight:700;letter-spacing:-.03em}
+  .tagline{color:var(--dim);margin:0 0 14px;font-size:17px}
+  .kicker{font-size:15px;color:var(--green);margin:56px 0 6px;font-weight:600}
+  h2{font-family:var(--display);font-size:clamp(26px,3.6vw,34px);color:var(--bright);margin:0 0 14px;font-weight:600;letter-spacing:-.02em;line-height:1.1;scroll-margin-top:18px}
+  h3{font-family:var(--display);font-size:19px;color:var(--bright);margin:30px 0 8px;font-weight:600;letter-spacing:-.01em;scroll-margin-top:18px}
+  section{scroll-margin-top:18px}
+  .ui{color:var(--bright);font-weight:600;white-space:normal}
+  code{font-family:var(--mono);font-size:.88em;background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--bright);overflow-wrap:anywhere}
+  .fine{font-size:13.5px;color:var(--faint);margin:10px 0 0}
+
+  /* the first screen: what you get, what you need, the steps, help */
+  .start{border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:4px 18px;margin:0 0 4px}
+  .start h2{font-size:14px;font-family:var(--sans);font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--dim);margin:12px 0 4px}
+  .start p{margin:0 0 10px;font-size:15.5px}
+  .start ul{margin:0 0 6px;padding-left:20px;font-size:15.5px;line-height:1.45}
+  .start li{margin:0 0 4px}
+  .start ol{list-style:none;margin:0 0 6px;padding:0;counter-reset:s}
+  .start ol li{counter-increment:s;margin:0;border-top:1px solid var(--line)}
+  .start ol li:first-child{border-top:0}
+  .start ol a{display:grid;grid-template-columns:22px 1fr;gap:0 6px;padding:4px 0;text-decoration:none;font-weight:500;font-size:15.5px;line-height:1.4}
+  .start ol a::before{content:counter(s);font-family:var(--display);font-weight:600;color:var(--green)}
+  .start ol a:hover{text-decoration:underline}
+  .start hr{border:0;border-top:1px solid var(--line);margin:0}
+  .start .help{margin:10px 0}
+
+  /* callouts */
+  .callout{border:1px solid var(--line);border-left:3px solid var(--green);background:var(--green-tint);padding:16px 18px;margin:22px 0;border-radius:10px}
+  .callout.warn{border-left-color:var(--amber);background:var(--amber-tint)}
+  .callout .label{font-weight:600;color:var(--bright);margin:0 0 8px;font-size:16px}
+  .callout p{margin:0 0 10px;font-size:16px}
+  .callout p:last-child,.callout ul:last-child{margin-bottom:0}
+  .callout ul{margin:0 0 10px;padding-left:20px;font-size:16px}
+  .callout li{margin:0 0 6px}
+
+  /* one action per line */
+  .do{list-style:none;margin:14px 0 0;padding:0;border-top:1px solid var(--line)}
+  .do>li{position:relative;padding:12px 0 12px 32px;border-bottom:1px solid var(--line);font-size:16.5px}
+  .do>li::before{content:"";position:absolute;left:2px;top:17px;width:15px;height:15px;border:2px solid var(--green);border-radius:4px}
+  .do>li small code{font-size:13.5px}
+  .do>li small{display:block;color:var(--dim);font-size:14.5px;line-height:1.5;margin-top:3px}
+  .do>li .panel{margin:10px 0 2px}
+  .see{border:1px solid var(--line);border-left:3px solid var(--green);background:var(--green-tint);border-radius:10px;padding:12px 16px;margin:16px 0 0;font-size:16px}
+  .see b{color:var(--bright);font-weight:600}
+  .go{margin:14px 0 0}
+  .go a{display:inline-flex;align-items:center;gap:6px;padding:10px 14px;border:1px solid var(--line2);border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;margin:0 8px 8px 0}
+  .go a:hover{border-color:var(--bright)}
+  .go a.primary{background:var(--bright);color:#0e0f16;border-color:var(--bright)}
+
+  /* tables of settings */
+  .panel{border:1px solid var(--line2);border-radius:10px;background:var(--panel);margin:16px 0;overflow:hidden}
+  .panel .ph{padding:10px 16px;border-bottom:1px solid var(--line);font-size:13px;color:var(--dim);font-weight:600;letter-spacing:.04em}
+  .row{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:6px 18px;padding:12px 16px;border-top:1px solid var(--line)}
+  .row:first-of-type{border-top:0}
+  .row .name{color:var(--bright);font-weight:600;font-size:15px;line-height:1.4}
+  .row .name.no{color:var(--dim);font-weight:500}
+  .row .what{color:var(--text);font-size:15px;line-height:1.5}
+  .months{display:grid;grid-template-columns:repeat(12,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:12px 0}
+  .months div{background:var(--panel);text-align:center;padding:7px 2px}
+  .months span{display:block;color:var(--dim);font-size:13px}
+  .months b{display:block;color:var(--bright);font-family:var(--mono);font-size:16px;font-weight:600}
+
+  /* fold-outs: troubleshooting and background */
+  details{border:1px solid var(--line);border-radius:10px;background:var(--panel);margin:10px 0 0}
+  summary{cursor:pointer;padding:14px 18px;font-weight:600;color:var(--bright);font-size:16.5px}
+  details>div{padding:0 18px 14px}
+  details p{margin:0 0 10px;font-size:16px}
+  details ul,details ol{margin:0 0 10px;padding-left:20px;font-size:16px}
+  details li{margin:0 0 6px}
+  .plain{margin:0 0 12px;padding-left:20px}
+  .plain li{margin:0 0 6px}
+  .next{margin:26px 0 0;font-size:16px}
+
+  /* read or watch */
+  .choose{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0 0}
+  .choose a{display:block;border:1px solid var(--line2);border-radius:10px;background:var(--panel);padding:14px 18px;text-decoration:none;font-family:var(--display);font-weight:600;font-size:20px;color:var(--bright);letter-spacing:-.01em}
+  .choose a:hover{border-color:var(--bright)}
+  .choose a small{display:block;font-family:var(--sans);font-weight:400;font-size:14.5px;color:var(--dim);letter-spacing:0;line-height:1.45;margin-top:4px}
+  [hidden]{display:none !important}
+
+  /* TradingView's own videos: nothing loads from the video host until the reader presses play */
+  .vid{margin:14px 0 18px;min-width:0}
+  .vid .frame{border:1px solid var(--line2);border-radius:10px;overflow:hidden;background:#000}
+  .vid button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;width:100%;aspect-ratio:16/9;background:var(--panel);border:0;color:var(--bright);cursor:pointer;font:inherit;padding:14px;text-align:center}
+  .vid button:hover{background:#1c1f2e}
+  .vid .play{width:54px;height:54px;border-radius:50%;background:var(--bright);position:relative;flex:none}
+  .vid .play::after{content:"";position:absolute;left:21px;top:16px;border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent #0e0f16}
+  .vid .vt{font-family:var(--display);font-weight:600;font-size:17px;line-height:1.25;max-width:440px}
+  .vid .vl{font-size:13.5px;color:var(--dim)}
+  .vid iframe{display:block;width:100%;aspect-ratio:16/9;border:0;background:#000}
+  .vid .cap{font-size:13.5px;color:var(--faint);margin:8px 0 0;line-height:1.45}
+  .vgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin:16px 0 0}
+  .vgrid .vid{margin:0}
+
+  /* our own video, with section buttons under it */
+  .player{margin:16px 0 0}
+  .player video{display:block;width:100%;aspect-ratio:16/9;border:1px solid var(--line2);border-radius:10px;background:#000}
+  .chl{font-size:14px;color:var(--dim);font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin:18px 0 8px}
+  .chapters{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .chapters button{display:flex;justify-content:space-between;align-items:baseline;gap:10px;width:100%;text-align:left;font:inherit;font-size:15.5px;font-weight:600;color:var(--bright);background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:11px 14px;cursor:pointer}
+  .chapters button:hover{border-color:var(--bright)}
+  .chapters button b{display:inline-block;min-width:20px;color:var(--green);font-family:var(--display);font-weight:600}
+  .chapters button .t{color:var(--dim);font-weight:400;font-size:14px;font-variant-numeric:tabular-nums}
+  .chapters button.cur{border-color:var(--green);background:var(--green-tint)}
+  a.wl{display:inline-flex;align-items:center;gap:8px;font-size:14.5px;font-weight:600;border:1px solid var(--line2);border-radius:999px;padding:7px 14px;text-decoration:none;margin:0 0 4px}
+  a.wl::before{content:"";border-style:solid;border-width:5px 0 5px 8px;border-color:transparent transparent transparent var(--green)}
+  a.wl:hover{border-color:var(--bright)}
+
+  .cta{margin:24px 0 0;display:flex;flex-wrap:wrap;gap:12px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;padding:13px 22px;border-radius:8px;font-weight:600;font-size:16px;text-decoration:none}
+  .btn-primary{background:var(--bright);color:#0e0f16;border:1px solid var(--bright)}
+  .btn-ghost{background:transparent;color:var(--bright);border:1px solid var(--line2)}
+  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line)}
+  footer .line{font-size:14px;color:var(--dim);margin:0 0 8px;font-weight:500}
+  footer p{font-size:13px;color:var(--faint);margin:0 0 10px}
+  footer p a{display:inline-block;padding:12px 4px}
+  @media (max-width:640px){
+    .wrap{padding:22px 16px 40px}
+    .choose,.vgrid,.chapters{grid-template-columns:1fr}
+    .row{grid-template-columns:1fr}
+    .months{grid-template-columns:repeat(6,1fr)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
+  <p class="badge">Setup guide</p>
+  <h1>Set up your AFT trading bot</h1>
+  <p class="tagline">Eight steps. When you finish, your bot runs on your own TradingView chart and sends its orders to your own Tradovate account.</p>
+
+  <div class="start">
+    <h2>What you need first</h2>
+    <ul>
+      <li>A <strong>computer</strong> with a web browser.</li>
+      <li>A <strong>paid TradingView plan</strong> with two-factor authentication turned on.</li>
+      <li>A <strong>Tradovate account</strong> (demo, prop or live).</li>
+      <li><strong>Your bot</strong> on your TradingView username.</li>
+    </ul>
+    <p><a href="#before">How to get each one ready</a></p>
+    <hr>
+    <h2>The eight steps</h2>
+    <ol>
+      <li><a href="#step-1">Get a CrossTrade account</a></li>
+      <li><a href="#step-2">Connect your Tradovate account</a></li>
+      <li><a href="#step-3">Copy your webhook URL and secret key</a></li>
+      <li><a href="#step-4">Add the strategy to your chart</a></li>
+      <li><a href="#step-5">Fill in the strategy's settings</a></li>
+      <li><a href="#step-6">Create the alert</a></li>
+      <li><a href="#step-7">Check the alert says Active</a></li>
+      <li><a href="#step-8">Check the connection in CrossTrade</a></li>
+    </ol>
+    <hr>
+    <p class="help"><strong>Stuck?</strong> <a href="#troubleshooting">Troubleshooting</a>, then <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a></p>
+  </div>
+
+  <div class="choose">
+    <a href="#before">Read<small>Every step in writing, one action per line</small></a>
+    <a href="#watch">Watch<small>One video with captions, 6:46. The same eight steps.</small></a>
+  </div>
+
+  <!-- ============================== WATCH ============================== -->
+  <p class="kicker" id="watch">Prefer to watch</p>
+  <h2>The whole setup on video</h2>
+  <p>Every screen in it is a real TradingView, CrossTrade or Tradovate screen, with private details covered. The buttons under it jump to a step.</p>
+  <div class="player" id="player">
+    <video controls preload="none" playsinline poster="/trading-bots/setup/media/aft-bot-setup-poster.jpg" aria-label="Set up your AFT trading bot"><source src="/trading-bots/setup/media/aft-bot-setup.mp4" type="video/mp4"></video>
+    <p class="chl">Jump to a step</p>
+    <ol class="chapters">
+      <li><button type="button" data-t="0.0"><span>Start here: what you are setting up</span><span class="t">0:00</span></button></li>
+      <li><button type="button" data-t="48.78"><span><b>1</b>Get a CrossTrade account</span><span class="t">0:48</span></button></li>
+      <li><button type="button" data-t="67.39"><span><b>2</b>Connect your Tradovate account</span><span class="t">1:07</span></button></li>
+      <li><button type="button" data-t="116.74"><span><b>3</b>Copy your webhook URL and secret key</span><span class="t">1:56</span></button></li>
+      <li><button type="button" data-t="162.14"><span><b>4</b>Add the strategy to your chart</span><span class="t">2:42</span></button></li>
+      <li><button type="button" data-t="201.14"><span><b>5</b>Fill in the strategy's settings</span><span class="t">3:21</span></button></li>
+      <li><button type="button" data-t="245.56"><span><b>6</b>Create the alert</span><span class="t">4:05</span></button></li>
+      <li><button type="button" data-t="307.61"><span><b>7</b>Check the alert says Active</span><span class="t">5:07</span></button></li>
+      <li><button type="button" data-t="332.2"><span><b>8</b>Check the connection in CrossTrade</span><span class="t">5:32</span></button></li>
+    </ol>
+    <p class="fine">6:46 long, with captions. In the steps below, each "Watch this part" link plays that step here. Your browser's Back button then returns you to the step. <a href="/trading-bots/setup/media/aft-bot-setup.mp4" download>Download the video</a>.</p>
+  </div>
+  <details>
+    <summary>TradingView's own tutorials on alerts and account security</summary>
+    <div>
+      <p>These three are from TradingView's official channel. They cover alerts and two-factor authentication in general. The settings for your AFT bot are in the steps on this page.</p>
+      <div class="vgrid">
+        <div class="vid" data-yt="gNpY1zEEDG8" data-title="Introduction to TradingView Alerts" data-len="TradingView · 16:21"><p class="cap"><a href="https://www.youtube.com/watch?v=gNpY1zEEDG8" rel="noopener" target="_blank">Introduction to TradingView Alerts</a> (16:21). Goes with step 6.</p></div>
+        <div class="vid" data-yt="UYAwLvhKteM" data-title="Alerts That Don't Expire" data-len="TradingView · 5:55"><p class="cap"><a href="https://www.youtube.com/watch?v=UYAwLvhKteM" rel="noopener" target="_blank">Alerts That Don't Expire</a> (5:55). The Open-ended setting in step 6.</p></div>
+        <div class="vid" data-yt="U0GrQH5Ik84" data-title="Two-Factor Authentication" data-len="TradingView · 6:16"><p class="cap"><a href="https://www.youtube.com/watch?v=U0GrQH5Ik84" rel="noopener" target="_blank">Protect Your TradingView Account: Two-Factor Authentication</a> (6:16). An older video, so menus may have moved.</p></div>
+      </div>
+    </div>
+  </details>
+
+  <!-- ============================== BEFORE YOU START ============================== -->
+  <section id="before">
+  <p class="kicker">Before you start</p>
+  <h2>Get these three things ready</h2>
+  <p>The bot is a strategy that runs on your TradingView chart. A service called CrossTrade carries its orders to your Tradovate account. Every account is your own, and All Fluence Trading never has access to any of them.</p>
+  <p>Do the setup on a computer, in a web browser. TradingView, CrossTrade and Tradovate all open as websites. You can read along on your phone.</p>
+  <details id="words">
+    <summary>Words used in this guide</summary>
+    <div>
+      <ul>
+        <li><strong>Webhook:</strong> a message one website sends to another by itself. TradingView sends each of the bot's orders to CrossTrade as a webhook. The <strong>webhook URL</strong> is the address those messages go to.</li>
+        <li><strong>Contract:</strong> a futures contract for one month, for example Micro Nasdaq for December. Each has its own short code.</li>
+        <li><strong>Position:</strong> the contracts your account holds right now.</li>
+        <li><strong>Working order</strong> (also called a resting order): an order that is placed but has not filled yet, such as a stop or a target.</li>
+        <li><strong>Flat:</strong> no position and no working orders. "The strategy is flat" means the bot holds no trade.</li>
+        <li><strong>Demo account:</strong> a practice account with simulated money.</li>
+        <li><strong>Prop firm:</strong> a company that gives you an evaluation or funded account to trade under its rules.</li>
+        <li><strong>ETH:</strong> extended trading hours, the full trading day including the evening and night. RTH, regular trading hours, is the daytime part only.</li>
+        <li><strong>New York time:</strong> US Eastern time. If you live somewhere else, look up the current time in New York once and note the difference from your own clock. Times on this page use the 24-hour clock: 16:09 is 4:09 in the afternoon.</li>
+        <li><strong>Invite-only:</strong> TradingView's name for a script that is shared privately with chosen usernames. Your bot reaches you this way.</li>
+      </ul>
+    </div>
+  </details>
+
+  <h3 id="need-tv">TradingView: a paid plan, with two-factor authentication on</h3>
+  <ul class="do">
+    <li>Check your TradingView plan. It has to be a paid plan: Essential or higher. The <span class="ui">TradingView plans</span> button under this list shows the plans, and is where you upgrade.<small>A bot sends its orders as "webhook" messages, and TradingView's free Basic plan cannot send them.</small><small>On Essential and Plus, TradingView's plans page lists two months as the longest an alert lasts, so on those plans you create the bot's alert again every two months (step 6 says how). From Premium up, an alert can run with no end date.</small></li>
+    <li>Turn on two-factor authentication. In TradingView open your profile menu, then <span class="ui">Account Settings</span>, then the <span class="ui">Privacy and Security</span> tab.<small>TradingView only allows webhook messages with two-factor authentication enabled.</small></li>
+    <li>Add real-time futures data to your TradingView account. The <span class="ui">Real-time futures data</span> button under this list opens TradingView's page for it; there, click <span class="ui">Subscribe to real-time CME Group futures</span>.<small>It is a paid monthly add-on from TradingView, and that page shows its price. One subscription covers both exchanges the bots trade: CME for Micro Nasdaq (MNQ) and COMEX for Micro Gold (MGC). Without it, TradingView's futures prices are delayed, and a strategy on delayed prices sends late orders.</small></li>
+  </ul>
+  <p class="go"><a href="https://www.tradingview.com/pricing/" rel="noopener" target="_blank">TradingView plans</a><a href="https://www.tradingview.com/support/solutions/43000572460-how-to-configure-2fa/" rel="noopener" target="_blank">How to turn on 2FA</a><a href="https://www.tradingview.com/cme/" rel="noopener" target="_blank">Real-time futures data</a></p>
+
+  <h3 id="need-broker">A Tradovate account, or a prop firm account that runs on Tradovate</h3>
+  <ul class="do">
+    <li>Have your Tradovate username and password to hand. For a prop firm account, they are the ones your firm gave you.<small>No Tradovate account yet? <a href="https://www.tradovate.com/" rel="noopener" target="_blank">Tradovate's own site</a> offers a 14-day demo account, and asks for no payment method. The sign-up is on its home page, and the username and password you choose there are your Tradovate login.</small><small>Tradovate says the demo runs for two weeks from the day you register and cannot place trades after that. Do your first run inside those two weeks.</small></li>
+    <li><strong>Check your own prop firm's rules on automated trading first.</strong> Some firms do not allow it.<small>CrossTrade lists the prop firms it connects to in its <a href="https://crosstrade.io/docs/getting-started/prop-firm-connection-guide" rel="noopener" target="_blank">prop firm connection guide</a>.</small></li>
+    <li>Pick an account that only the bot will trade.<small>The bot keeps that account in step with its own position, so a trade you place by hand in the same contract on the same account will be closed or resized.</small></li>
+  </ul>
+  <div class="callout">
+    <p class="label">Do your first run on a demo account</p>
+    <p>Orders sent by a connected bot are real orders. Start on a Tradovate demo account and watch it through at least one full trade. Move to the account you intend to trade only after that. A prop evaluation or funded account is not a practice account: trades there count against your firm's limits.</p>
+  </div>
+
+  <h3 id="need-bot">Your bot, added to your TradingView username</h3>
+  <p>Your bot is an invite-only strategy on TradingView. AFT adds it to your TradingView username, so AFT needs that username spelled exactly as TradingView shows it.</p>
+  <ul class="do">
+    <li>Find your username: in TradingView, open your profile menu. Your username is at the top of it.<small>It is also on your <a href="https://www.tradingview.com/settings/#account-settings" rel="noopener" target="_blank">TradingView account settings</a> page.</small></li>
+    <li>If you have not sent your username yet, or the strategy is not in your Invite-only list, write to support@allfluencetrading.com with your exact TradingView username. Send the username only, never a key or a password.</li>
+    <li>You are ready when the strategy shows in your Invite-only list. Step 4 opens that list.</li>
+  </ul>
+  <p class="go"><a href="mailto:support@allfluencetrading.com?subject=My%20TradingView%20username">Email support</a></p>
+  <p>No bot yet? See the <a href="/trading-bots/">AFT Trading Bots page</a>.</p>
+  </section>
+
+  <!-- ============================== STEP 1 ============================== -->
+  <section id="step-1">
+  <p class="kicker">Step 1 of 8</p>
+  <h2>Get a CrossTrade account</h2>
+  <p><a class="wl" href="#watch" data-ch="1">Watch this part (0:48)</a></p>
+  <ul class="do">
+    <li>Open CrossTrade's plans page with the button below.</li>
+    <li>Click <span class="ui">Sign Up</span>, at the top of the page.</li>
+    <li>Start the free 7-day trial, or pick a plan. Any plan works for this guide. Running the bot on several accounts, or adding a loss-limit monitor, needs the Pro plan or higher.<small>Sending a TradingView bot's orders to Tradovate is part of every CrossTrade plan, and the trial includes every feature. The plans page shows each plan's price. CrossTrade says you can change plans or cancel before the trial ends without being charged.</small></li>
+    <li>Create your account: your name, your email and a password.</li>
+  </ul>
+  <p class="go"><a class="primary" data-ev="content" data-name="setup-step1-crosstrade" href="https://crosstrade.io/pricing?ref=AFT" rel="noopener" target="_blank">Open CrossTrade's plans page</a></p>
+  <p class="fine">Referral link: All Fluence Trading earns a commission if you subscribe through it. Your price is the same.</p>
+  <p class="see"><b>You should now see:</b> you are signed in to CrossTrade. There is nothing to install: for Tradovate, CrossTrade runs in your browser.</p>
+  </section>
+
+  <!-- ============================== STEP 2 ============================== -->
+  <section id="step-2">
+  <p class="kicker">Step 2 of 8</p>
+  <h2>Connect your Tradovate account</h2>
+  <p><a class="wl" href="#watch" data-ch="2">Watch this part (1:07)</a></p>
+  <ul class="do">
+    <li><strong>Link your demo account first.</strong> The first run is on a demo account, not on a prop firm or real-money account. No demo account yet? Get one before you go on: <a href="#need-broker">Before you start</a> says where.</li>
+    <li>In CrossTrade, open <span class="ui">My Account</span> with the button below, then click <span class="ui">Brokers</span> in the menu on the left.</li>
+    <li>Click <span class="ui">Link Demo</span> for a Tradovate demo account, or for any prop firm login (evaluation and funded alike). <strong>Click <span class="ui">Link Live</span> only for your own real-money Tradovate login.</strong><small>Why a prop firm login uses Link Demo: in CrossTrade, "Demo" is the name of Tradovate's simulation system, and every prop firm account runs on it. Your trades there still count with your prop firm.</small></li>
+    <li>Tradovate's own sign-in page opens. Type your Tradovate username and password there, and click <span class="ui">Login</span>.<small>You type your broker password on Tradovate's page, never into CrossTrade. Nobody at All Fluence Trading will ever ask you for this login.</small></li>
+    <li>Approve the access the page lists. You are sent straight back to CrossTrade.</li>
+    <li>On the <span class="ui">Brokers</span> screen, find your account's row. The <span class="ui">Name</span> column is your account name.<small>A login with several accounts lists every one. Use the row of the account the bot should trade.</small></li>
+    <li>Copy the account name and keep it for step 5. Copy and paste it, do not retype it.<small>It looks something like <code>DEMO0000000</code>. That one is a made-up example.</small></li>
+  </ul>
+  <p class="go"><a class="primary" href="https://crosstrade.io/user/my-account" rel="noopener" target="_blank">Open My Account in CrossTrade</a><a href="https://crosstrade.io/docs/tradovate/linking-your-account" rel="noopener" target="_blank">CrossTrade's own walkthrough</a></p>
+  <p class="see"><b>You should now see:</b> your account listed on the Brokers screen, with <span class="ui">Active</span> in its <span class="ui">Status</span> column.</p>
+  <p class="fine">If the name is cut short with dots, <span class="ui">Privacy Mode</span> is on. It is a CrossTrade switch that hides part of your account names and key on screen. Click <span class="ui">Security</span> in the same menu, switch <span class="ui">Privacy Mode</span> off at the top of that screen to read the full name, then switch it back on.</p>
+  </section>
+
+  <!-- ============================== STEP 3 ============================== -->
+  <section id="step-3">
+  <p class="kicker">Step 3 of 8</p>
+  <h2>Copy your webhook URL and secret key</h2>
+  <p><a class="wl" href="#watch" data-ch="3">Watch this part (1:56)</a></p>
+  <ul class="do">
+    <li>Still in <span class="ui">My Account</span>, click <span class="ui">Security</span> in the menu on the left.</li>
+    <li>Under <span class="ui">Webhook URL</span>, click <span class="ui">Copy</span>. Paste it somewhere private, such as a password manager or a note only you can open.<small>This is the address TradingView sends the bot's orders to. You need it in step 6.</small></li>
+    <li>Under <span class="ui">Secret Key</span>, click <span class="ui">Copy</span>. Keep it in the same private place.<small>It proves a message really comes from you. You need it in step 5.</small></li>
+  </ul>
+  <p class="see"><b>You should now have three things saved:</b> your account name (from step 2), your webhook URL and your secret key.</p>
+  <div class="callout warn" id="key-safety">
+    <p class="label">Your key stays with you</p>
+    <p>Your <strong>secret key</strong> and <strong>webhook URL</strong> can place orders on your account. Treat them like a password.</p>
+    <ul>
+      <li>Never post them, send them to anyone or leave them visible in a screenshot or screen share. That includes a screenshot of the strategy's settings.</li>
+      <li>All Fluence Trading will never ask for your key, your webhook URL, your broker password or your account number. Anyone who asks is not us.</li>
+      <li><span class="ui">Privacy Mode</span>, at the top of the Security page, cuts them short on screen. <span class="ui">Copy</span> still copies the full value.</li>
+      <li>Every key, account name and code shown on this page is a made-up example.</li>
+    </ul>
+  </div>
+  </section>
+
+  <!-- ============================== STEP 4 ============================== -->
+  <section id="step-4">
+  <p class="kicker">Step 4 of 8</p>
+  <h2>Add the strategy to your chart</h2>
+  <p><a class="wl" href="#watch" data-ch="4">Watch this part (2:42)</a></p>
+  <p>This guide covers two bots. Each runs on one symbol, and only on the 1-minute chart. Not sure which one is yours? Open either chart below, click <span class="ui">Indicators</span>, <span class="ui">Invite-only</span>, <span class="ui">Strategies</span>, and read the name in the list without clicking it. Then open that bot's chart.</p>
+  <ul class="do">
+    <li>Sign in to TradingView on your computer, and open the chart for your bot:
+      <div class="panel">
+        <div class="row"><div class="name">Slipstream (AFT)</div><div class="what">Micro Nasdaq, <code>MNQ1!</code>, 1 minute<br><a href="https://www.tradingview.com/chart/?symbol=CME_MINI%3AMNQ1%21&amp;interval=1" rel="noopener" target="_blank">Open the MNQ chart</a></div></div>
+        <div class="row"><div class="name">Midas (AFT)</div><div class="what">Micro Gold, <code>MGC1!</code>, 1 minute<br><a href="https://www.tradingview.com/chart/?symbol=COMEX_MINI%3AMGC1%21&amp;interval=1" rel="noopener" target="_blank">Open the MGC chart</a></div></div>
+      </div>
+    </li>
+    <li>Check the chart shows regular candles, not Heikin Ashi, Renko or another special chart type (those draw the price in other ways, and the bot is not built for them).<small>To change it, click the chart-type button in the toolbar at the top of the chart, just left of <span class="ui">Indicators</span>, and choose <span class="ui">Candles</span>.</small></li>
+    <li>Check extended trading hours are on: the session button in the toolbar at the bottom of the chart, on the right beside the clock, reads <span class="ui">ETH</span>.<small>If it reads RTH, click it and choose the extended hours session.</small></li>
+    <li>Check no other strategy is on this chart. Give the bot a chart layout of its own.<small>Everything on a chart is listed by name at its top left. A new layout starts with nothing on it.</small><small>To make one: click <span class="ui">Manage layouts</span> in the top toolbar, then <span class="ui">Create new layout</span>, and give it a name. Then open your bot's chart link above again.</small></li>
+    <li>At the top of the chart, click <span class="ui">Indicators</span>.</li>
+    <li>In the window that opens, click <span class="ui">Invite-only</span> in the list on the left.</li>
+    <li>Click <span class="ui">Strategies</span>.</li>
+    <li>Click your strategy's name, once. Then close that window.</li>
+  </ul>
+  <p class="see"><b>You should now see:</b> the strategy's name at the top left of the chart.</p>
+  <p class="fine">Strategy not in the list? <a href="#need-bot">Send AFT your TradingView username</a>.</p>
+  </section>
+
+  <!-- ============================== STEP 5 ============================== -->
+  <section id="step-5">
+  <p class="kicker">Step 5 of 8</p>
+  <h2>Fill in the strategy's settings</h2>
+  <p><a class="wl" href="#watch" data-ch="5">Watch this part (3:21)</a></p>
+  <p>Fill the boxes first and tick the last box at the end. The bot sends nothing until the key, the account and the contract are all filled in and that box is ticked.</p>
+  <ul class="do">
+    <li>Hover over the strategy's name at the top left of the chart, and click the gear icon (<span class="ui">Settings</span>).</li>
+    <li>You are on the <span class="ui">Inputs</span> tab. Under <span class="ui">★ SIZING ★</span>, leave <span class="ui">Multiplier (× the strategy's contracts)</span> at <code>1</code> for your first run.<small>What it does is under <a href="#multiplier">Changing the size</a>, further down this page.</small></li>
+    <li>Scroll down to the group called <span class="ui">★ CROSSTRADE ★</span>.</li>
+    <li>In <span class="ui">CrossTrade secret key</span>, paste your secret key from step 3.</li>
+    <li>In <span class="ui">Tradovate account</span>, paste your account name from step 2, exactly as CrossTrade shows it. For the first run, this is your demo account.</li>
+    <li>Find the code of the current contract. <a href="#contract">How to work out your contract code</a>, just below this list, takes four short lines. <strong>Do not copy a code from this page: the right one changes every few months.</strong></li>
+    <li>Type that code into the contract box. The box has a different name in each bot:
+      <div class="panel">
+        <div class="row"><div class="name">Slipstream (AFT)</div><div class="what">The box is <span class="ui">Contract symbol sent to CrossTrade</span>.</div></div>
+        <div class="row"><div class="name">Midas (AFT)</div><div class="what">The box is <span class="ui">Contract sent to CrossTrade (e.g. MGCG7)</span>. The code inside that label is only an example. Do not leave the box blank: nothing is sent while it is empty.</div></div>
+      </div>
+    </li>
+    <li>Last, tick <span class="ui">Send live orders to CrossTrade (off = log only)</span>.<small>With it off, nothing is sent to CrossTrade. "Live" here means "send the orders for real". It has nothing to do with Link Live in step 2: tick it for a demo account too.</small></li>
+    <li>Leave every other input as it came, and click <span class="ui">OK</span>.</li>
+  </ul>
+  <p class="see"><b>You should now see:</b> the settings window is closed and the strategy is on the chart with no error message.</p>
+  <p><strong>The contract code goes out of date every few months.</strong> What to do then is under <a href="#roll">When the contract month changes</a>, further down this page.</p>
+
+  <h3 id="contract">How to work out your contract code</h3>
+  <p>The chart uses a symbol that never expires (<code>MNQ1!</code>, <code>MGC1!</code>). An order has to name one dated contract. The code is the root, then a month letter, then the last digit of the year:</p>
+  <div class="panel">
+    <div class="row"><div class="name"><code>MNQZ6</code></div><div class="what">MNQ · Z = December · 6 = 2026</div></div>
+    <div class="row"><div class="name"><code>MGCG7</code></div><div class="what">MGC · G = February · 7 = 2027</div></div>
+  </div>
+  <ul class="do">
+    <li>Sign in to Tradovate's web app at <a href="https://trader.tradovate.com/" rel="noopener" target="_blank">trader.tradovate.com</a>, with the login you linked in step 2.<small>If your prop firm gave you its own address for the Tradovate platform, sign in there instead.</small></li>
+    <li>In the Search Bar at the top of the app, type the root: <code>MNQ</code> or <code>MGC</code>.</li>
+    <li>Click a result. A Quote Info window opens. Its <span class="ui">Front Month</span> line says whether this is the front-month contract, which is the current one. If it is not, click the next result and look again.</li>
+    <li>Type the code of the front-month contract into the contract box, written in exactly the format above.</li>
+  </ul>
+  <details>
+    <summary>The month letters, and when the contract changes</summary>
+    <div>
+      <div class="months" role="list" aria-label="Futures month letters"><div role="listitem"><span>Jan</span><b>F</b></div><div role="listitem"><span>Feb</span><b>G</b></div><div role="listitem"><span>Mar</span><b>H</b></div><div role="listitem"><span>Apr</span><b>J</b></div><div role="listitem"><span>May</span><b>K</b></div><div role="listitem"><span>Jun</span><b>M</b></div><div role="listitem"><span>Jul</span><b>N</b></div><div role="listitem"><span>Aug</span><b>Q</b></div><div role="listitem"><span>Sep</span><b>U</b></div><div role="listitem"><span>Oct</span><b>V</b></div><div role="listitem"><span>Nov</span><b>X</b></div><div role="listitem"><span>Dec</span><b>Z</b></div></div>
+      <ul>
+        <li>MNQ has four contracts a year: March (H), June (M), September (U) and December (Z).</li>
+        <li>MGC trades mainly in February (G), April (J), June (M), August (Q) and December (Z).</li>
+        <li>TradingView's symbol search lists the same contracts with a four-digit year, for example MNQZ2026. Keep only the last digit of the year.</li>
+      </ul>
+      <p>When trading moves on to the next contract month, the code in your settings is out of date. Wait until the strategy is flat (it holds no trade; after 16:09 New York time is simplest), type the new code, then delete the alert and create it again (step 6).</p>
+    </div>
+  </details>
+  </section>
+
+  <!-- ============================== STEP 6 ============================== -->
+  <section id="step-6">
+  <p class="kicker">Step 6 of 8</p>
+  <h2>Create the alert</h2>
+  <p><a class="wl" href="#watch" data-ch="6">Watch this part (4:05)</a></p>
+  <p>The alert keeps the bot running on TradingView's servers and delivers its messages to CrossTrade, so your computer can be off.</p>
+  <ul class="do">
+    <li><strong>First check your account is flat in that contract:</strong> no position and no orders waiting.<small>In Tradovate's web app, the <span class="ui">Positions</span> and <span class="ui">Orders</span> windows show them. Open each from the <span class="ui">+</span> menu at the top left.</small></li>
+    <li>Click <span class="ui">Alert</span>, in the toolbar at the top of the chart.</li>
+    <li>In the <span class="ui">Condition</span> box, choose the strategy by name.</li>
+    <li>In the second box, directly under <span class="ui">Condition</span>, choose <span class="ui">alert() function calls only</span>.<small>Not the two choices that mention "Order fills". If this choice is not offered, the Condition box above it is not set to your strategy yet.</small></li>
+    <li>Set <span class="ui">Interval</span> to <span class="ui">1m</span>.<small>The alert then runs on the 1-minute timeframe whichever timeframe your chart is showing.</small></li>
+    <li>Click <span class="ui">Expiration</span> and choose <span class="ui">Open-ended</span>, which means no end date. If it is not offered, the alert will stop on the date shown: read the note under this line.<small>Open-ended not offered? TradingView's plans page lists alerts with no end date from the Premium plan up, and two months at most on Essential and Plus. Pick the furthest date you are offered. Put a reminder in your calendar a few days before it: on that day, after 16:09 New York time, delete the alert and create it again with these same steps.</small></li>
+    <li>Click <span class="ui">Notifications</span>, the last row of the window. A second screen opens.</li>
+    <li>Tick <span class="ui">Webhook URL</span>, and paste your webhook URL from step 3 into the box under it.</li>
+    <li>Click <span class="ui">Apply</span>, at the bottom right. You are back on the first screen.</li>
+    <li>Leave the <span class="ui">Message</span> box exactly as it is. Do not type or paste anything into it.<small>The strategy writes every message itself.</small></li>
+    <li>Click <span class="ui">Create</span>, at the bottom right.</li>
+  </ul>
+  <p class="see"><b>You should now see:</b> the alert window closes. Step 7 checks that the alert is running.</p>
+  <div class="callout warn" id="dedicated">
+    <p class="label">One alert, and only one</p>
+    <ul>
+      <li><strong>A second account never gets an alert of its own.</strong> To run the bot on more accounts, use the second guide, <a href="/trading-bots/setup/multiple-accounts/">One bot on several accounts</a>. A second alert makes trades happen twice.</li>
+      <li><strong>Never create a second alert for the same strategy on the same account.</strong> Both would send orders to it.</li>
+      <li><strong>The alert remembers the settings it was created with.</strong> If you change a setting later, delete the alert and create a new one, while the strategy is flat (it holds no trade).</li>
+      <li><strong>Editing or re-saving a running alert restarts it</strong>, which cancels that contract's working orders on the account. Only do it while the strategy is flat.</li>
+      <li><strong>If you name the alert,</strong> never put your key or account name in the name.</li>
+    </ul>
+  </div>
+  </section>
+
+  <!-- ============================== STEP 7 ============================== -->
+  <section id="step-7">
+  <p class="kicker">Step 7 of 8</p>
+  <h2>Check the alert says Active</h2>
+  <p><a class="wl" href="#watch" data-ch="7">Watch this part (5:07)</a></p>
+  <ul class="do">
+    <li>Click the clock icon on the right edge of TradingView. Your list of alerts opens.</li>
+    <li>Find your alert in the list. It carries your strategy's name.</li>
+  </ul>
+  <p class="see"><b>You should now see:</b> the word <span class="ui">Active</span> on your alert.</p>
+  <p>This is the first place to look whenever something seems off. If the bot is not placing trades, come back here. An alert that does not say Active means the bot is not running: see <a href="#ts-stopped">the alert stopped</a>.</p>
+  </section>
+
+  <!-- ============================== STEP 8 ============================== -->
+  <section id="step-8">
+  <p class="kicker">Step 8 of 8</p>
+  <h2>Check the connection in CrossTrade</h2>
+  <p><a class="wl" href="#watch" data-ch="8">Watch this part (5:32)</a></p>
+  <p>You do not need to place a test trade. When the alert starts, the bot sends a few messages of its own that carry no trade, and you can see them arrive. Messages only go out while the market is open: Sunday 18:00 to Friday 17:00 New York time (US Eastern time), with a daily break from 17:00 to 18:00.</p>
+  <ul class="do">
+    <li>In CrossTrade, open <span class="ui">Alert History</span> with the button below.</li>
+    <li>Wait for rows to appear for your account. Give it up to ten minutes of open market. Every message the bot sends shows up here.<small>Market closed right now? Nothing arrives until it opens. That is not a fault: come back and look after the open.</small></li>
+    <li>Read the colour of each row:
+      <div class="panel" aria-label="Alert History statuses">
+        <div class="row"><div class="name">Accepted (green)</div><div class="what">The message went through to Tradovate. This is what a working bot looks like.</div></div>
+        <div class="row"><div class="name">Blocked (orange)</div><div class="what">Normal when the row reads "No open position": the bot sent a close while the account was already flat.</div></div>
+        <div class="row"><div class="name">Rejected (red)</div><div class="what">Normal on a <span class="ui">Cancel Order</span> row that says the order had already filled or finished.</div></div>
+        <div class="row"><div class="name">Warning (yellow)</div><div class="what">Read the message on the row. It says what happened.</div></div>
+      </div>
+    </li>
+    <li>In Tradovate's web app, check the account holds no position and no orders you did not expect (the <span class="ui">Positions</span> and <span class="ui">Orders</span> windows, as in step 6).</li>
+  </ul>
+  <p class="go"><a class="primary" href="https://crosstrade.io/user/alert-history" rel="noopener" target="_blank">Open Alert History in CrossTrade</a></p>
+  <p class="see"><b>You should now see:</b> rows for your account in Alert History. That is the connection working. When the bot takes its first trade, the entry, the stop and the targets appear in Tradovate.</p>
+  <p><strong>What is a real problem:</strong></p>
+  <ul class="plain">
+    <li>No rows at all after ten minutes of open market: see <a href="#ts-nothing">nothing arrives in CrossTrade</a>.</li>
+    <li>A red row on a <span class="ui">Place Order</span>: see <a href="#ts-red">CrossTrade shows red rows</a>.</li>
+    <li>The alert in TradingView no longer says Active: see <a href="#ts-stopped">the alert stopped</a>.</li>
+  </ul>
+  <p>That is the whole setup. Watch the bot through at least one full trade on your demo account before you move to the account you intend to trade.</p>
+  <details id="move">
+    <summary>Moving the bot from your demo account to another account</summary>
+    <div>
+      <ol>
+        <li>Wait until the bot holds no trade. Between 16:09 and 18:00 New York time is simplest.</li>
+        <li>Link the other account in CrossTrade and copy its name (step 2).</li>
+        <li>In the strategy's settings, put that name in <span class="ui">Tradovate account</span> and check the contract code (step 5).</li>
+        <li>Delete the old alert in TradingView's alerts list, and create a new one (step 6).</li>
+        <li>Check it the same way (steps 7 and 8).</li>
+      </ol>
+    </div>
+  </details>
+  </section>
+
+  <!-- ============================== DAY TO DAY ============================== -->
+  <section id="running">
+  <p class="kicker">After the setup</p>
+  <h2>Running it day to day</h2>
+  <details id="daily-close">
+    <summary>What the bot does at the end of each day</summary>
+    <div>
+      <p>Every trading day at <strong>16:09 New York time</strong> the strategy closes any open position and cancels any resting order, on the chart and on your account. It places nothing new until the evening session opens at <strong>18:00</strong>. You do not have to do anything.</p>
+      <p>That window, 16:09 to 18:00 New York time, is also the safe time for anything that restarts the alert: changing a setting, updating the contract code, deleting and re-creating the alert.</p>
+    </div>
+  </details>
+  <details id="roll">
+    <summary>When the contract month changes</summary>
+    <div>
+      <p>A futures contract ends, and trading moves on to the next contract month every few months (four times a year for MNQ). The code in your settings then points at the old contract.</p>
+      <ol>
+        <li>Now and then, look up the front-month contract again (<a href="#contract">how to work it out</a>).</li>
+        <li>When it has changed, wait until the bot holds no trade. Between 16:09 and 18:00 New York time is simplest.</li>
+        <li>Type the new code in the contract box (step 5).</li>
+        <li>Delete the alert and create it again (step 6).</li>
+        <li>In Tradovate, check that nothing is left in the old contract.</li>
+      </ol>
+    </div>
+  </details>
+  <details id="multiplier">
+    <summary>Changing the size: the Multiplier</summary>
+    <div>
+      <p><span class="ui">Multiplier (× the strategy's contracts)</span>, in the group <span class="ui">★ SIZING ★</span>, multiplies every order the strategy places. At 1 the strategy uses its own sizing. At 2 every order doubles, and risk and profit both double. Drawdown grows by the same factor.</p>
+      <ul>
+        <li><strong>Slipstream:</strong> order size is <span class="ui">Contracts per trade</span>, in the same group, times the Multiplier.</li>
+        <li><strong>Midas:</strong> each of its models has its own fixed contract count, and the Multiplier multiplies all of them. With the Multiplier at 1, the List of Trades in TradingView's Strategy Tester shows the contracts each order uses.</li>
+      </ul>
+      <p>Choose the size by the drawdown your account can carry, not by the profit you hope for. Because the alert keeps its settings, a new Multiplier needs a new alert.</p>
+    </div>
+  </details>
+  <details id="holidays">
+    <summary>Holidays and early-close days</summary>
+    <div>
+      <ul>
+        <li><strong>Market closed all day:</strong> nothing to do.</li>
+        <li><strong>Early-close days</strong> (the exchange shuts before its usual time, for example around US Thanksgiving and Christmas): the two bots differ.
+          <ul>
+            <li><strong>Slipstream</strong> has the exchange's 2026 early-close days written into it and closes ahead of them. It does not know early closes after 2026 or other exchange holidays. On such a day, a position open at the early close is carried to the reopen and closed there.</li>
+            <li><strong>Midas</strong> does not know about early closes. A position still open at an early close is carried through the break and managed as usual after the reopen.</li>
+          </ul>
+        </li>
+        <li><strong>If you would rather sit a holiday out:</strong> after the 16:09 close on the last normal day, stop the alert in TradingView's alerts list. Restart it after 16:09 and before 18:00 New York time on the day normal trading resumes, or any time the strategy on the chart is flat.</li>
+      </ul>
+      <p><a href="https://www.cmegroup.com/trading-hours.html" rel="noopener" target="_blank">CME Group trading hours and holiday calendar</a></p>
+    </div>
+  </details>
+  <details id="more-accounts">
+    <summary>More than one account</summary>
+    <div>
+      <p>To have your other accounts follow the account your bot trades, use the second guide: <a href="/trading-bots/setup/multiple-accounts/">One bot on several accounts</a>. It also covers CrossTrade's optional account monitor, which puts fixed rules on an account, such as a daily loss limit. Finish this guide first.</p>
+    </div>
+  </details>
+  </section>
+
+  <!-- ============================== TROUBLESHOOTING ============================== -->
+  <section id="troubleshooting">
+  <p class="kicker">If something is wrong</p>
+  <h2>Troubleshooting</h2>
+  <details id="ts-stopped">
+    <summary>The alert stopped</summary>
+    <div>
+      <p>An alert that is not Active sends nothing, and the bot is no longer managing your account. Check Tradovate first: if a position or working orders are still there, they are yours to manage by hand until the alert runs again.</p>
+      <ul>
+        <li><strong>It expired.</strong> Create it again (step 6), with <span class="ui">Expiration</span> set to <span class="ui">Open-ended</span> or to the furthest date your plan offers.</li>
+        <li><strong>TradingView stopped it for firing too often.</strong> TradingView stops a script alert that fires more than 15 times within three minutes. Restart it from the alerts list. If it happens again, write to us.</li>
+        <li><strong>The script hit an error</strong>: see "The script shows an error" below.</li>
+      </ul>
+      <p>Restart or re-create an alert while the strategy on the chart is flat. <a href="https://www.tradingview.com/support/solutions/43000690939" rel="noopener" target="_blank">TradingView's note on stopped alerts</a>.</p>
+    </div>
+  </details>
+  <details id="ts-nothing">
+    <summary>Nothing arrives in CrossTrade</summary>
+    <div>
+      <ul>
+        <li><span class="ui">Send live orders to CrossTrade (off = log only)</span> is not ticked, or the key, the account or the contract box is empty. Fix the setting (step 5), then delete the alert and create it again (step 6).</li>
+        <li>The alert has no webhook URL, or two-factor authentication is off in TradingView. Open the alert log in TradingView: click the clock icon on the right edge, then the <span class="ui">Log</span> tab beside <span class="ui">Alerts</span>. Its <span class="ui">Webhook status</span> column shows delivery problems.</li>
+        <li>The alert's condition is not <span class="ui">alert() function calls only</span>.</li>
+        <li>The market is closed. With no new price bars, no messages are sent.</li>
+        <li>Your TradingView plan cannot send webhooks (the free Basic plan cannot).</li>
+      </ul>
+      <p><a href="https://www.tradingview.com/support/solutions/43000529348-how-to-configure-webhook-alerts/" rel="noopener" target="_blank">TradingView's webhook instructions</a></p>
+    </div>
+  </details>
+  <details id="ts-red">
+    <summary>CrossTrade shows red rows</summary>
+    <div>
+      <p>A red row on a <span class="ui">Cancel Order</span> that says the order had already filled or finished is normal. On a red <span class="ui">Place Order</span> row, the message says what was wrong. The common causes:</p>
+      <ul>
+        <li><strong>The account name does not match.</strong> Copy it again from My Account, Brokers, and paste it into <span class="ui">Tradovate account</span> in the strategy's settings.</li>
+        <li><strong>The Tradovate link expired.</strong> Click Link Demo or Link Live again and sign back in. Messages sent while the link was down are not queued.</li>
+        <li><strong>The Kill Switch is on</strong> in CrossTrade's <span class="ui">Master Controls</span>, on the Webhooks page of your CrossTrade dashboard. It is CrossTrade's own stop switch: while it is on, CrossTrade refuses every alert. Switch it off there.</li>
+        <li><strong>The key is wrong</strong>, for example it was cut short when pasted.</li>
+        <li><strong>The contract code is wrong or expired.</strong> See the next item.</li>
+      </ul>
+      <p>After fixing a strategy setting, delete the alert and create it again.</p>
+    </div>
+  </details>
+  <details id="ts-contract">
+    <summary>Wrong contract month, or the contract expired</summary>
+    <div>
+      <p>Signs: red rows in Alert History that name the instrument, or orders landing in a contract month you did not mean to trade.</p>
+      <ol>
+        <li>Wait until the strategy is flat. After 16:09 New York time is simplest.</li>
+        <li>Open the strategy's settings and type the current code in the contract box (<a href="#contract">how to work it out</a>).</li>
+        <li>Delete the old alert and create a new one (step 6).</li>
+        <li>In Tradovate, check that nothing is left in the old contract.</li>
+      </ol>
+    </div>
+  </details>
+  <details id="ts-chart">
+    <summary>The script shows an error: wrong timeframe or symbol</summary>
+    <div>
+      <p>Slipstream runs only on MNQ and Midas only on MGC, each on the 1-minute chart. Anywhere else the script stops with a message. Put the chart back on the right symbol and 1 minute (the chart links are in <a href="#step-4">step 4</a>).</p>
+      <p>An alert keeps the symbol and timeframe of the chart it was created on. An alert created on the wrong chart has to be deleted and created again on the right one.</p>
+    </div>
+  </details>
+  <details id="ts-settings">
+    <summary>I changed a setting and nothing changed</summary>
+    <div>
+      <p>A TradingView alert keeps the strategy settings from the moment it was created. Delete the alert and create a new one for the change to take effect, while the strategy is flat.</p>
+    </div>
+  </details>
+  <details id="ts-mismatch">
+    <summary>The account does not match the chart</summary>
+    <div>
+      <p>The usual cause is a trade or an order placed by hand in the same contract on the same account, or a second alert on the same account. Stop the alert, close that contract's position and orders in Tradovate, remove any duplicate alert, and start again when the strategy on the chart is flat. Keep trading by hand on a different account.</p>
+    </div>
+  </details>
+  <details id="ts-key">
+    <summary>I think my key was exposed</summary>
+    <div>
+      <p>Stop the alert first, then check Tradovate for positions and orders you did not expect. In CrossTrade open My Account, Security, and click <span class="ui">Regenerate Key</span>. Put the new key into the strategy's settings (step 5) and create a new alert (step 6). Do not send the old or the new key to anyone, us included.</p>
+    </div>
+  </details>
+  <p class="next"><strong>Still stuck?</strong> Write to <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a> or ask in the <a data-dest="discordInvite" data-ev="lead" data-name="setup-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a>. Say which bot, which step and what the screen shows. Cover your key, webhook URL and account name in any screenshot.</p>
+  </section>
+
+  <p class="cta"><a class="btn btn-primary" href="#step-1">Back to step 1</a><a class="btn btn-ghost" href="/trading-bots/setup/multiple-accounts/" data-ev="content" data-name="setup-multiple-accounts">One bot on several accounts</a><a class="btn btn-ghost" href="/trading-bots/" data-ev="content" data-name="setup-bots">AFT Trading Bots</a></p>
+
+  <footer>
+    <p class="line">All Fluence Trading · AFT Trading Bots · Setup guide</p>
+    <p><a href="/">Front page</a> · <a href="/trading-bots/">Trading Bots</a> · <a href="/challenge/">AFT Challenge</a> · <a data-dest="discordInvite" data-ev="lead" data-name="setup-footer-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a> · <a href="/legal/">Disclaimer</a> · <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a></p>
+    <p>Screen names were checked against TradingView's and CrossTrade's own help pages in November 2026. Those services change their screens; where a label differs, follow the linked help page. TradingView, CrossTrade and Tradovate are trademarks of their owners. All Fluence Trading is in CrossTrade's referral program and is not otherwise affiliated with or endorsed by these companies.</p>
+    <p>For education only. Trading futures involves substantial risk of loss and is not suitable for every investor. You can lose more than your initial investment. Automated strategies can lose money, and an order routed to a broker can fail, be delayed or fill at a different price. If you connect a strategy to an account, that choice and the size you trade are yours, and you are responsible for every order it sends. Strategy Tester results are hypothetical, have inherent limitations and do not represent actual trading. All Fluence Trading provides educational software and training only and is not a registered investment adviser, broker-dealer or commodity trading advisor. Nothing here is financial advice.</p>
+  </footer>
+</div>
+<script>
+/* Section buttons and 'Watch this part' links: jump a video to a time and play. Works for every .player on the page. */
+(function(){
+  Array.prototype.forEach.call(document.querySelectorAll('.player'),function(box){
+    var v=box.querySelector('video'), btns=box.querySelectorAll('.chapters button');
+    function go(t){
+      function seek(){ try{ v.currentTime=t; }catch(e){} v.play(); }
+      if(v.readyState>=1) seek();
+      else { v.addEventListener('loadedmetadata',seek,{once:true}); v.preload='auto'; v.load(); }
+    }
+    box.aftGo=function(i){ var b=btns[i]; if(b) go(parseFloat(b.getAttribute('data-t'))); };
+    Array.prototype.forEach.call(btns,function(b){ b.addEventListener('click',function(){ go(parseFloat(b.getAttribute('data-t'))); }); });
+    v.addEventListener('timeupdate',function(){
+      var cur=-1; for(var i=0;i<btns.length;i++){ if(v.currentTime+0.25>=parseFloat(btns[i].getAttribute('data-t'))) cur=i; }
+      for(var j=0;j<btns.length;j++){ btns[j].classList.toggle('cur',j===cur); }
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('a.wl[data-ch]'),function(a){
+    a.addEventListener('click',function(){
+      var box=document.getElementById(a.getAttribute('data-p')||'player');
+      if(box&&box.aftGo) box.aftGo(parseInt(a.getAttribute('data-ch'),10));
+    });
+  });
+})();
+</script>
+<script>
+/* Video slots. data-yt = a fixed YouTube id. data-video = a key looked up in AFT_CONFIG.videos
+   (a YouTube id, or an https / site-relative .mp4 or .webm address). A slot with no video stays hidden. */
+(function(){
+  var V=(window.AFT_CONFIG&&window.AFT_CONFIG.videos)||{};
+  function kind(v){
+    if(/^[A-Za-z0-9_-]{11}$/.test(v)) return 'yt';
+    if(/^(https:\/\/|\/)[^\s"'<>]+\.(mp4|webm)$/i.test(v)) return 'file';
+    return '';
+  }
+  var ours=0;
+  Array.prototype.forEach.call(document.querySelectorAll('.vid'),function(el){
+    var key=el.getAttribute('data-video');
+    var v=String(el.getAttribute('data-yt')||(key&&V[key])||'');
+    var k=kind(v);
+    if(!k) return;
+    if(key) ours++;
+    var title=el.getAttribute('data-title')||'Video';
+    var len=el.getAttribute('data-len')||(key&&V[key+'Length'])||'';
+    var frame=document.createElement('div'); frame.className='frame';
+    var b=document.createElement('button'); b.type='button';
+    b.setAttribute('aria-label','Play video: '+title);
+    var i=document.createElement('span'); i.className='play'; i.setAttribute('aria-hidden','true');
+    var t=document.createElement('span'); t.className='vt'; t.textContent=title;
+    var l=document.createElement('span'); l.className='vl'; l.textContent=len;
+    b.appendChild(i); b.appendChild(t); if(len) b.appendChild(l);
+    b.addEventListener('click',function(){
+      var m;
+      if(k==='yt'){
+        m=document.createElement('iframe');
+        m.src='https://www.youtube-nocookie.com/embed/'+v+'?autoplay=1&rel=0';
+        m.allow='autoplay; encrypted-media; picture-in-picture; fullscreen';
+        m.allowFullscreen=true; m.title=title;
+      }else{
+        m=document.createElement('video'); m.src=v; m.controls=true; m.autoplay=true; m.playsInline=true;
+      }
+      frame.replaceChild(m,b);
+    });
+    frame.appendChild(b);
+    el.insertBefore(frame,el.firstChild);
+    el.hidden=false;
+  });
+  if(ours){
+    Array.prototype.forEach.call(document.querySelectorAll('[data-aft-videos]'),function(el){el.hidden=false;});
+    Array.prototype.forEach.call(document.querySelectorAll('[data-no-aft-videos]'),function(el){el.hidden=true;});
+  }
+})();
+</script>
+</body>
+</html>
