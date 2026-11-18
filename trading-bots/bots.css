@@ -291,7 +291,7 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
      with 4 tiers: one column, two by two from 700px, all four across from 1800px
    Every card's first line (name and price), the line under it and its Choose button are one line each, so they
    sit level across the cards of a row. */
-@media(min-width:700px){
+@media(min-width:720px){
   .bx-plan-grid{grid-template-columns:repeat(12,minmax(0,1fr));gap:20px}
   .bx-plan{grid-column:span 12;padding:20px 20px 22px}
   .bx-plan:first-child:nth-last-child(4),.bx-plan:first-child:nth-last-child(4)~.bx-plan{grid-column:span 6}
