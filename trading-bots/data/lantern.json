@@ -1,0 +1,18 @@
+{
+ "schema": "aft.strategy-performance/2",
+ "slug": "lantern",
+ "name": "Lantern",
+ "tier": null,
+ "what": {
+  "market_line": "MNQ · Micro Nasdaq",
+  "timeframe": "1-minute chart"
+ },
+ "status": "no_figures",
+ "label": {
+  "kind": "none",
+  "text": "No figures published yet"
+ },
+ "source": {
+  "generated_by": "aft_strategy_export.py"
+ }
+}

@@ -1,11 +1,10 @@
 {
- "schema": "aft.strategy-performance/1",
+ "schema": "aft.strategy-performance/2",
  "slug": "slipstream",
  "name": "Slipstream",
  "tier": "select",
  "what": {
   "market_line": "MNQ · Micro Nasdaq",
-  "sentence": "A single MNQ model that trades the continuation of fresh price imbalances.",
   "timeframe": "1-minute chart"
  },
  "status": "no_figures",

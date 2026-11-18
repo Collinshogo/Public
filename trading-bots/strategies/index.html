@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AFT Strategy Library | All Fluence Trading</title>
+<link rel="canonical" href="https://allfluencetrading.com/trading-bots/strategies/">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0e0f16">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="../bots.css">
+<link rel="stylesheet" href="strategies.css">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="All Fluence Trading">
+<meta property="og:title" content="AFT Strategy Library">
+<meta property="og:description" content="Search and filter the AFT Trading Bots strategies published on TradingView. Each one is also sold on its own.">
+<meta property="og:url" content="https://allfluencetrading.com/trading-bots/strategies/">
+<meta property="og:image" content="https://allfluencetrading.com/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AFT Strategy Library">
+<meta name="twitter:description" content="Search and filter the AFT Trading Bots strategies published on TradingView. Each one is also sold on its own.">
+<meta name="twitter:image" content="https://allfluencetrading.com/assets/og.png">
+<script src="/config.js"></script>
+<script src="/tracking.js" defer></script>
+<meta name="description" content="Search and filter the AFT Trading Bots strategies published on TradingView by instrument and tier. Each one's price and figures appear here once they are set.">
+</head>
+<body class="bots" data-page="strategies" data-data-base="../data/">
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
+    <nav class="nav-links" aria-label="AFT Trading Bots">
+      <a href="#plans">Tiers</a>
+      <a href="#list" aria-current="page">Strategy Library</a>
+      <a href="../#method">How results are shown</a>
+      <a href="../#how">How it works</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="bx-s-head">
+  <div class="wrap">
+    <p class="bx-kicker"><a href="../">AFT Trading Bots</a></p>
+    <h1>Strategy Library</h1>
+    <p class="bx-s-lead">Search and filter the strategies published on TradingView. Each one's price and figures appear here once they are set. Buy one on its own, or take a tier that bundles them.</p>
+    <p class="bx-s-note">Every figure here is a hypothetical backtest from TradingView's Strategy Tester. A backtest does not represent actual trading.</p>
+  </div>
+</section>
+
+<section id="list" class="bx-list">
+  <div class="wrap">
+    <div class="bx-tools">
+      <label class="bx-search"><span class="bx-vh">Search by name or instrument</span><input type="search" id="q" placeholder="Name or instrument" autocomplete="off" enterkeyhint="search"></label>
+      <button class="btn btn-ghost bx-f-btn" type="button" id="f-open" aria-expanded="false" aria-controls="filters">Filter<span class="bx-f-n" id="f-n" hidden></span></button>
+      <p class="bx-count" id="count" aria-live="polite"></p>
+    </div>
+
+    <div class="bx-fback" id="f-back" hidden></div>
+    <div class="bx-filters" id="filters" role="group" aria-labelledby="f-title">
+      <div class="bx-f-head">
+        <h2 id="f-title">Filter</h2>
+        <button class="bx-x" type="button" id="f-x" aria-label="Close filters"><span class="bx-x-i" aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="bx-f-body" id="f-body"></div>
+      <div class="bx-f-foot">
+        <button class="btn btn-ghost bx-f-clear" type="button" id="f-clear">Clear all</button>
+        <button class="btn btn-primary bx-f-done" type="button" id="f-done">Done</button>
+      </div>
+    </div>
+
+    <p class="bx-swipe" id="swipe">Scroll the table sideways to see every column.</p>
+    <p class="bx-asof" id="as-of">All figures cover 01 Jan 2026 to the current day.<span id="as-of-upd"></span></p>
+    <div class="bx-tw" id="table-frame" role="region" aria-label="The strategies. The table scrolls sideways." tabindex="0">
+      <table class="bx-table">
+        <caption class="bx-vh">The published strategies. Choose a heading to sort; choose a strategy to open its card.</caption>
+        <thead id="t-head"></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="bx-t-notes" id="table-notes">
+      <p id="hyp-note">Every figure in this table is a hypothetical backtest. A backtest does not represent actual trading. Each strategy's test dates and starting balance are on its card. Monthly profit is the total profit divided by the calendar months in the test, with the current month counted as a whole month.</p>
+      <p id="freq-note"></p>
+      <p id="dash-note" hidden>A dash means the figure is not published yet.</p>
+    </div>
+    <div class="bx-empty" id="empty" hidden>
+      <p>No strategy matches these filters.</p>
+      <button class="btn btn-ghost" type="button" id="empty-clear">Clear all</button>
+    </div>
+    <noscript><p class="bx-sub">Turn on JavaScript to list the strategies and open each one's record.</p></noscript>
+  </div>
+</section>
+
+<section id="plans" class="bx-plans">
+  <div class="wrap">
+    <div class="bx-head">
+      <h2>Or take a tier</h2>
+      <p class="bx-sub">A tier bundles its strategies, and each higher tier includes the ones below it. Your choice stays in the bar at the bottom.</p>
+    </div>
+    <div class="bx-plan-grid" id="plan-grid"></div>
+    <div class="bx-open-note">
+      <p class="bx-open-h">Checkout is not open yet</p>
+      <p>You can pick a tier now and it stays in the bar. When checkout opens, it is announced in the free Discord first.</p>
+      <p class="bx-open-cta"><a class="btn btn-primary" data-dest="discordInvite" data-ev="lead" data-name="bots-strategies-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Join the free Discord</a></p>
+    </div>
+    <p class="bx-fine">What each tier gives you, and how billing and cancelling work, is on the <a href="../#plans">AFT Trading Bots page</a>.</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="site bx-foot">
+  <div class="wrap">
+    <p class="bx-foot-line">All Fluence Trading · AFT Trading Bots</p>
+    <p class="bx-foot-links"><a href="/">Front page</a> · <a href="../">AFT Trading Bots</a> · <a href="/challenge/">AFT Challenge</a> · <a data-dest="discordInvite" data-ev="lead" data-name="bots-strategies-footer-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a> · <a href="/legal/">Disclaimer</a> · <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a></p>
+    <p>For education only. Trading futures involves substantial risk of loss and is not suitable for every investor. You can lose more than your initial investment. Automated strategies can lose money, and an order routed to a broker can fail, be delayed or fill at a different price. Strategy Tester results are hypothetical, have inherent limitations and do not represent actual trading. All Fluence Trading provides educational software and training only and is not a registered investment adviser, broker-dealer or commodity trading advisor. Nothing here is financial advice.</p>
+  </div>
+</footer>
+
+<div class="bx-bar" id="bar" role="region" aria-label="Your selection">
+  <div class="bx-bar-in">
+    <div class="bx-bar-sel" aria-live="polite">
+      <p class="bx-bar-plan" id="bar-plan">No tier chosen yet</p>
+      <p class="bx-bar-detail" id="bar-detail">Pick one below</p>
+    </div>
+    <p class="bx-bar-price" id="bar-price" hidden></p>
+    <div class="bx-bar-acts">
+      <button class="btn btn-ghost bx-bar-btn bx-bar-alt" type="button" id="bar-alt" hidden></button>
+      <a class="btn bx-btn-red bx-bar-btn" role="button" href="#plans" id="bar-btn">See tiers</a>
+    </div>
+  </div>
+</div>
+
+<div class="bx-backdrop" id="backdrop" hidden></div>
+<aside class="bx-sheet" id="sheet" role="dialog" aria-labelledby="sheet-title" hidden>
+  <div class="bx-sheet-head">
+    <div class="bx-sheet-id">
+      <p class="bx-sheet-k" id="sheet-k"></p>
+      <h2 class="bx-wm" id="sheet-title" tabindex="-1"></h2>
+    </div>
+    <button class="bx-x" type="button" id="sheet-close" aria-label="Close and go back to the strategies"><span class="bx-x-t" aria-hidden="true">Back to strategies</span><span class="bx-x-i" aria-hidden="true">&times;</span></button>
+  </div>
+  <div class="bx-sheet-body" id="sheet-body"></div>
+</aside>
+
+<script src="../bots-config.js"></script>
+<script src="../data/catalog.js"></script>
+<script src="../bots.js"></script>
+<script src="strategies.js"></script>
+</body>
+</html>

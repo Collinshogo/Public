@@ -285,6 +285,11 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bx-rule h3{font-size:19px;margin:0 0 6px}
 .bx-rule p{margin:0;color:var(--dim);font-size:15.5px}
 .bx-fine{margin:18px 0 0;color:var(--faint);font-size:14px;max-width:760px}
+/* what a tier saves against its strategies bought one by one (only when every price is set), under the tier's line */
+.bx-save{order:3;flex:0 0 100%;margin:0;color:var(--green);font-size:14.5px;font-weight:600;line-height:1.35}
+/* the way to the Strategies page, under the tiers */
+.bx-one{margin:18px 0 0;font-size:17px;font-weight:600}
+.bx-one a{color:var(--bright);text-decoration:underline;text-underline-offset:3px}
 /* How many cards sit in a row follows how many tiers there are. The grid has twelve columns; a card spans all
    twelve, six, four or three.
      with 3 tiers: one column, then all across from 1000px
@@ -328,7 +333,13 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bx-strat h3{font-size:27px;margin:0 0 8px;display:flex;align-items:center;height:34px;container-type:inline-size}
 .bx-strat h3 .bx-wm{font-size:25px;font-size:min(25px,calc(100cqw/(var(--n,9)*.84)));line-height:1.15}
 .bx-strat h3 .bx-wm[data-lvl="plain"]{font-size:26px;font-size:min(26px,calc(100cqw/(var(--n,9)*.6)))}
-.bx-strat-n{color:var(--dim);font-size:16px;margin:0 0 18px}
+/* a card's three quick highlights (row E702): label over figure, one row; an empty list takes no room */
+.bx-hl{display:grid;grid-template-columns:repeat(3,auto);justify-content:space-between;align-items:end;gap:0 12px;margin:2px 0 14px;container-type:inline-size}
+.bx-hl:empty{display:none}
+.bx-hl-i{min-width:0}
+.bx-hl dt{margin:0;font-size:11.5px;line-height:1.3;color:var(--dim)}
+.bx-hl dd{margin:3px 0 0;font-family:var(--display);font-weight:600;font-size:18px;color:var(--bright);letter-spacing:-.02em;line-height:1.15;white-space:nowrap;font-variant-numeric:tabular-nums}
+@container (max-width:300px){.bx-hl{gap:0 8px}.bx-hl dt{font-size:10.5px}.bx-hl dd{font-size:16px}}
 .bx-spark{position:relative;height:68px;margin:auto 0 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg2);overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--faint);font-size:13.5px}
 .bx-spark svg{position:absolute;inset:0;width:100%;height:100%}
 .bx-strat-go{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0;font-size:14.5px}

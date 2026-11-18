@@ -16,7 +16,11 @@
    - The open strategy: every strategy name is a real link (#slug). The hash opens the view in place,
      Back or Close returns to the same spot, and the choice in the bar is never lost. While a strategy
      is open the bar also carries the button that chooses that strategy's tier, so one bar is pinned, not two.
-   - Performance: drawn from data/<slug>.json (schema aft.strategy-performance/1, written by the importer).
+   - The Strategies page (/trading-bots/strategies/) runs this same script: its tier cards are built here from the
+     catalog, and strategies.js draws its list from what this script exposes as window.AFT_BOTS.
+   - Savings: a tier's card says what its strategies cost one by one, worked out from the catalog's prices, only when
+     every strategy the tier includes has a price and the tier costs less.
+   - Performance: drawn from data/<slug>.json (schema aft.strategy-performance/2, or /1 in an older file).
      The four figures are printed exactly as the file's display strings give them. First screen: the chart,
      the four-figure bar and the monthly P&L. What it is, the test, the other figures and the proof scroll below. */
 (function () {
@@ -62,6 +66,20 @@
   function sheenSpan(text) { return '<span class="bx-sh" aria-hidden="true" data-t="' + esc(text) + '"></span>'; }
   function lit(fin) { return fin === 'sheen' || fin === 'polished'; }
   function sheen(s) { return lit(finish(s.tier)) ? sheenSpan(s.name) : ''; }
+
+  /* ---------- the Strategies page: its tier cards come from the catalog ---------- */
+  var ON_LIST = document.body.dataset.page === 'strategies';
+  var DATA = document.body.dataset.dataBase || 'data/';
+  if (ON_LIST && $('#plan-grid')) {
+    $('#plan-grid').innerHTML = (CAT.tiers || []).map(function (t) {
+      return '<article class="bx-plan" data-plan="' + esc(t.id) + '" data-name="' + esc(t.name) + '" data-price="' + Number(t.price) + '" data-kind="monthly" data-rank="' + Number(t.rank) + '">' +
+        '<header><h3 class="bx-wm bx-tname">' + esc(t.name) + '</h3><p class="bx-plan-for">' + esc(t.line) + '</p></header>' +
+        '<p class="bx-price"><span class="bx-amt">$' + Number(t.price).toLocaleString('en-US') + '</span><span class="bx-per">a month</span></p>' +
+        '<button class="btn btn-ghost bx-choose" type="button" data-choose="' + esc(t.id) + '">Choose ' + esc(t.name) + '</button>' +
+        '<div class="bx-strats"><ul data-tier-list="' + esc(t.id) + '">' + (t.rank < CAT.tiers.length ? '<li class="bx-srow"><p class="bx-tba">Tier ' + (CAT.tiers.length - t.rank + 1) + ' strategies<small>Named here at release</small></p></li>' : '') + '</ul></div>' +
+        '</article>';
+    }).join('');
+  }
 
   /* ---------- the page's switches ---------- */
   // The one-time plan: built here and added to the page only when the config switches it on,
@@ -123,8 +141,9 @@
   function finish(tier) { return FIN[tier] || 'plain'; }
   // A strategy's grade follows the tier it sits in: the lowest tier holds Tier 4, the top tier Tier 1. The words
   // name the grade and the tiers that include it, wherever a strategy's tier is shown.
-  function grade(tier) { return ladder.length - ladder.indexOf(plans[tier]); }
+  function grade(tier) { return plans[tier] ? ladder.length - ladder.indexOf(plans[tier]) : null; }
   function gradeWords(tier) {
+    if (!plans[tier]) return 'Tier not set';
     return 'Tier ' + grade(tier) + ' · ' + plans[tier].name + (plans[tier] === ladder[ladder.length - 1] ? '' : ' and up');
   }
 
@@ -162,12 +181,23 @@
   }
 
   /* ---------- the named strategies, from the catalog ---------- */
+  // A grade that is set decides the strategy's tier: Tier 1 is the top tier, Tier 4 the lowest.
+  (CAT.strategies || []).forEach(function (s) {
+    if (s && [1, 2, 3, 4].indexOf(s.grade) >= 0 && ladder[ladder.length - s.grade]) s.tier = ladder[ladder.length - s.grade].id;
+  });
   var names = {}, tiers = {}, slugs = [];
   var named = (CAT.strategies || []).filter(function (s) {
     return s && s.named === true && /^[a-z0-9-]+$/.test(String(s.slug)) && s.name && plans[s.tier] &&
       plans[s.tier].kind === 'monthly' && !document.getElementById(s.slug);
   });
-  named.forEach(function (s) { names[s.slug] = s.name; tiers[s.slug] = s.tier; slugs.push(s.slug); });
+  // The Strategies page lists every entry with a TradingView page, a strategy whose tier is not set (tier: null) included.
+  // Only named strategies with a tier reach the tier cards and the savings.
+  var listed = (CAT.strategies || []).filter(function (s) {
+    return s && s.named === true && /^[a-z0-9-]+$/.test(String(s.slug)) && s.name && !document.getElementById(s.slug) &&
+      /^https:\/\/www\.tradingview\.com\/script\//.test(String(s.tv_url)) && (s.tier === null || (plans[s.tier] && plans[s.tier].kind === 'monthly'));
+  });
+  var shown = ON_LIST ? listed : named;
+  shown.forEach(function (s) { names[s.slug] = s.name; tiers[s.slug] = s.tier; slugs.push(s.slug); });
 
   function nameSpan(s) { return '<span class="bx-sname bx-wm"' + lettering(s) + '>' + esc(s.name) + sheen(s) + '</span>'; }
 
@@ -182,6 +212,21 @@
     li.innerHTML = '<a class="bx-slink" href="#' + s.slug + '">' + nameSpan(s) + '<span class="bx-arw" aria-hidden="true">›</span></a>';
     var last = ul.lastElementChild;
     ul.insertBefore(li, last && !$('.bx-slink', last) ? last : null);   // before the unnamed chip, when there is one
+  });
+
+  // What a tier saves against buying its strategies one by one. Shown only when every strategy the tier includes
+  // has a price and the tier costs less; never typed anywhere, so a new price changes it by itself.
+  function dollars(n) {
+    var r = Math.round(n * 100) / 100;
+    return '$' + r.toLocaleString('en-US', { minimumFractionDigits: r % 1 ? 2 : 0, maximumFractionDigits: 2 });
+  }
+  ladder.forEach(function (p) {
+    var inc = (CAT.strategies || []).filter(function (s) { return s && plans[s.tier] && plans[s.tier].kind === 'monthly' && plans[s.tier].rank <= p.rank; });
+    if (!inc.length || p.price === null) return;
+    if (!inc.every(function (s) { return typeof s.price === 'number' && s.price > 0; })) return;
+    var all = inc.reduce(function (a, s) { return a + s.price; }, 0), saved = all - p.price;
+    if (!(saved > 0)) return;
+    $('header', p.el).insertAdjacentHTML('afterend', '<p class="bx-save">Bought one by one: ' + dollars(all) + ' a month. You save ' + dollars(saved) + '.</p>');
   });
 
   // A long list: SHOW rows and one button that opens the rest in place. The button is made only for a tier
@@ -243,7 +288,7 @@
       return '<a class="bx-strat" href="#' + s.slug + '" data-slug="' + s.slug + '" data-tier="' + esc(s.tier) + '" data-lvl="' + finish(s.tier) + '">' +
         '<p class="bx-strat-k"><span>' + esc(s.market_line || '') + '</span><span class="bx-tier" data-lvl="' + finish(s.tier) + '">' + esc(gradeWords(s.tier)) + '</span></p>' +
         '<h3><span class="bx-wm"' + lettering(s) + '>' + esc(s.name) + sheen(s) + '</span></h3>' +
-        '<p class="bx-strat-n">' + esc(s.sentence || '') + '</p>' +
+        '<dl class="bx-hl" data-hl="' + s.slug + '"></dl>' +
         '<div class="bx-spark" data-spark="' + s.slug + '" aria-hidden="true"></div>' +
         '<p class="bx-strat-go"><span class="bx-status" data-status="' + s.slug + '"></span><span class="bx-open">Open strategy</span></p>' +
         '</a>';
@@ -314,7 +359,7 @@
         setBtn('choose', 'Choose ' + own.name, '', own.id);
       } else {
         barPlan.textContent = 'No tier chosen yet';
-        barDetail.textContent = 'Pick one above';
+        barDetail.textContent = ON_LIST ? 'Pick one below' : 'Pick one above';
         setBtn('tiers', 'See tiers');
       }
     } else {
@@ -402,7 +447,7 @@
   function showSheet(slug) {
     openSlug = slug;
     sheetTitle.textContent = names[slug];
-    var s = named.filter(function (x) { return x.slug === slug; })[0];
+    var s = shown.filter(function (x) { return x.slug === slug; })[0];
     sheetTitle.setAttribute('data-lvl', finish(tiers[slug]));
     ['--n', '--c0', '--c1', '--c2'].forEach(function (k) { sheetTitle.style.removeProperty(k); });
     if (s) {
@@ -464,7 +509,7 @@
   /* ---------- data ---------- */
   function getDoc(slug) {
     if (docs[slug]) return Promise.resolve(docs[slug]);
-    return fetch('data/' + slug + '.json').then(function (r) {
+    return fetch(DATA + slug + '.json').then(function (r) {
       if (!r.ok) throw new Error('data file ' + r.status);
       return r.json();
     }).then(function (d) { docs[slug] = d; return d; });
@@ -485,11 +530,13 @@
 
   function renderPanel(d) {
     var w = d.what || {}, tierName = gradeWords(tiers[d.slug]);
+    var own = shown.filter(function (x) { return x.slug === d.slug; })[0] || {};
+    var ownPrice = typeof own.price === 'number' && own.price > 0 ? dollars(own.price) + ' a month' : 'Price at release';
     sheetK.textContent = (w.market_line ? w.market_line + ' · ' : '') + tierName;
 
-    var what = '<section class="bx-part"><h3>What it is</h3>' + (w.sentence ? '<p>' + esc(w.sentence) + '</p>' : '') +
+    var what = '<section class="bx-part"><h3>The strategy</h3>' +
       dl([['Market', has(w.market_line) && esc(w.market_line)], ['Chart', has(w.timeframe) && esc(w.timeframe)],
-        ['Trades during', has(w.session) && esc(w.session)], ['Tier', esc(tierName)]]) + '</section>';
+        ['Tier', esc(tierName)], ['On its own', esc(ownPrice)]]) + '</section>';
 
     if (d.status !== 'figures') {
       sheetBody.innerHTML = '<div class="bx-nofig">' +
@@ -502,26 +549,25 @@
     var t = d.test, f = d.figures, p = d.proof || {}, show = f.display, wo = d.worked_out;
     var windowWords = day(t.window_from) + ' to ' + day(t.window_to);
     var hasCurve = d.equity && d.equity.length, hasMonths = d.months && d.months.length;
-    var kpiLen = Math.max(show.net_profit.length, show.max_drawdown.length);
+    var kpiLen = Math.max(show.net_profit.length, show.max_drawdown_usd.length);
     var moWords = hasMonths ? d.months.map(function (m) { return usd(m.pnl_usd, true); }) : [];
     var moLen = moWords.reduce(function (a, s) { return Math.max(a, s.length); }, 0);
 
     // The caption beside the label: the window, the start, the sizing and the costs, as the record states them.
     var cap = [d.label.text, windowWords];
     if (has(t.start_capital_usd)) cap.push(usd(t.start_capital_usd, false, false) + ' start');
-    if (has(t.order_size)) cap.push(t.order_size);
     if (has(t.commission) && has(t.slippage)) cap.push('after commission and slippage');
     else if (has(t.commission)) cap.push('after commission');
 
     // First screen: the chart, the four figures in one bar, one caption, the monthly P&L.
     var first = '<div class="bx-first">' +
       (hasCurve ? '<div class="bx-chart" id="bx-chart"></div>'
-        : (d.overview_image ? '<div class="bx-chart is-image"><img src="data/' + esc(d.overview_image) + '" alt="The Strategy Tester overview for ' + esc(d.name) + ': a hypothetical backtest, ' + esc(windowWords) + '"></div>' : '')) +
+        : (d.overview_image ? '<div class="bx-chart is-image"><img src="' + esc(DATA) + esc(d.overview_image) + '" alt="The Strategy Tester overview for ' + esc(d.name) + ': a hypothetical backtest, ' + esc(windowWords) + '"></div>' : '')) +
       '<dl class="bx-kpis' + (kpiLen >= 15 ? ' is-long is-xlong' : (kpiLen >= 12 ? ' is-long' : '')) + '">' +
         kpi('Net profit', show.net_profit, tone(f.net_profit_usd)) +
         kpi('Win rate', show.win_rate) +
         kpi('Profit factor', show.profit_factor) +
-        kpi('Max drawdown', show.max_drawdown) +
+        kpi('Max drawdown', show.max_drawdown_usd) +
       '</dl>' +
       '<p class="bx-cap">' + cap.map(esc).join(' · ') + '</p>' +
       (hasMonths ? '<div class="bx-mo"><h3 class="bx-mo-h" id="bx-mo-h">Monthly P&amp;L</h3>' +
@@ -540,7 +586,6 @@
         ['Symbol', has(t.symbol) && esc(t.symbol)],
         ['Window', esc(windowWords)],
         ['Starting balance', has(t.start_capital_usd) && esc(usd(t.start_capital_usd, false, false))],
-        ['Order size', has(t.order_size) && esc(t.order_size)],
         ['Commission', has(t.commission) && esc(t.commission)],
         ['Slippage', has(t.slippage) && esc(t.slippage)]
       ]) + '</section>' +
@@ -631,9 +676,20 @@
     box.dataset.w = w; box.dataset.h = hgt;
   }
 
+  // A card's quick highlights (Collin 2026-11-18, row E702): the record's own display figures, as the Strategy Library
+  // table prints them, label over figure. The card carries no label words; the sheet and the Strategy Library keep them.
+  function highlights(d) {
+    if (d.status !== 'figures' || !d.figures || !d.figures.display) return '';
+    var f = d.figures, show = f.display;
+    return [['Return on drawdown', show.return_on_drawdown, ''], ['Avg monthly profit', show.monthly_profit, tone(f.monthly_profit_usd)],
+            ['Win rate', show.win_rate, '']].filter(function (h) { return h[1]; }).map(function (h) {
+      return '<div class="bx-hl-i"><dt>' + esc(h[0]) + '</dt><dd' + (h[2] ? ' class="' + h[2] + '"' : '') + '>' + esc(h[1]) + '</dd></div>';
+    }).join('');
+  }
+
   function spark(el, d) {
     if (d.status !== 'figures' || !d.equity || !d.equity.length) {
-      el.textContent = d.status === 'figures' ? d.label.text : 'No figures published yet';
+      el.textContent = d.status === 'figures' ? '' : 'No figures published yet';
       return;
     }
     var g = linePath(d.equity, 300, 68, { l: 4, r: 4, t: 8, b: 8 });
@@ -660,12 +716,14 @@
   });
 
   /* ---------- start ---------- */
+  window.AFT_BOTS = { named: named, listed: listed, plans: plans, ladder: ladder, nameSpan: nameSpan, grade: grade, finish: finish, esc: esc,
+    usd: usd, day: day, tone: tone, dollars: dollars, priceWords: priceWords };
   load();
   render();
-  slugs.forEach(function (slug) {
+  if (stratGrid) slugs.forEach(function (slug) {
     getDoc(slug).then(function (d) {
-      var st = $('[data-status="' + slug + '"]'), sp = $('[data-spark="' + slug + '"]');
-      if (st) st.textContent = d.status === 'figures' ? d.label.text : '';
+      var sp = $('[data-spark="' + slug + '"]'), hl = $('[data-hl="' + slug + '"]');
+      if (hl) hl.innerHTML = highlights(d);
       if (sp) spark(sp, d);
     }, function () { /* the cards still read without their data */ });
   });
