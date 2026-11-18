@@ -15,40 +15,41 @@
  "test": {
   "tester": "TradingView Strategy Tester",
   "window_from": "2026-01-01",
-  "window_to": "2026-11-17",
-  "run_date": "2026-11-17",
+  "window_to": "2026-11-18",
+  "run_date": "2026-11-18",
   "symbol": "COMEX_MINI:MGC1!",
   "timeframe": "1 minute",
   "start_capital_usd": 25000.0,
-  "commission": "charged on every trade"
+  "commission": "$0.75 per contract",
+  "slippage": "2 ticks"
  },
- "record_line": "TradingView Strategy Tester · Jan 1, 2026 to Nov 17, 2026 · $25,000 start · commission charged on every trade · run Nov 17, 2026",
+ "record_line": "TradingView Strategy Tester · Jan 1, 2026 to Nov 18, 2026 · $25,000 start · commission $0.75 per contract · slippage 2 ticks · run Nov 18, 2026",
  "figures": {
-  "net_profit_usd": 58401.5,
-  "win_rate_pct": 67.36,
-  "profit_factor": 2.061,
-  "trades": 769,
+  "net_profit_usd": 57687.0,
+  "win_rate_pct": 67.19,
+  "profit_factor": 2.034,
+  "trades": 771,
   "display": {
-   "net_profit": "+$58,401.50",
-   "win_rate": "67.36%",
-   "profit_factor": "2.061",
+   "net_profit": "+$57,687.00",
+   "win_rate": "67.19%",
+   "profit_factor": "2.034",
    "max_drawdown": "3.72%",
    "max_drawdown_usd": "$1,849.50",
-   "return_on_drawdown": "31.58",
-   "avg_trade": "+$75.99",
-   "trades": "769",
-   "trading_days": "229",
+   "return_on_drawdown": "31.19",
+   "avg_trade": "+$74.82",
+   "trades": "771",
+   "trading_days": "230",
    "trade_frequency": "0.30",
-   "monthly_profit": "+$5,309.23"
+   "monthly_profit": "+$5,244.27"
   },
   "max_drawdown_pct": 3.72,
   "max_drawdown_usd": 1849.5,
-  "return_on_drawdown": 31.58,
-  "avg_trade_usd": 75.99,
-  "trading_days": 229,
-  "trade_frequency": 0.2978,
+  "return_on_drawdown": 31.19,
+  "avg_trade_usd": 74.82,
+  "trading_days": 230,
+  "trade_frequency": 0.2983,
   "winners": 518,
-  "monthly_profit_usd": 5309.23
+  "monthly_profit_usd": 5244.27
  },
  "months": [
   {
@@ -103,8 +104,8 @@
   },
   {
    "month": "2026-11",
-   "pnl_usd": 183.0,
-   "trades": 32
+   "pnl_usd": -531.5,
+   "trades": 34
   }
  ],
  "equity": [
@@ -1106,22 +1107,25 @@
   ],
   [
    "2026-11-17",
-   58401.5
+   58270.0
+  ],
+  [
+   "2026-11-18",
+   57687.0
   ]
  ],
  "worked_out": {
   "worst_day_usd": -1038.5,
   "worst_day_date": "2026-04-09",
-  "note": "Worked out from the trade list in the same export.",
-  "open_trade_pnl_usd": -33.5
+  "note": "Worked out from the trade list in the same export."
  },
  "proof": {
-  "run_date": "2026-11-17",
+  "run_date": "2026-11-18",
   "tradingview_url": null
  },
  "source": {
   "generated_by": "aft_strategy_export.py",
-  "properties_sha256": "862f08bafd1b02aef40d70d7fc4abee3330bc98f58e36c04a2fc4762466182b2",
-  "trade_list_sha256": "921236778b8426a4b4493b504443f974d513e4e8363e483915ab47a066e792c2"
+  "properties_sha256": "3ce6901b9e38b9c1b68f2ac8e5076e7b0bcbe321875f5791ae760621e7cedce3",
+  "trade_list_sha256": "dead7268cf559fe6d29871e59460974494f16696dda3deabd720a97e05b3f77e"
  }
 }

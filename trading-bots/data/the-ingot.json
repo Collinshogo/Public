@@ -15,7 +15,7 @@
  "test": {
   "tester": "TradingView Strategy Tester",
   "window_from": "2026-01-01",
-  "window_to": "2026-11-17",
+  "window_to": "2026-11-18",
   "run_date": "2026-11-18",
   "symbol": "COMEX_MINI:MGC1!",
   "timeframe": "1 minute",
@@ -23,7 +23,7 @@
   "commission": "$0.75 per contract",
   "slippage": "2 ticks"
  },
- "record_line": "TradingView Strategy Tester · Jan 1, 2026 to Nov 17, 2026 · $25,000 start · commission $0.75 per contract · slippage 2 ticks · run Nov 18, 2026",
+ "record_line": "TradingView Strategy Tester · Jan 1, 2026 to Nov 18, 2026 · $25,000 start · commission $0.75 per contract · slippage 2 ticks · run Nov 18, 2026",
  "figures": {
   "net_profit_usd": 37893.5,
   "win_rate_pct": 73.42,
@@ -38,16 +38,16 @@
    "return_on_drawdown": "20.36",
    "avg_trade": "+$47.07",
    "trades": "805",
-   "trading_days": "229",
-   "trade_frequency": "0.28",
+   "trading_days": "230",
+   "trade_frequency": "0.29",
    "monthly_profit": "+$3,444.86"
   },
   "max_drawdown_pct": 6.26,
   "max_drawdown_usd": 1861.0,
   "return_on_drawdown": 20.36,
   "avg_trade_usd": 47.07,
-  "trading_days": 229,
-  "trade_frequency": 0.2845,
+  "trading_days": 230,
+  "trade_frequency": 0.2857,
   "winners": 591,
   "monthly_profit_usd": 3444.86
  },
@@ -957,7 +957,7 @@
  },
  "source": {
   "generated_by": "aft_strategy_export.py",
-  "properties_sha256": "0e3b20cf179f44e2f8b7b6fe7110395b8e45667b8bef4bc7710779eda81a03d9",
+  "properties_sha256": "5995b479645b25ae9ea3e5c206ba5e6d9365d734a78e5b580d74998dcbc8de8b",
   "trade_list_sha256": "e4690efd6958b42dbc821d89702261e05377a663b04db1c732d46b8dec28d6c9"
  }
 }
