@@ -113,9 +113,9 @@ window.AFT_BOTS_CATALOG = {
       named: true,
       name: "The Press",
       tv_url: "https://www.tradingview.com/script/YSUDmL8e-The-Press-AFT/",
-      tier: null,
-      grade: null,
-      price: null,
+      tier: "select",
+      grade: 3,
+      price: 277,
       chip: "MNQ",
       market_line: "MNQ · Micro Nasdaq",
       lettering: ["#eef3ff", "#7fb2ff", "#c9d6ff"]
@@ -259,6 +259,35 @@ window.AFT_BOTS_CATALOG.figures = {
    "monthly_profit": "+$9,462.11",
    "trading_days": "229",
    "trade_frequency": "0.19"
+  }
+ },
+ "the-press": {
+  "label": "Hypothetical backtest",
+  "window_from": "2026-01-01",
+  "window_to": "2026-11-18",
+  "run_date": "2026-11-18",
+  "start_capital_usd": 25000.0,
+  "net_profit_usd": 30055.5,
+  "profit_factor": 3.195,
+  "trades": 211,
+  "win_rate_pct": 64.45,
+  "max_drawdown_usd": 1284.25,
+  "return_on_drawdown": 23.4,
+  "avg_trade_usd": 142.44,
+  "monthly_profit_usd": 2732.32,
+  "trading_days": 230,
+  "trade_frequency": 1.09,
+  "display": {
+   "net_profit": "+$30,055.50",
+   "profit_factor": "3.195",
+   "trades": "211",
+   "win_rate": "64.45%",
+   "max_drawdown_usd": "$1,284.25",
+   "return_on_drawdown": "23.40",
+   "avg_trade": "+$142.44",
+   "monthly_profit": "+$2,732.32",
+   "trading_days": "230",
+   "trade_frequency": "1.09"
   }
  },
  "golden-meridian": {
