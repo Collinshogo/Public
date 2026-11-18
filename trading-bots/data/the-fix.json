@@ -2,7 +2,7 @@
  "schema": "aft.strategy-performance/2",
  "slug": "the-fix",
  "name": "The Fix",
- "tier": "base",
+ "tier": "select",
  "what": {
   "market_line": "MGC · Micro Gold",
   "timeframe": "1-minute chart"

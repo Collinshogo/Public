@@ -55,7 +55,7 @@ window.AFT_BOTS_CATALOG = {
       tv_url: "https://www.tradingview.com/script/GoazA2iD-Continuum-AFT/",
       tier: "ultimate",
       grade: null,
-      price: null,
+      price: 797,
       chip: "MNQ",
       market_line: "MNQ · Micro Nasdaq",
       lettering: ["#f2f6f3", "#8ea0ff", "#3ddc84"]
@@ -67,7 +67,7 @@ window.AFT_BOTS_CATALOG = {
       tv_url: "https://www.tradingview.com/script/uljkARS5-Midas-AFT/",
       tier: "ultimate",
       grade: 1,
-      price: null,
+      price: 797,
       chip: "MGC",
       market_line: "MGC · Micro Gold",
       lettering: ["#fff6dc", "#f7c948", "#ff8a3d"]
@@ -79,7 +79,7 @@ window.AFT_BOTS_CATALOG = {
       tv_url: "https://www.tradingview.com/script/ikYoLFYO-Slipstream-AFT/",
       tier: "select",
       grade: null,
-      price: null,
+      price: 277,
       chip: "MNQ",
       market_line: "MNQ · Micro Nasdaq",
       lettering: ["#f2f6f3", "#ff9fd0", "#b388ff"]
@@ -151,7 +151,7 @@ window.AFT_BOTS_CATALOG = {
       tv_url: "https://www.tradingview.com/script/XaWdIs0A-Golden-Meridian-AFT/",
       tier: "ultimate",
       grade: 1,
-      price: null,
+      price: 797,
       chip: "MGC",
       market_line: "MGC · Micro Gold",
       lettering: ["#fff9e0", "#ffd65c", "#46d5c4"]
@@ -163,7 +163,7 @@ window.AFT_BOTS_CATALOG = {
       tv_url: "https://www.tradingview.com/script/teBARQ5o-Hallmark-AFT/",
       tier: "ultimate",
       grade: 1,
-      price: null,
+      price: 797,
       chip: "MGC",
       market_line: "MGC · Micro Gold",
       lettering: ["#fdf3e3", "#e6b873", "#c77dff"]
@@ -175,7 +175,7 @@ window.AFT_BOTS_CATALOG = {
       tv_url: "https://www.tradingview.com/script/837aV0Y8-The-Alloy-AFT/",
       tier: "supreme",
       grade: 2,
-      price: null,
+      price: 627,
       chip: "MGC",
       market_line: "MGC · Micro Gold",
       lettering: ["#f4f1ea", "#c9b18a", "#7fd1c7"]
@@ -185,9 +185,9 @@ window.AFT_BOTS_CATALOG = {
       named: true,
       name: "The Assay",
       tv_url: "https://www.tradingview.com/script/XemUIkde-The-Assay-AFT/",
-      tier: "base",
-      grade: 4,
-      price: null,
+      tier: "select",
+      grade: 3,
+      price: 277,
       chip: "MGC",
       market_line: "MGC · Micro Gold",
       lettering: ["#fff4d6", "#f0c14b", "#8fd14f"]
@@ -197,9 +197,9 @@ window.AFT_BOTS_CATALOG = {
       named: true,
       name: "The Fix",
       tv_url: "https://www.tradingview.com/script/XrpbFoZt-The-Fix-AFT/",
-      tier: "base",
-      grade: 4,
-      price: null,
+      tier: "select",
+      grade: 3,
+      price: 277,
       chip: "MGC",
       market_line: "MGC · Micro Gold",
       lettering: ["#fdeef0", "#ff8fa3", "#ffd166"]
@@ -209,9 +209,9 @@ window.AFT_BOTS_CATALOG = {
       named: true,
       name: "The Ingot",
       tv_url: "https://www.tradingview.com/script/UNIo4H1s-The-Ingot-AFT/",
-      tier: "base",
-      grade: 4,
-      price: null,
+      tier: "select",
+      grade: 3,
+      price: 277,
       chip: "MGC",
       market_line: "MGC · Micro Gold",
       lettering: ["#fff3da", "#ffb627", "#e85d04"]
