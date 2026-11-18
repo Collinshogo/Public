@@ -140,8 +140,22 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bx-strategies,.bx-how{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 
 /* plans */
-.bx-plan-grid{display:grid;gap:16px}
-.bx-plan{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px 20px;display:flex;flex-direction:column;gap:18px;min-width:0;transition:border-color .15s,box-shadow .15s}
+.bx-plan-grid{display:grid;gap:12px}
+/* A tier card is compact: at phone width the whole card, from its name to its last line, fits one screen.
+   Its parts are laid out as one wrapping row. The name and the price share the first line; every other part
+   takes a full line of its own, in this order: the line under the name, the Choose button, the strategies,
+   the update line, support and access. The card's header is not a box of its own (display:contents), so the
+   title and the line under it are parts of that row too. A part added later (a savings line, say) needs only
+   its own order and a full line. */
+.bx-plan{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 16px 18px;display:flex;flex-wrap:wrap;align-items:baseline;align-content:flex-start;gap:12px;min-width:0;transition:border-color .15s,box-shadow .15s}
+.bx-plan>header{display:contents}
+.bx-plan>header>h3{order:1;flex:0 1 auto}
+.bx-plan>.bx-price{order:2;flex:0 0 auto;margin-left:auto}
+.bx-plan>header>.bx-plan-for{order:3;flex:0 0 100%;margin-top:-7px}
+.bx-plan>.bx-choose{order:4}
+.bx-plan>.bx-strats{order:5;flex:0 0 100%}
+.bx-plan>.bx-inc{order:6;flex:0 0 100%}
+.bx-plan>.bx-perks{order:7;flex:0 0 100%}
 /* The card ladder, each step adding light and never size:
      plain     the page's own panel and hairline
      gradient  the same flat panel with a slate edge. Not lit.
@@ -160,72 +174,70 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
     linear-gradient(var(--panel),var(--panel)) padding-box,
     linear-gradient(165deg,#ffe58a,#f7c948 24%,rgba(247,201,72,.6) 50%,rgba(255,157,71,.66) 74%,#ffbe5c) border-box}
 .bx-plan.is-chosen,.bx-plan[data-plan].is-chosen{border-color:var(--red-edge);box-shadow:0 0 0 1px var(--red-edge) inset,0 14px 44px -20px rgba(225,25,30,.6)}
-/* one line height for every title, so the prices stay level across the cards */
-.bx-plan h3{width:fit-content;max-width:100%;font-size:27px;line-height:34px;margin:0}
-.bx-plan h3.bx-tname[data-lvl="gradient"],.bx-plan h3.bx-tname[data-lvl="polished"],.bx-plan h3.bx-tname[data-lvl="sheen"]{font-size:25px}
-.bx-plan-for{margin:6px 0 0;color:var(--dim);font-size:16px}
-.bx-price{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:0}
-.bx-amt{font-family:var(--display);font-size:44px;font-weight:700;color:var(--bright);letter-spacing:-.03em;line-height:1}
-.bx-per{color:var(--dim);font-size:16px}
+/* one line height for every title and for the price beside it, so the first line is level across the cards */
+.bx-plan h3{width:fit-content;max-width:100%;font-size:22px;line-height:30px;margin:0}
+.bx-plan h3.bx-tname[data-lvl="gradient"],.bx-plan h3.bx-tname[data-lvl="polished"],.bx-plan h3.bx-tname[data-lvl="sheen"]{font-size:20px}
+.bx-plan-for{margin:0;color:var(--dim);font-size:15px;line-height:1.35}
+.bx-price{display:flex;align-items:baseline;gap:6px;margin:0;white-space:nowrap}
+.bx-amt{font-family:var(--display);font-size:28px;font-weight:700;color:var(--bright);letter-spacing:-.03em;line-height:30px}
+.bx-per{color:var(--dim);font-size:14px}
 /* a tier whose price is not set yet: the words stand where the figure would, smaller, on the figure's own line height */
-.bx-tbs{font-family:var(--display);font-size:22px;font-weight:600;color:var(--bright);letter-spacing:-.01em;line-height:44px}
+.bx-tbs{font-family:var(--display);font-size:18px;font-weight:600;color:var(--bright);letter-spacing:-.01em;line-height:30px}
 .bx-bar-price .bx-tbs-bar{margin-left:0;font-size:16px;color:var(--text)}
+/* where a card is narrowest (the smallest phones, and four cards across) the price gives way, so the name and the price keep one line */
+@media(max-width:379.98px),(min-width:1800px){
+  .bx-plan-grid .bx-plan{column-gap:8px}
+  .bx-plan-grid .bx-amt{font-size:24px}
+  .bx-plan-grid .bx-per{font-size:13px}
+}
 
+/* The strategies a tier gives access to: a heading, then one chip per named strategy. The chips sit side by side
+   and wrap. A chip is the strategy's name in its own lettering and an arrow; the whole chip is the link that opens
+   the strategy. The strategies not named yet are one quiet chip with a dashed edge, which is not a link. Under
+   the chips, the "Plus" line: the lower grades this tier also holds, and what is added later. */
 .bx-strats{border:1px solid var(--line);border-radius:10px;background:var(--bg2);overflow:hidden}
-.bx-list-h{margin:0;padding:10px 14px;font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--red-soft)}
-.bx-strats ul{list-style:none;margin:0;padding:0}
-.bx-srow{display:flex;align-items:stretch;border-top:1px solid var(--line);margin:0}
+.bx-list-h{margin:0;padding:9px 12px 0;font-size:13.5px;font-weight:600;line-height:1.3;color:var(--red-soft)}
+.bx-strats ul{list-style:none;margin:0;padding:8px 12px 10px;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.bx-srow{display:flex;min-width:0;max-width:100%;margin:0}
 .bx-srow[hidden]{display:none}
-.bots .bx-slink{flex:1;min-width:0;display:flex;align-items:center;gap:10px;min-height:52px;padding:8px 14px;color:var(--bright);font-weight:600;font-size:16.5px}
-/* A tier row is one line at every width: the name, the market tag, "See it". The name keeps its size and lettering.
-   Everything but the name starts at its smallest and takes the room that is left, in this order: the words "See it"
-   first, then the gaps and the side padding up to their full size, then the space before "See it". So when room runs
-   out the row gives up the gaps and padding first, then the words (the arrow stays; the whole row is the link),
-   and only when nothing else is left does the name shrink, ending in an ellipsis. */
-.bots .bx-srow>.bx-slink{gap:0;padding:8px 0;white-space:nowrap}
-.bx-srow>.bx-slink::before,.bx-srow>.bx-slink::after{content:"";flex:1000 0 8px;max-width:14px}
-.bx-g{flex:1000 0 5px;max-width:10px}
-.bx-g2{flex-grow:1;max-width:none}
-.bx-sname.bx-wm{font-size:17px;line-height:1.2}
-.bx-sname.bx-wm[data-lvl="plain"]{font-size:17.5px}
+.bots .bx-slink{display:flex;align-items:center;gap:7px;min-width:0;min-height:44px;box-sizing:border-box;padding:0 10px 0 12px;border:1px solid var(--line2);border-radius:9px;background:var(--panel);color:var(--bright);font-weight:600;white-space:nowrap}
+.bots .bx-slink:hover{text-decoration:none;border-color:var(--dim);background:rgba(255,255,255,.045)}
+.bx-sname.bx-wm{font-size:15px;line-height:1.3}
+.bx-sname.bx-wm[data-lvl="plain"]{font-size:15.5px}
+/* a name too long for its card is cut with an ellipsis; nothing else in a chip gives way */
 .bx-srow .bx-sname{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
-.bots .bx-slink:hover{text-decoration:none;background:rgba(255,255,255,.045)}
-.bx-tba{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;min-height:52px;box-sizing:border-box;margin:0;padding:8px 14px;color:var(--dim);font-size:15.5px;font-weight:500;line-height:1.3}
+.bx-arw{flex:none;color:var(--red-soft);font-size:15px;font-weight:500;line-height:1}
+.bx-tba{margin:0;padding:6px 10px;border:1px dashed var(--line2);border-radius:9px;color:var(--dim);font-size:13.5px;font-weight:500;line-height:1.35}
 .bx-tba small{font-size:13px;font-weight:400;color:var(--faint)}
-.bx-plus{margin:0;padding:11px 14px;border-top:1px solid var(--line);font-size:14.5px;font-weight:500;color:var(--text);background:var(--red-tint)}
-.bx-chip{flex:none;font-size:12px;font-weight:600;color:var(--dim);border:1px solid var(--line2);border-radius:6px;padding:1px 6px;letter-spacing:.02em}
-/* "See it": a one-line box that grows from nothing. Its empty first item holds the line, so the words drop to a
-   second, hidden line the moment the box is narrower than they are: they show whole or not at all. */
-.bx-see{flex:1000000000 0 0px;min-width:0;max-width:max-content;display:flex;flex-wrap:wrap;height:21px;overflow:hidden;color:var(--red-soft);font-size:14px;font-weight:500;line-height:21px}
-.bx-see::before{content:"";width:0;height:21px}
-.bx-see>span{flex:none}
-.bx-arw{flex:none;padding-left:4px;color:var(--red-soft);font-size:14px;font-weight:500;line-height:21px}
+.bx-tba small::before{content:"\00a0\00b7\00a0"}
+.bx-plus{margin:0;padding:8px 12px;border-top:1px solid var(--line);font-size:13.5px;font-weight:500;line-height:1.4;color:var(--text);background:var(--red-tint)}
 /* a long list: the button that opens the rest of it in place */
-.bx-all{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;margin:0;padding:8px 14px;border:0;border-top:1px solid var(--line);background:transparent;color:var(--bright);font-family:var(--sans);font-size:15px;font-weight:600;cursor:pointer}
+.bx-all{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;margin:0;padding:6px 12px;border:0;border-top:1px solid var(--line);background:transparent;color:var(--bright);font-family:var(--sans);font-size:14.5px;font-weight:600;cursor:pointer}
 .bx-all:hover{background:rgba(255,255,255,.045)}
 .bx-all::after{content:"";width:7px;height:7px;margin-top:-4px;border-right:2px solid var(--red-soft);border-bottom:2px solid var(--red-soft);transform:rotate(45deg)}
 .bx-all[aria-expanded="true"]::after{margin-top:4px;transform:rotate(-135deg)}
 
-.bx-inc{list-style:none;margin:0;padding:0;display:grid;gap:9px;font-size:15.5px;color:var(--text)}
-.bx-inc li{position:relative;padding-left:24px;margin:0}
-.bx-inc li::before{content:"";position:absolute;left:3px;top:.42em;width:10px;height:5px;border-left:2px solid var(--red-soft);border-bottom:2px solid var(--red-soft);transform:rotate(-45deg)}
-/* What a tier gives beyond its strategies. Its own lines come first: with a tier under it they are the lines it
-   adds, bright, each behind a plus sign in the tier's own colour. Then the lines it takes from the tiers under it,
-   quieter, behind a tick. The same lines again as a table under the cards (.bx-cmp): tier names upright on a
-   phone, so the four columns stay narrow and a line keeps to two rows. */
-.bx-perks{display:grid;gap:10px;margin:0;padding-top:18px;border-top:1px solid var(--line)}
-.bx-perks-h,.bx-rule .bx-perks-h{margin:0;font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--red-soft)}
-.bx-perks ul{list-style:none;margin:0;padding:0;display:grid;gap:9px;font-size:15.5px;color:var(--text)}
-.bx-perks li{position:relative;padding-left:24px;margin:0}
-.bx-perks li::before{content:"";position:absolute;left:3px;top:.42em;width:10px;height:5px;border-left:2px solid var(--red-soft);border-bottom:2px solid var(--red-soft);transform:rotate(-45deg)}
+.bx-inc{list-style:none;margin:0;padding:0;font-size:14px;line-height:1.4;color:var(--text)}
+.bx-inc li{position:relative;padding-left:22px;margin:0}
+.bx-inc li::before{content:"";position:absolute;left:3px;top:.4em;width:9px;height:5px;border-left:2px solid var(--red-soft);border-bottom:2px solid var(--red-soft);transform:rotate(-45deg)}
+/* What a tier gives beyond its strategies: one running line. The tier's own lines, each ending in a middle dot;
+   with a tier under it they are the lines it adds, bright, each behind a plus sign in the tier's own colour, and
+   the line closes with "Plus everything in" the tiers below, quieter. Every line of every tier is in the table
+   under the cards (.bx-cmp): tier names upright on a phone, so the four columns stay narrow and a line keeps to
+   two rows. */
+.bx-perks{margin:0;padding-top:12px;border-top:1px solid var(--line);font-size:14px;line-height:1.5;color:var(--text)}
+.bx-perks-h,.bx-rule .bx-perks-h{margin:0;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--red-soft)}
+.bx-perks .bx-perks-h{margin:0 0 3px;line-height:1.4}
+.bx-perks ul{display:inline;list-style:none;margin:0;padding:0}
+.bx-perks li{display:inline;margin:0}
+.bx-perks li:not(:last-child)::after,.bx-perks ul:has(+ .bx-perks-plus:not([hidden])) li:last-child::after{content:"\00a0\00b7";font-weight:400;color:var(--faint)}
 .bx-perks ul.is-add li{color:var(--bright);font-weight:500}
-.bx-perks ul.is-add li::before{content:"+";left:2px;top:-.1em;width:auto;height:auto;border:0;transform:none;font-size:1.16em;font-weight:700;color:var(--perk,var(--red-soft))}
+.bx-perks ul.is-add li::before{content:"+\00a0";font-weight:700;color:var(--perk,var(--red-soft))}
 .bx-plan[data-lvl="gradient"]{--perk:#aab5d0}
 .bx-plan[data-lvl="polished"]{--perk:#f2f5fa}
 .bx-plan[data-lvl="sheen"]{--perk:#f7c948}
-.bx-perks-plus{margin:4px 0 0;font-size:14px;font-weight:500;color:var(--dim)}
-.bx-perks ul.bx-perks-low{gap:7px;font-size:14.5px;color:var(--dim)}
-.bx-perks-low li::before{border-color:var(--faint)}
+.bx-perks-plus{display:inline;margin:0;color:var(--dim)}
+.bx-perks-plus[hidden]{display:none}
 .bx-vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .bx-cmp{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
 .bx-cmp table{width:100%;margin:8px 0 0;border-collapse:collapse;font-size:14px;color:var(--text)}
@@ -246,51 +258,65 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 }
 /* The short texts of a tier card and of the table under the cards wrap balanced: the lines of a text come out
    near the same length, so none ends on a line that holds one word. Words, sizes and the count of lines stay. */
-.bx-plan .bx-plan-for,.bx-plan .bx-life-note,.bx-plan .bx-plus,.bx-plan .bx-inc li,.bx-plan .bx-perks li,.bx-plan .bx-perks-plus,.bx-cmp tbody th{text-wrap:balance}
+.bx-plan .bx-plan-for,.bx-plan .bx-life-note,.bx-plan .bx-plus,.bx-plan .bx-inc li,.bx-cmp tbody th{text-wrap:balance}
 /* A hyphenated word in those texts stays whole: no line ends at its hyphen. */
 .bx-nb{white-space:nowrap}
-.bots .bx-choose{width:100%}
+.bots .bx-choose{width:100%;min-height:44px;padding:9px 16px;font-size:15.5px}
 /* while a list is open the cards stop stretching to the tallest one (the page script holds each at its closed height) */
 .bx-plan-grid.has-open{align-items:start}
 .bots .bx-plan.is-chosen .bx-choose{background:var(--red-btn);border-color:var(--red-edge);color:#fff}
 
 /* The one-time plan: a band under the tier cards, as wide as their grid. It is the top tier paid once and has no
-   finish of its own: the page script gives its card and its title the top tier's data-lvl, so the rules above draw them. */
-.bx-life{margin-top:16px}
-.bx-life-note{color:var(--dim);font-size:15px;margin:4px 0 0}
-.bx-life-buy{display:flex;flex-direction:column;gap:16px}
+   finish of its own: the page script gives its card and its title the top tier's data-lvl, so the rules above draw them.
+   Under 1000px it is laid out like a tier card: its name and price on the first line, then its two lines, then
+   its button. From 1000px its words stand on the left and its price and button on the right. */
+.bx-life{margin-top:12px}
+.bx-life-note{margin:0;color:var(--dim);font-size:14px;line-height:1.4}
+.bx-life-buy{display:flex;flex-direction:column;gap:12px}
+@media(max-width:999.98px){
+  .bx-life>.bx-life-main,.bx-life>.bx-life-main>header,.bx-life>.bx-life-buy{display:contents}
+  .bx-life h3{order:1;flex:0 1 auto}
+  .bx-life .bx-price{order:2;flex:0 0 auto;margin-left:auto}
+  .bx-life .bx-plan-for{order:3;flex:0 0 100%;margin-top:-7px}
+  .bx-life .bx-life-note{order:3;flex:0 0 100%;margin-top:-8px}
+  .bx-life .bx-choose{order:4}
+}
 .bx-rule{margin:20px 0 0;padding:18px 20px;border:1px solid var(--line);border-left:3px solid var(--red-edge);border-radius:10px;background:var(--bg2);max-width:860px}
 .bx-rule h3{font-size:19px;margin:0 0 6px}
 .bx-rule p{margin:0;color:var(--dim);font-size:15.5px}
 .bx-fine{margin:18px 0 0;color:var(--faint);font-size:14px;max-width:760px}
-/* How many cards sit in a row follows how many tiers there are, and a row of cards is used only where a
-   13-letter name still fits its row whole. The grid has twelve columns; a card spans all twelve, six, four or three.
+/* How many cards sit in a row follows how many tiers there are. The grid has twelve columns; a card spans all
+   twelve, six, four or three.
      with 3 tiers: one column, then all across from 1000px
      with 4 tiers: one column, two by two from 700px, all four across from 1800px
-   Where cards sit side by side the line under the title keeps room for its longest wording (--for-h), so the
-   prices and the Choose buttons sit level across the cards. */
-.bx-plan-for{min-height:var(--for-h,0)}
+   Every card's first line (name and price), the line under it and its Choose button are one line each, so they
+   sit level across the cards of a row. */
 @media(min-width:700px){
   .bx-plan-grid{grid-template-columns:repeat(12,minmax(0,1fr));gap:20px}
-  .bx-plan{grid-column:span 12}
-  .bx-plan:first-child:nth-last-child(4),.bx-plan:first-child:nth-last-child(4)~.bx-plan{grid-column:span 6;--for-h:3.1em}
+  .bx-plan{grid-column:span 12;padding:20px 20px 22px}
+  .bx-plan:first-child:nth-last-child(4),.bx-plan:first-child:nth-last-child(4)~.bx-plan{grid-column:span 6}
   .bx-life{margin-top:20px}
 }
 @media(min-width:1000px){
-  .bx-plan{grid-column:span 4;padding:28px 24px;--for-h:3.1em}
-  .bx-life{flex-direction:row;align-items:center;justify-content:space-between;gap:48px;padding:26px 28px;--for-h:0}
+  .bx-plan{grid-column:span 4;padding:24px 24px 26px;row-gap:14px}
+  .bx-life{flex-wrap:nowrap;align-items:center;justify-content:space-between;gap:48px;padding:22px 28px}
+  .bx-life-main{flex:1 1 auto;min-width:0}
+  .bx-life .bx-plan-for{margin-top:4px}
+  .bx-life .bx-life-note{margin-top:2px}
   .bx-life-buy{flex:none;width:350px}
 }
 @media(min-width:1800px){
-  .bx-plan:first-child:nth-last-child(4),.bx-plan:first-child:nth-last-child(4)~.bx-plan{grid-column:span 3;padding:26px 18px}
+  .bx-plan:first-child:nth-last-child(4),.bx-plan:first-child:nth-last-child(4)~.bx-plan{grid-column:span 3;padding:22px 18px 24px}
 }
 
 /* strategies */
 .bx-strat-grid{display:grid;gap:16px}
 .bots .bx-strat{display:flex;flex-direction:column;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 20px;color:var(--text);transition:border-color .15s,transform .15s}
 .bots .bx-strat:hover{text-decoration:none;border-color:var(--red-edge)}
-.bx-strat-k{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px;font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--red-soft)}
-.bx-tier{flex:none;font-size:11.5px;letter-spacing:.06em;color:var(--bright);border:1px solid var(--line2);border-radius:999px;padding:1px 9px}
+.bx-strat-k{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 10px;margin:0 0 10px;font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--red-soft)}
+/* three cards across, where the market line and the grade only just fit: every head keeps two rows' height, so the names stay level */
+@media(min-width:900px) and (max-width:1119.98px){.bx-strat-k{min-height:47px;align-content:flex-start}}
+.bx-tier{flex:none;font-size:11.5px;letter-spacing:.02em;text-transform:none;color:var(--bright);border:1px solid var(--line2);border-radius:999px;padding:1px 9px}
 .bx-tier[data-lvl="gradient"]{color:#c3cbe0;border-color:#4d5778}
 .bx-tier[data-lvl="polished"]{color:#f4f7fc;border-color:rgba(222,230,244,.82);background:rgba(214,224,242,.09);box-shadow:0 0 10px -3px rgba(206,218,242,.55)}
 .bx-tier[data-lvl="sheen"]{color:#ffe08a;border-color:#f7c948;background:rgba(247,201,72,.13);box-shadow:0 0 12px -2px rgba(247,201,72,.7)}
@@ -475,8 +501,6 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 @media(min-width:3200px){body.bots{zoom:1.9}html{scroll-padding-bottom:166px}}
 
 @media(max-width:380px){
-  .bx-amt{font-size:40px}
-  .bx-tbs{font-size:21px;line-height:40px}
   .bots .bx-bar-btn{padding:12px 13px;font-size:15px}
   .bx-bar-in{gap:10px;padding:0 12px}
   .bx-bar-plan{font-size:15.5px}

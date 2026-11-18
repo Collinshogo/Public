@@ -10,7 +10,7 @@
      bots-config.js. Its look follows its place among the tiers, worked out here: the lettering of its title and
      of its strategies' names, the card's finish, the tier pill, the bar and the open strategy's tier line.
      A card with no data-price reads "Price to be set" wherever its price would stand.
-   - A tier's list: one row per named strategy, each on one line. A list longer than SHOW rows shows SHOW
+   - A tier's list: one chip per named strategy, side by side. A list longer than SHOW chips shows SHOW
      and a "Show all <count>" button that opens the rest in place. While an opened list is on screen and its
      card's own Choose button is not, the bar offers that tier.
    - The open strategy: every strategy name is a real link (#slug). The hash opens the view in place,
@@ -73,8 +73,8 @@
       grid.insertAdjacentHTML('afterend',
         '<article class="bx-plan bx-life" data-plan="lifetime" data-name="Lifetime" data-price="10000" data-kind="lifetime" data-rank="' + esc(topCard.dataset.rank) + '">' +
         '<div class="bx-life-main"><header><h3 class="bx-wm bx-tname">Lifetime</h3>' +
-        '<p class="bx-plan-for">Pay once. Everything in ' + esc(topCard.dataset.name) + ', with no monthly payment.</p>' +
-        '<p class="bx-life-note">Access for as long as <span class="bx-nb">AFT Trading Bots</span> is offered.</p></header></div>' +
+        '<p class="bx-plan-for">Pay once, with no monthly charge. Every strategy in every tier, and everything new the bots produce in future.</p>' +
+        '<p class="bx-life-note">Yours for life, with every update pushed to you automatically and ' + esc(topCard.dataset.name) + '\'s support and access.</p></header></div>' +
         '<div class="bx-life-buy"><p class="bx-price"><span class="bx-amt">$10,000</span><span class="bx-per">once</span></p>' +
         '<button class="btn btn-ghost bx-choose" type="button" data-choose="lifetime">Choose Lifetime</button></div>' +
         '</article>');
@@ -121,21 +121,25 @@
   // top tier's, so the top tier's own rules (bots.css) draw them, and it follows the top tier if the tiers change.
   if (plans.lifetime && ladder.length) wear(plans.lifetime, FIN[ladder[ladder.length - 1].id]);
   function finish(tier) { return FIN[tier] || 'plain'; }
+  // A strategy's grade follows the tier it sits in: the lowest tier holds Tier 4, the top tier Tier 1. The words
+  // name the grade and the tiers that include it, wherever a strategy's tier is shown.
+  function grade(tier) { return ladder.length - ladder.indexOf(plans[tier]); }
+  function gradeWords(tier) {
+    return 'Tier ' + grade(tier) + ' · ' + plans[tier].name + (plans[tier] === ladder[ladder.length - 1] ? '' : ' and up');
+  }
 
   // What a tier gives beyond its strategies. A tier's own lines are the items of the [data-perks] list in its card
-  // (index.html), and a tier has every line of the tiers under it as well. Its card shows its own lines first,
-  // marked as added where there is a tier under it, then the lines it takes from below, quieter. The block under
-  // the cards shows the same lines as a table. Change a line in its card and both follow; a new tier card needs
+  // (index.html), and a tier has every line of the tiers under it as well. Its card shows its own lines, marked as
+  // added where there is a tier under it, and its "Plus everything in" line on the same running line. The block
+  // under the cards shows every line as a table. Change a line in its card and both follow; a new tier card needs
   // nothing here.
   var perkRows = [];             // every line once, lowest tier first: {text, from: its tier's place on the ladder}
   ladder.forEach(function (p, i) {
     var ul = $('[data-perks]', p.el), plus = $('.bx-perks-plus', p.el);
-    var low = perkRows.slice();
+    var low = perkRows.length;
     (ul ? $$('li', ul) : []).forEach(function (li) { perkRows.push({ text: li.textContent.trim(), from: i }); });
-    if (!ul || !low.length) { if (plus) plus.hidden = true; return; }
+    if (!ul || !low) { if (plus) plus.hidden = true; return; }
     ul.classList.add('is-add');
-    (plus || ul).insertAdjacentHTML('afterend', '<ul class="bx-perks-low">' +
-      low.map(function (r) { return '<li>' + esc(r.text) + '</li>'; }).join('') + '</ul>');
   });
   var ruleBox = $('.bx-rule'), perksHead = $('.bx-perks-h');
   if (ruleBox && perksHead && ladder.length > 1 && perkRows.length) {
@@ -148,13 +152,13 @@
         }).join('') + '</tr>';
       }).join('') + '</tbody></table></div>');
   }
-  // What a chosen tier holds, for the bar: its own strategies and those of every tier under it.
+  // What a chosen tier holds, for the bar: the grades of its own strategies and of every tier under it.
   function holds(p) {
-    if (p.kind === 'lifetime') return 'Every strategy, paid once';
+    if (p.kind === 'lifetime') return 'Every strategy, for life';
     if (ladder.length > 1 && p === ladder[ladder.length - 1]) return 'Every strategy';
-    var ns = ladder.filter(function (q) { return q.rank <= p.rank; }).map(function (q) { return q.name; }).reverse();
-    if (ns.length > 2) return ns.slice(0, -1).join(', ') + ' and ' + ns[ns.length - 1];   // three names fill the bar's line on a phone
-    return ns.join(' and ') + ' strategies';
+    var gs = ladder.filter(function (q) { return q.rank <= p.rank; }).map(function (q) { return grade(q.id); }).reverse();
+    if (gs.length > 1) return 'Tier ' + gs.slice(0, -1).join(', ') + ' and ' + gs[gs.length - 1] + ' strategies';
+    return 'Tier ' + gs[0] + ' strategies';
   }
 
   /* ---------- the named strategies, from the catalog ---------- */
@@ -166,22 +170,18 @@
   named.forEach(function (s) { names[s.slug] = s.name; tiers[s.slug] = s.tier; slugs.push(s.slug); });
 
   function nameSpan(s) { return '<span class="bx-sname bx-wm"' + lettering(s) + '>' + esc(s.name) + sheen(s) + '</span>'; }
-  function chip(s) { return s.chip ? '<span class="bx-chip">' + esc(s.chip) + '</span>' : ''; }
 
-  // Tier cards: each named strategy is a row above its tier's unnamed line, in the catalog's order.
-  // A row is one line: the name, the market tag, "See it". The two empty spans are its gaps, which give way
-  // before anything else does (bots.css).
-  var GAP = '<span class="bx-g" aria-hidden="true"></span>', GAP2 = '<span class="bx-g bx-g2" aria-hidden="true"></span>';
+  // Tier cards: each named strategy is a chip before its tier's unnamed chip, in the catalog's order.
+  // A chip is the name and an arrow, and the whole chip opens the strategy (bots.css).
   named.forEach(function (s) {
     var ul = $('[data-tier-list="' + s.tier + '"]');
     if (!ul) return;
     var li = document.createElement('li');
     li.className = 'bx-srow';
     li.setAttribute('data-lvl', finish(s.tier));
-    li.innerHTML = '<a class="bx-slink" href="#' + s.slug + '">' + nameSpan(s) + GAP + chip(s) + GAP2 +
-      '<span class="bx-see"><span>See it</span></span><span class="bx-arw" aria-hidden="true">›</span></a>';
+    li.innerHTML = '<a class="bx-slink" href="#' + s.slug + '">' + nameSpan(s) + '<span class="bx-arw" aria-hidden="true">›</span></a>';
     var last = ul.lastElementChild;
-    ul.insertBefore(li, last && !$('.bx-slink', last) ? last : null);   // above the unnamed line, when there is one
+    ul.insertBefore(li, last && !$('.bx-slink', last) ? last : null);   // before the unnamed chip, when there is one
   });
 
   // A long list: SHOW rows and one button that opens the rest in place. The button is made only for a tier
@@ -241,7 +241,7 @@
   if (stratGrid) {
     stratGrid.innerHTML = named.map(function (s) {
       return '<a class="bx-strat" href="#' + s.slug + '" data-slug="' + s.slug + '" data-tier="' + esc(s.tier) + '" data-lvl="' + finish(s.tier) + '">' +
-        '<p class="bx-strat-k"><span>' + esc(s.market_line || '') + '</span><span class="bx-tier" data-lvl="' + finish(s.tier) + '">' + esc(plans[s.tier].name) + '</span></p>' +
+        '<p class="bx-strat-k"><span>' + esc(s.market_line || '') + '</span><span class="bx-tier" data-lvl="' + finish(s.tier) + '">' + esc(gradeWords(s.tier)) + '</span></p>' +
         '<h3><span class="bx-wm"' + lettering(s) + '>' + esc(s.name) + sheen(s) + '</span></h3>' +
         '<p class="bx-strat-n">' + esc(s.sentence || '') + '</p>' +
         '<div class="bx-spark" data-spark="' + s.slug + '" aria-hidden="true"></div>' +
@@ -309,7 +309,7 @@
     if (!p) {
       barPrice.hidden = true;
       if (own) {
-        barPlan.textContent = own.name + ' tier';
+        barPlan.textContent = openSlug ? gradeWords(own.id) : own.name + ' tier';
         barDetail.textContent = priceWords(own);
         setBtn('choose', 'Choose ' + own.name, '', own.id);
       } else {
@@ -329,7 +329,7 @@
       } else if (openSlug && includes(p.id, openSlug)) {
         barDetail.textContent = '✓ Includes ' + nm;
       } else {
-        barDetail.textContent = openSlug ? nm + ' is in ' + own.name : 'Viewing the ' + own.name + ' list';
+        barDetail.textContent = openSlug ? nm + ': ' + gradeWords(own.id) : 'Viewing the ' + own.name + ' list';
         barAlt.textContent = 'Switch to ' + own.name + (own.price === null ? '' : ' · $' + own.price.toLocaleString('en-US'));
         barAlt.dataset.plan = own.id;
         barAlt.hidden = false;
@@ -409,7 +409,7 @@
       palette(s).forEach(function (p) { sheetTitle.style.setProperty(p[0], p[1]); });
       if (sheen(s)) sheetTitle.insertAdjacentHTML('beforeend', sheen(s));
     }
-    sheetK.textContent = plans[tiers[slug]].name + ' tier';
+    sheetK.textContent = gradeWords(tiers[slug]);
     sheetBody.innerHTML = '<p class="bx-note">Loading…</p>';
     listPlan = null;
     render();
@@ -484,8 +484,8 @@
   function has(v) { return v !== undefined && v !== null && v !== ''; }
 
   function renderPanel(d) {
-    var w = d.what || {}, tierName = plans[tiers[d.slug]].name;
-    sheetK.textContent = (w.market_line ? w.market_line + ' · ' : '') + tierName + ' tier';
+    var w = d.what || {}, tierName = gradeWords(tiers[d.slug]);
+    sheetK.textContent = (w.market_line ? w.market_line + ' · ' : '') + tierName;
 
     var what = '<section class="bx-part"><h3>What it is</h3>' + (w.sentence ? '<p>' + esc(w.sentence) + '</p>' : '') +
       dl([['Market', has(w.market_line) && esc(w.market_line)], ['Chart', has(w.timeframe) && esc(w.timeframe)],

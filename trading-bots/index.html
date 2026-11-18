@@ -67,9 +67,9 @@
 
     <!-- One article per tier, lowest first. An article is the whole definition of its tier: data-name, data-rank
          (the order the tiers nest in), data-price (left out while a price is not set), the line under the title,
-         the "Plus everything in" line, the three bullets and, under "Support and access", the lines this tier
-         adds beyond its strategies (its own lines only: the page script lists the lines of the tiers under it
-         after them, and builds the table under the cards from the same lines). Its checkout link is the key of
+         the "Plus" line, the update line and, under "Support and access", the lines this tier
+         adds beyond its strategies (its own lines only: the page script builds the table under the cards from
+         the same lines). Its checkout link is the key of
          the same name in bots-config.js. The lettering, the card finish, the tier pill, the bar and the open strategy's tier line
          all follow data-rank (bots.js); data-lvl is written here only so the first paint already has it. -->
     <div class="bx-plan-grid" id="plan-grid">
@@ -77,20 +77,19 @@
       <article class="bx-plan" data-plan="base" data-name="Base" data-price="197" data-kind="monthly" data-rank="1" data-lvl="plain">
         <header>
           <h3 class="bx-wm bx-tname" data-lvl="plain">Base</h3>
-          <p class="bx-plan-for"><span class="bx-nb">Single-model</span> strategies.</p>
+          <p class="bx-plan-for">All Tier 4 strategies.</p>
         </header>
         <p class="bx-price"><span class="bx-amt">$197</span><span class="bx-per">a month</span></p>
         <button class="btn btn-ghost bx-choose" type="button" data-choose="base">Choose Base</button>
         <div class="bx-strats">
-          <p class="bx-list-h">In this tier</p>
+          <p class="bx-list-h">You get access to these strategies</p>
           <ul data-tier-list="base">
-            <li class="bx-srow"><p class="bx-tba">Single-model strategies<small>Named here at release</small></p></li>
+            <li class="bx-srow"><p class="bx-tba">Tier 4 strategies<small>Named here at release</small></p></li>
           </ul>
+          <p class="bx-plus">Plus any strategy added to Tier 4</p>
         </div>
         <ul class="bx-inc">
-          <li>Every strategy in this tier, as <span class="bx-nb">invite-only</span> TradingView scripts</li>
-          <li>Each new strategy placed in this tier</li>
-          <li>Every update to every strategy in it</li>
+          <li>Every update to these strategies, pushed to you automatically</li>
         </ul>
         <div class="bx-perks">
           <p class="bx-perks-h">Support and access</p>
@@ -105,21 +104,19 @@
       <article class="bx-plan" data-plan="select" data-name="Select" data-price="397" data-kind="monthly" data-rank="2" data-lvl="gradient">
         <header>
           <h3 class="bx-wm bx-tname" data-lvl="gradient">Select</h3>
-          <p class="bx-plan-for">A further set of <span class="bx-nb">single-model</span> strategies.</p>
+          <p class="bx-plan-for">All Tier 3 and Tier 4 strategies.</p>
         </header>
         <p class="bx-price"><span class="bx-amt">$397</span><span class="bx-per">a month</span></p>
         <button class="btn btn-ghost bx-choose" type="button" data-choose="select">Choose Select</button>
         <div class="bx-strats">
-          <p class="bx-list-h">In this tier</p>
+          <p class="bx-list-h">You get access to these strategies</p>
           <ul data-tier-list="select">
-            <li class="bx-srow"><p class="bx-tba">More in this tier<small>Named here at release</small></p></li>
+            <li class="bx-srow"><p class="bx-tba">Tier 3 strategies<small>Named here at release</small></p></li>
           </ul>
-          <p class="bx-plus">Plus everything in Base</p>
+          <p class="bx-plus">Plus every Tier 4 strategy, and any strategy added to Tier 3 or 4</p>
         </div>
         <ul class="bx-inc">
-          <li>Every strategy in this tier and in Base, as <span class="bx-nb">invite-only</span> TradingView scripts</li>
-          <li>Each new strategy placed in this tier or below</li>
-          <li>Every update to every strategy in it</li>
+          <li>Every update to these strategies, pushed to you automatically</li>
         </ul>
         <div class="bx-perks">
           <p class="bx-perks-h">Support and access</p>
@@ -133,21 +130,19 @@
       <article class="bx-plan" data-plan="supreme" data-name="Supreme" data-price="897" data-kind="monthly" data-rank="3" data-lvl="polished">
         <header>
           <h3 class="bx-wm bx-tname" data-lvl="polished">Supreme<span class="bx-sh" aria-hidden="true" data-t="Supreme"></span></h3>
-          <p class="bx-plan-for">The combination strategies: a few models in one.</p>
+          <p class="bx-plan-for">All Tier 2, 3 and 4 strategies.</p>
         </header>
         <p class="bx-price"><span class="bx-amt">$897</span><span class="bx-per">a month</span></p>
         <button class="btn btn-ghost bx-choose" type="button" data-choose="supreme">Choose Supreme</button>
         <div class="bx-strats">
-          <p class="bx-list-h">In this tier</p>
+          <p class="bx-list-h">You get access to these strategies</p>
           <ul data-tier-list="supreme">
-            <li class="bx-srow"><p class="bx-tba">Combination strategies<small>Named here at release</small></p></li>
+            <li class="bx-srow"><p class="bx-tba">Tier 2 strategies<small>Named here at release</small></p></li>
           </ul>
-          <p class="bx-plus">Plus everything in Select and Base</p>
+          <p class="bx-plus">Plus every Tier 3 and 4 strategy, and any strategy added to Tier 2, 3 or 4</p>
         </div>
         <ul class="bx-inc">
-          <li>Every strategy in this tier, in Select and in Base, as <span class="bx-nb">invite-only</span> TradingView scripts</li>
-          <li>Each new strategy placed in this tier or below</li>
-          <li>Every update to every strategy in it</li>
+          <li>Every update to these strategies, pushed to you automatically</li>
         </ul>
         <div class="bx-perks">
           <p class="bx-perks-h">Support and access</p>
@@ -161,19 +156,17 @@
       <article class="bx-plan" data-plan="ultimate" data-name="Ultimate" data-price="1197" data-kind="monthly" data-rank="4" data-lvl="sheen">
         <header>
           <h3 class="bx-wm bx-tname" data-lvl="sheen">Ultimate<span class="bx-sh" aria-hidden="true" data-t="Ultimate"></span></h3>
-          <p class="bx-plan-for">The full books: every model for one market in a single strategy.</p>
+          <p class="bx-plan-for">All strategies, Tier 1 to 4.</p>
         </header>
         <p class="bx-price"><span class="bx-amt">$1,197</span><span class="bx-per">a month</span></p>
         <button class="btn btn-ghost bx-choose" type="button" data-choose="ultimate">Choose Ultimate</button>
         <div class="bx-strats">
-          <p class="bx-list-h">In this tier</p>
+          <p class="bx-list-h">You get access to these strategies</p>
           <ul data-tier-list="ultimate"></ul>
-          <p class="bx-plus">Plus everything in Supreme, Select and Base</p>
+          <p class="bx-plus">Plus every Tier 2, 3 and 4 strategy, and every strategy added to any tier</p>
         </div>
         <ul class="bx-inc">
-          <li>Every strategy AFT releases, in every tier, as <span class="bx-nb">invite-only</span> TradingView scripts</li>
-          <li>Each new strategy as it is released</li>
-          <li>Every update to every strategy</li>
+          <li>Every update to these strategies, pushed to you automatically</li>
         </ul>
         <div class="bx-perks">
           <p class="bx-perks-h">Support and access</p>
@@ -189,7 +182,7 @@
 
     <div class="bx-rule">
       <h3>What sets the tiers apart</h3>
-      <p>The strategies in them. Base and Select hold the single-model strategies. Supreme adds the combination strategies, which run a few models in one. Ultimate adds the full books, where a single strategy runs every model for one market. Each strategy's own record, once it is published, is on this page to read before you choose. A tier is a grouping of strategies. It is not a forecast, and no tier is a promise of any result.</p>
+      <p>Performance, and nothing else. Every strategy is graded Tier 1 to Tier 4 on its tested performance, Tier 1 the strongest. Base holds the Tier 4 strategies, each tier above adds the next grade up, and Ultimate holds every strategy. Each strategy's own record, once it is published, is on this page to read before you choose. A grade ranks tested performance; it is not a forecast, and no tier is a promise of any result.</p>
     </div>
 
     <div class="bx-open-note">
@@ -198,7 +191,7 @@
       <p class="bx-open-cta"><a class="btn btn-primary" data-dest="discordInvite" data-ev="lead" data-name="bots-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Join the free Discord</a></p>
     </div>
 
-    <p class="bx-fine">The bots are sold separately from the All Fluence membership. The four tiers are billed monthly, through Whop. You can cancel any time in your Whop account: cancelling stops the next charge, and you keep access until the end of the month you paid for. Lifetime is one payment of $10,000 through Whop, with no monthly charge. No refunds once charged.</p>
+    <p class="bx-fine">The bots are sold separately from the All Fluence membership. The four tiers are billed monthly, through Whop. You can cancel any time in your Whop account: cancelling stops the next charge, and you keep access until the end of the month you paid for. Lifetime is one payment of $10,000 through Whop, with no monthly charge, and it is yours for life. No refunds once charged.</p>
   </div>
 </section>
 
@@ -271,7 +264,7 @@
       </details>
       <details>
         <summary>What does Lifetime include?</summary>
-        <p>Lifetime is everything in Ultimate for one payment of $10,000 through Whop, with no monthly charge: every strategy AFT releases, each new one as it is released, every update, and Ultimate's support and access. Lifetime means the life of the product: your access continues for as long as AFT Trading Bots is offered. No refunds once charged.</p>
+        <p>Lifetime is one payment of $10,000 through Whop, with no monthly charge, and it is yours for life: every strategy in every tier, every new strategy and everything new the bots produce in future, every update pushed to you automatically, and Ultimate's support and access. No refunds once charged.</p>
       </details>
       <details>
         <summary>Is this part of the All Fluence membership?</summary>
