@@ -128,6 +128,19 @@
   }
 
   /* ---------- which rows, in which order ---------- */
+  // The Trade frequency filter compares the number a buyer reads (row E726). A row shown "<n> per day" is that whole
+  // number, taken from the record's own words and not rounded again here. A row shown per week (under one a day) is
+  // its quotient against a minimum, so a minimum of 1 leaves it out, and 0, the whole trades a day it reads, against a
+  // maximum, so a maximum under 1 (or of 0) keeps only those rows. Sorting stays on the quotient.
+  function filterValues(f, c) {
+    var v = num(f[c.f]);
+    if (c.k === 'fq' && v !== null) {
+      var words = (f.display && f.display.trade_frequency) || '', m = /^(\d+) per day$/.exec(words);
+      if (m) return [Number(m[1]), Number(m[1])];
+      if (/^\d+ per week$/.test(words)) return [v, 0];
+    }
+    return [v, v];
+  }
   function passes(r) {
     if (st.q) {
       var hay = (r.s.name + ' ' + (r.s.chip || '') + ' ' + (r.s.market_line || '')).toLowerCase();
@@ -138,9 +151,9 @@
     return RANGES.every(function (c) {
       var lo = st.r[c.k + '_min'], hi = st.r[c.k + '_max'];
       if (lo === '' && hi === '') return true;
-      var v = r.f ? num(r.f[c.f]) : null;
-      if (v === null) return false;              // no figure cannot meet a limit
-      return (lo === '' || v >= Number(lo)) && (hi === '' || v <= Number(hi));
+      var v = r.f ? filterValues(r.f, c) : [null];
+      if (v[0] === null) return false;           // no figure cannot meet a limit
+      return (lo === '' || v[0] >= Number(lo)) && (hi === '' || v[1] <= Number(hi));
     });
   }
   function value(r, k) {
