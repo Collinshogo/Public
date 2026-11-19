@@ -47,7 +47,7 @@
   var TBS = 'Price to be set';   // a tier whose card carries no data-price
   function priceWords(p) { return p.price === null ? TBS : '$' + p.price.toLocaleString('en-US') + (p.kind === 'lifetime' ? ' once' : ' a month'); }
   function colour(c) { return /^#[0-9a-f]{3,8}$/i.test(String(c)); }
-  // The lettering ladder (bots.css): the LEVEL is the finish of the strategy's tier (finish(), below), the
+  // The lettering ladder (bots.css): the LEVEL is the finish of the strategy's tier, plain in the lower tiers (nameFinish(), below), the
   // PALETTE is the strategy's own three colours. The tier and the colours come from the catalog, so moving a
   // strategy to another tier there changes its lettering everywhere on the page with no style edit.
   function palette(s) {          // [custom property, value] pairs for one name
@@ -58,14 +58,14 @@
     return out;
   }
   function lettering(s) {        // the attributes that letter a name: its level and its palette
-    return ' data-lvl="' + finish(s.tier) + '" style="' + palette(s).map(function (p) { return p[0] + ':' + p[1]; }).join(';') + '"';
+    return ' data-lvl="' + nameFinish(s.tier) + '" style="' + palette(s).map(function (p) { return p[0] + ':' + p[1]; }).join(';') + '"';
   }
   // The sheen on a name (bots.css): an empty element over the name that carries the name again as data,
   // hidden from screen readers and from selection. It goes on a name only when its tier's finish is lit:
   // the top tier (sheen) and, with four or more tiers, the one under it (polished, a slower and fainter pass).
   function sheenSpan(text) { return '<span class="bx-sh" aria-hidden="true" data-t="' + esc(text) + '"></span>'; }
   function lit(fin) { return fin === 'sheen' || fin === 'polished'; }
-  function sheen(s) { return lit(finish(s.tier)) ? sheenSpan(s.name) : ''; }
+  function sheen(s) { return lit(nameFinish(s.tier)) ? sheenSpan(s.name) : ''; }
 
   /* ---------- the Strategies page: its tier cards come from the catalog ---------- */
   var ON_LIST = document.body.dataset.page === 'strategies';
@@ -139,6 +139,13 @@
   // top tier's, so the top tier's own rules (bots.css) draw them, and it follows the top tier if the tiers change.
   if (plans.lifetime && ladder.length) wear(plans.lifetime, FIN[ladder[ladder.length - 1].id]);
   function finish(tier) { return FIN[tier] || 'plain'; }
+  // A strategy's NAME wears its tier's finish only in the upper half of the monthly tiers (row E728; with four tiers,
+  // Tier 1 and Tier 2), so only those names stand out. A name in the lower half, or with no tier, is plain everywhere
+  // it shows. The tier cards, the tier badges and the small cards' borders keep their tier's own finish (finish()).
+  function nameFinish(tier) {
+    var i = plans[tier] ? ladder.indexOf(plans[tier]) : -1;
+    return i >= 0 && i >= ladder.length / 2 ? finish(tier) : 'plain';
+  }
   // A strategy's grade follows the tier it sits in: the lowest tier holds Tier 4, the top tier Tier 1. The words
   // name the grade and the tiers that include it, wherever a strategy's tier is shown.
   function grade(tier) { return plans[tier] ? ladder.length - ladder.indexOf(plans[tier]) : null; }
@@ -448,7 +455,7 @@
     openSlug = slug;
     sheetTitle.textContent = names[slug];
     var s = shown.filter(function (x) { return x.slug === slug; })[0];
-    sheetTitle.setAttribute('data-lvl', finish(tiers[slug]));
+    sheetTitle.setAttribute('data-lvl', nameFinish(tiers[slug]));
     ['--n', '--c0', '--c1', '--c2'].forEach(function (k) { sheetTitle.style.removeProperty(k); });
     if (s) {
       palette(s).forEach(function (p) { sheetTitle.style.setProperty(p[0], p[1]); });
