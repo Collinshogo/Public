@@ -25,31 +25,31 @@
  },
  "record_line": "TradingView Strategy Tester · Jan 1, 2026 to Nov 18, 2026 · $25,000 start · commission $0.75 per contract · slippage 2 ticks · run Nov 18, 2026",
  "figures": {
-  "net_profit_usd": 57188.5,
+  "net_profit_usd": 56518.0,
   "win_rate_pct": 61.3,
   "profit_factor": 3.748,
   "trades": 323,
   "display": {
-   "net_profit": "+$57,188.50",
+   "net_profit": "+$56,518.00",
    "win_rate": "61.30%",
    "profit_factor": "3.748",
    "max_drawdown": "3.23%",
    "max_drawdown_usd": "$1,075.00",
-   "return_on_drawdown": "53.20",
+   "return_on_drawdown": "52.57",
    "avg_trade": "+$174.98",
    "trades": "323",
    "trading_days": "230",
    "trade_frequency": "0.71",
-   "monthly_profit": "+$5,198.95"
+   "monthly_profit": "+$5,138.00"
   },
   "max_drawdown_pct": 3.23,
   "max_drawdown_usd": 1075.0,
-  "return_on_drawdown": 53.2,
+  "return_on_drawdown": 52.57,
   "avg_trade_usd": 174.98,
   "trading_days": 230,
   "trade_frequency": 0.7121,
   "winners": 198,
-  "monthly_profit_usd": 5198.95
+  "monthly_profit_usd": 5138.0
  },
  "months": [
   {
@@ -104,7 +104,7 @@
   },
   {
    "month": "2026-11",
-   "pnl_usd": 110.0,
+   "pnl_usd": -560.5,
    "trades": 17
   }
  ],
@@ -863,14 +863,13 @@
   ],
   [
    "2026-11-17",
-   57188.5
+   56518.0
   ]
  ],
  "worked_out": {
   "worst_day_usd": -736.0,
   "worst_day_date": "2026-03-10",
-  "note": "Worked out from the trade list in the same export.",
-  "open_trade_pnl_usd": 670.5
+  "note": "Worked out from the trade list in the same export."
  },
  "proof": {
   "run_date": "2026-11-18",
