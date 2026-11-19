@@ -39,7 +39,7 @@
    "avg_trade": "+$74.82",
    "trades": "771",
    "trading_days": "230",
-   "trade_frequency": "0.30",
+   "trade_frequency": "3 per day",
    "monthly_profit": "+$5,244.27"
   },
   "max_drawdown_pct": 3.72,
@@ -47,7 +47,7 @@
   "return_on_drawdown": 31.19,
   "avg_trade_usd": 74.82,
   "trading_days": 230,
-  "trade_frequency": 0.2983,
+  "trade_frequency": 3.3522,
   "winners": 518,
   "monthly_profit_usd": 5244.27
  },

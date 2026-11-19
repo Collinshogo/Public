@@ -19,11 +19,12 @@
   function month(ym) { var p = ym.split('-'); return MON[Number(p[1]) - 1] + ' ' + p[0]; }
   function num(v) { return typeof v === 'number' && isFinite(v) ? v : null; }
 
-  // The words for Trade frequency. The number itself is worked out once, in trade_frequency() in aft_strategy_export.py.
+  // The words for Trade frequency (row E723). The number (trades per trading day) and the words shown ("3 per day",
+  // "4 per week") are worked out once, in trade_frequency() and frequency_words() in aft_strategy_export.py.
   var FREQ = {
-    sub: 'trading days ÷ trades taken',
-    filter: 'Trade frequency',
-    note: 'Trade frequency is the trading days in the test divided by the trades taken. Trading days are the Monday to Friday dates in the tested range, first and last day included. Holidays are not removed. A lower number means the strategy trades more often.'
+    sub: 'average trades taken',
+    filter: 'Trade frequency (trades per day)',
+    note: 'Trade frequency is the trades taken divided by the trading days in the test, rounded to a whole number. Trading days are the Monday to Friday dates in the tested range, first and last day included. Holidays are not removed. A strategy that averages under one trade a day shows its trades per week (five trading days).'
   };
   var HYPOTHETICAL = 'Every figure here is a hypothetical backtest from TradingView\'s Strategy Tester. A backtest does not represent actual trading.';
 
@@ -37,7 +38,7 @@
     { k: 'np', label: 'Total profit', first: 'desc', f: 'net_profit_usd', d: 'net_profit' },
     { k: 'mp', label: 'Monthly profit', first: 'desc', f: 'monthly_profit_usd', d: 'monthly_profit', sub: 'average per month', note: 'hyp-note' },
     { k: 'pf', label: 'Profit factor', first: 'desc', f: 'profit_factor', d: 'profit_factor' },
-    { k: 'fq', label: 'Trade frequency', first: 'asc', f: 'trade_frequency', d: 'trade_frequency', sub: FREQ.sub, note: 'freq-note' },
+    { k: 'fq', label: 'Trade frequency', first: 'desc', f: 'trade_frequency', d: 'trade_frequency', sub: FREQ.sub, note: 'freq-note' },
     { k: 'dd', label: 'Max drawdown', first: 'asc', f: 'max_drawdown_usd', d: 'max_drawdown_usd' },
     { k: 'wr', label: 'Win rate', first: 'desc', f: 'win_rate_pct', d: 'win_rate' },
     { k: 'price', label: 'Price', first: 'desc' }
@@ -405,9 +406,45 @@
     toAddress();
   });
 
-  // A link to #slug: bots.js opens its full-screen view first, so that view is closed and the card opens in the table.
+  // A strategy picked in a tier card (row E724) opens bots.js's full-screen view in place, as on the AFT Trading Bots
+  // page: the table, its filters, its sort and the page's scroll stay as they are. The open row's #slug is taken off the
+  // address first (replaceState, no hashchange), so Close and Back return to an address with no strategy in it and
+  // bots.js does not reopen that row's view; the #slug is written back once the view closes.
+  var tierPick = '';
+  $('#plans').addEventListener('click', function (e) {
+    var a = e.target.closest('a.bx-slink');
+    if (!a) return;
+    var s = a.getAttribute('href').slice(1);
+    if (!Object.prototype.hasOwnProperty.call(bySlug, s)) return;
+    tierPick = s;
+    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+  });
+  function fromTier(slug) {
+    return slug && (slug === tierPick || (history.state && history.state.bxTier === slug));
+  }
+  // strategies.css hides bots.js's view on this page (a link anywhere else opens the card in the table); a tier pick
+  // lifts that rule for as long as its view is open, with the display bots.css gives the two elements.
+  var sheetEl = $('#sheet'), backEl = $('#backdrop');
+  function tierView(on) {
+    [[sheetEl, 'flex'], [backEl, 'block']].forEach(function (p) {
+      if (on) p[0].style.setProperty('display', p[1], 'important'); else p[0].style.removeProperty('display');
+    });
+  }
+  if (sheetEl && backEl && window.MutationObserver) {
+    new MutationObserver(function () { tierView(!sheetEl.hidden && fromTier(hashSlug())); })
+      .observe(sheetEl, { attributes: true, attributeFilter: ['hidden'] });
+  }
+
+  // Any other link to #slug (or a page loaded onto one): bots.js opens its full-screen view first, so that view is
+  // closed and the card opens in the table.
   function takeHash() {
     var slug = hashSlug(), sheet = $('#sheet');
+    if (fromTier(slug)) {   // the view stays open where he is; this history entry is marked so Forward does the same
+      if (!(history.state && history.state.bxTier === slug)) history.replaceState({ bxTier: slug }, '', location.href);
+      return;
+    }
+    if (tierPick && !slug) { tierPick = ''; if (st.open) toAddress(); return; }   // the view closed: an open row's #slug goes back
+    tierPick = '';
     if (!slug) return;
     if (sheet && !sheet.hidden) $('#sheet-close').click();
     if (!passes(bySlug[slug])) clearFilters();

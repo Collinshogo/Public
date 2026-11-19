@@ -247,7 +247,7 @@ window.AFT_BOTS_CATALOG.figures = {
   "avg_trade_usd": 85.52,
   "monthly_profit_usd": 9415.36,
   "trading_days": 230,
-  "trade_frequency": 0.1899,
+  "trade_frequency": 5.2652,
   "display": {
    "net_profit": "+$103,569.00",
    "profit_factor": "2.65",
@@ -258,7 +258,7 @@ window.AFT_BOTS_CATALOG.figures = {
    "avg_trade": "+$85.52",
    "monthly_profit": "+$9,415.36",
    "trading_days": "230",
-   "trade_frequency": "0.19"
+   "trade_frequency": "5 per day"
   }
  },
  "aftershock": {
@@ -276,7 +276,7 @@ window.AFT_BOTS_CATALOG.figures = {
   "avg_trade_usd": 237.05,
   "monthly_profit_usd": 3146.27,
   "trading_days": 230,
-  "trade_frequency": 1.5753,
+  "trade_frequency": 0.6348,
   "display": {
    "net_profit": "+$34,609.00",
    "profit_factor": "2.425",
@@ -287,7 +287,7 @@ window.AFT_BOTS_CATALOG.figures = {
    "avg_trade": "+$237.05",
    "monthly_profit": "+$3,146.27",
    "trading_days": "230",
-   "trade_frequency": "1.58"
+   "trade_frequency": "3 per week"
   }
  },
  "lantern": {
@@ -305,7 +305,7 @@ window.AFT_BOTS_CATALOG.figures = {
   "avg_trade_usd": 52.33,
   "monthly_profit_usd": 2901.73,
   "trading_days": 230,
-  "trade_frequency": 0.377,
+  "trade_frequency": 2.6522,
   "display": {
    "net_profit": "+$31,919.00",
    "profit_factor": "2.451",
@@ -316,7 +316,7 @@ window.AFT_BOTS_CATALOG.figures = {
    "avg_trade": "+$52.33",
    "monthly_profit": "+$2,901.73",
    "trading_days": "230",
-   "trade_frequency": "0.38"
+   "trade_frequency": "3 per day"
   }
  },
  "the-press": {
@@ -334,7 +334,7 @@ window.AFT_BOTS_CATALOG.figures = {
   "avg_trade_usd": 142.44,
   "monthly_profit_usd": 2732.32,
   "trading_days": 230,
-  "trade_frequency": 1.09,
+  "trade_frequency": 0.9174,
   "display": {
    "net_profit": "+$30,055.50",
    "profit_factor": "3.195",
@@ -345,7 +345,7 @@ window.AFT_BOTS_CATALOG.figures = {
    "avg_trade": "+$142.44",
    "monthly_profit": "+$2,732.32",
    "trading_days": "230",
-   "trade_frequency": "1.09"
+   "trade_frequency": "5 per week"
   }
  },
  "meridian": {
@@ -363,7 +363,7 @@ window.AFT_BOTS_CATALOG.figures = {
   "avg_trade_usd": 86.83,
   "monthly_profit_usd": 3907.55,
   "trading_days": 230,
-  "trade_frequency": 0.4646,
+  "trade_frequency": 2.1522,
   "display": {
    "net_profit": "+$42,983.00",
    "profit_factor": "2.453",
@@ -374,7 +374,7 @@ window.AFT_BOTS_CATALOG.figures = {
    "avg_trade": "+$86.83",
    "monthly_profit": "+$3,907.55",
    "trading_days": "230",
-   "trade_frequency": "0.46"
+   "trade_frequency": "2 per day"
   }
  },
  "golden-meridian": {
@@ -392,7 +392,7 @@ window.AFT_BOTS_CATALOG.figures = {
   "avg_trade_usd": 174.98,
   "monthly_profit_usd": 5138.0,
   "trading_days": 230,
-  "trade_frequency": 0.7121,
+  "trade_frequency": 1.4043,
   "display": {
    "net_profit": "+$56,518.00",
    "profit_factor": "3.748",
@@ -403,7 +403,7 @@ window.AFT_BOTS_CATALOG.figures = {
    "avg_trade": "+$174.98",
    "monthly_profit": "+$5,138.00",
    "trading_days": "230",
-   "trade_frequency": "0.71"
+   "trade_frequency": "1 per day"
   }
  },
  "hallmark": {
@@ -421,7 +421,7 @@ window.AFT_BOTS_CATALOG.figures = {
   "avg_trade_usd": 84.87,
   "monthly_profit_usd": 6094.86,
   "trading_days": 230,
-  "trade_frequency": 0.2911,
+  "trade_frequency": 3.4348,
   "display": {
    "net_profit": "+$67,043.50",
    "profit_factor": "2.578",
@@ -432,7 +432,7 @@ window.AFT_BOTS_CATALOG.figures = {
    "avg_trade": "+$84.87",
    "monthly_profit": "+$6,094.86",
    "trading_days": "230",
-   "trade_frequency": "0.29"
+   "trade_frequency": "3 per day"
   }
  },
  "the-alloy": {
@@ -450,7 +450,7 @@ window.AFT_BOTS_CATALOG.figures = {
   "avg_trade_usd": 74.82,
   "monthly_profit_usd": 5244.27,
   "trading_days": 230,
-  "trade_frequency": 0.2983,
+  "trade_frequency": 3.3522,
   "display": {
    "net_profit": "+$57,687.00",
    "profit_factor": "2.034",
@@ -461,7 +461,7 @@ window.AFT_BOTS_CATALOG.figures = {
    "avg_trade": "+$74.82",
    "monthly_profit": "+$5,244.27",
    "trading_days": "230",
-   "trade_frequency": "0.30"
+   "trade_frequency": "3 per day"
   }
  },
  "the-assay": {
@@ -479,7 +479,7 @@ window.AFT_BOTS_CATALOG.figures = {
   "avg_trade_usd": 156.46,
   "monthly_profit_usd": 3427.82,
   "trading_days": 230,
-  "trade_frequency": 0.9544,
+  "trade_frequency": 1.0478,
   "display": {
    "net_profit": "+$37,706.00",
    "profit_factor": "2.195",
@@ -490,7 +490,7 @@ window.AFT_BOTS_CATALOG.figures = {
    "avg_trade": "+$156.46",
    "monthly_profit": "+$3,427.82",
    "trading_days": "230",
-   "trade_frequency": "0.95"
+   "trade_frequency": "1 per day"
   }
  },
  "the-fix": {
@@ -508,7 +508,7 @@ window.AFT_BOTS_CATALOG.figures = {
   "avg_trade_usd": 158.07,
   "monthly_profit_usd": 2256.14,
   "trading_days": 230,
-  "trade_frequency": 1.465,
+  "trade_frequency": 0.6826,
   "display": {
    "net_profit": "+$24,817.50",
    "profit_factor": "3.178",
@@ -519,7 +519,7 @@ window.AFT_BOTS_CATALOG.figures = {
    "avg_trade": "+$158.07",
    "monthly_profit": "+$2,256.14",
    "trading_days": "230",
-   "trade_frequency": "1.46"
+   "trade_frequency": "3 per week"
   }
  },
  "the-ingot": {
@@ -537,7 +537,7 @@ window.AFT_BOTS_CATALOG.figures = {
   "avg_trade_usd": 47.07,
   "monthly_profit_usd": 3444.86,
   "trading_days": 230,
-  "trade_frequency": 0.2857,
+  "trade_frequency": 3.5,
   "display": {
    "net_profit": "+$37,893.50",
    "profit_factor": "1.785",
@@ -548,7 +548,7 @@ window.AFT_BOTS_CATALOG.figures = {
    "avg_trade": "+$47.07",
    "monthly_profit": "+$3,444.86",
    "trading_days": "230",
-   "trade_frequency": "0.29"
+   "trade_frequency": "4 per day"
   }
  },
  "the-print": {
@@ -566,7 +566,7 @@ window.AFT_BOTS_CATALOG.figures = {
   "avg_trade_usd": 182.97,
   "monthly_profit_usd": 3842.32,
   "trading_days": 230,
-  "trade_frequency": 0.9957,
+  "trade_frequency": 1.0043,
   "display": {
    "net_profit": "+$42,265.50",
    "profit_factor": "12.758",
@@ -577,7 +577,7 @@ window.AFT_BOTS_CATALOG.figures = {
    "avg_trade": "+$182.97",
    "monthly_profit": "+$3,842.32",
    "trading_days": "230",
-   "trade_frequency": "1.00"
+   "trade_frequency": "1 per day"
   }
  }
 };
