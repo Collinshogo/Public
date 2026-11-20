@@ -15,6 +15,9 @@
 // to run if the two differ.
 // Each named strategy also needs its data file beside this one: data/<slug>.json, written by aft_bots_publish.py.
 // Nothing else on the page has to change to name a strategy, price it or move it to another tier.
+// coming_soon set to true marks a strategy that is not released yet (row E736). It carries a slug, its name, its market line and
+// its timeframe, and nothing else: no tier, grade, price, script page or data file. The pages show it only under
+// "Coming soon"; it sits on no tier card and in no plan, saving, table row, sort, filter or count.
 window.AFT_BOTS_CATALOG = {
   schema: "aft.bots-catalog/3",
   tiers: [
@@ -227,6 +230,48 @@ window.AFT_BOTS_CATALOG = {
       chip: "MGC",
       market_line: "MGC · Micro Gold",
       lettering: ["#f1f4ff", "#a5b4fc", "#f9c74f"]
+    },
+    {
+      slug: "undercurrent",
+      coming_soon: true,
+      name: "Undercurrent",
+      market_line: "MNQ · Micro Nasdaq",
+      timeframe: "1-minute chart"
+    },
+    {
+      slug: "capstone",
+      coming_soon: true,
+      name: "Capstone",
+      market_line: "MNQ · Micro Nasdaq",
+      timeframe: "1-minute chart"
+    },
+    {
+      slug: "keystone",
+      coming_soon: true,
+      name: "Keystone",
+      market_line: "MNQ · Micro Nasdaq",
+      timeframe: "1-minute chart"
+    },
+    {
+      slug: "riptide",
+      coming_soon: true,
+      name: "Riptide",
+      market_line: "MES · Micro S&P 500",
+      timeframe: "1-minute chart"
+    },
+    {
+      slug: "night-watch",
+      coming_soon: true,
+      name: "Night Watch",
+      market_line: "MES · Micro S&P 500",
+      timeframe: "1-minute chart"
+    },
+    {
+      slug: "tripwire",
+      coming_soon: true,
+      name: "Tripwire",
+      market_line: "MES · Micro S&P 500",
+      timeframe: "1-minute chart"
     }
   ]
 };

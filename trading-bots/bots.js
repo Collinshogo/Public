@@ -28,6 +28,10 @@
 
   var CFG = window.AFT_BOTS_CONFIG || {};
   var CAT = window.AFT_BOTS_CATALOG || {};
+  // Row E736: a coming-soon entry is not a released strategy. It is taken out of the list every other part of both
+  // pages reads, so it reaches no tier card, plan, saving, table row, sort, filter or count; only "Coming soon" shows it.
+  var SOON = (CAT.strategies || []).filter(function (s) { return s && s.coming_soon === true; });
+  if (CAT.strategies) CAT.strategies = CAT.strategies.filter(function (s) { return !(s && s.coming_soon === true); });
   var LINKS = CFG.checkout || {};
   var KEY = 'aft-bots-tier';
   var MINUS = '−';
@@ -814,6 +818,28 @@
       if (planGrid) $$('.bx-plan', planGrid).forEach(function (c) { c.style.minHeight = ''; });
     }
   });
+
+  /* ---------- coming soon (row E736): a name, the market line and the chart, nothing else ---------- */
+  // The Library's block (#soon, under the table) is one small card per item; the bots page's strip (#soon-strip, after
+  // the tier cards) gives the names and markets and links to that block. A name is lettered plain.
+  var soonItems = SOON.filter(function (s) { return /^[a-z0-9-]+$/.test(String(s.slug)) && s.name && s.market_line; });
+  function soonBlock(el, full) {
+    if (!el || !soonItems.length) return;
+    var h = full ? 'h2' : 'h3';
+    el.innerHTML = '<' + h + ' class="bx-soon-h" id="' + el.id + '-h">Coming soon</' + h + '>' +
+      '<p class="bx-soon-n">Not released yet. Figures, tier and price are published with each release.</p>' +
+      '<ul class="bx-soon-list">' + soonItems.map(function (s) {
+        return '<li class="bx-soon-i"><p class="bx-soon-name">' + esc(s.name) + '</p><p class="bx-soon-m">' + esc(s.market_line) + '</p>' +
+          (full ? '<p class="bx-soon-tag">Coming soon</p>' : '') + '</li>';
+      }).join('') + '</ul>' +
+      (full ? '' : '<p class="bx-soon-more"><a href="strategies/#soon">See them in the Strategy Library</a></p>');
+    el.setAttribute('aria-labelledby', el.id + '-h');
+    el.hidden = false;
+    // A page loaded onto #soon: the block is drawn after the browser looked for it, so it is brought into view once all is drawn.
+    if (full && location.hash === '#soon') window.addEventListener('load', function () { el.scrollIntoView({ block: 'start' }); });
+  }
+  soonBlock($('#soon'), true);
+  soonBlock($('#soon-strip'), false);
 
   /* ---------- start ---------- */
   window.AFT_BOTS = { named: named, listed: listed, plans: plans, ladder: ladder, nameSpan: nameSpan, grade: grade, finish: finish, esc: esc,

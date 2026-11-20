@@ -576,6 +576,28 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
   .bots .nav-links a.nav-setup{padding:12px 0 12px 12px}
 }
 
+/* Coming soon (row E736): one small card per item, a name, its market line and chart; no figure, tier, price or link.
+   The bots page's strip is the same list, names and markets only, in narrower cards. */
+.bots .bx-soon{margin:34px 0 0;padding:0}   /* a section: style.css's section padding is not wanted inside the list */
+.bots .bx-soon[hidden]{display:none}
+.bots .bx-soon-h{font-size:22px;margin:0 0 4px}
+.bots .bx-soon-strip .bx-soon-h{font-size:19px}
+.bots .bx-soon-strip{margin-top:26px}
+.bots .bx-soon-n{margin:0 0 12px;color:var(--dim);font-size:14.5px;line-height:1.45}
+.bots .bx-soon-list{list-style:none;margin:0;padding:0;display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(min-width:640px){.bots .bx-soon-list{gap:10px;grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(min-width:1100px){.bots .bx-soon-list{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.bots .bx-soon-i{min-width:0;padding:11px 12px;border:1px dashed var(--line2);border-radius:10px;background:var(--bg2)}
+.bots .bx-soon-strip .bx-soon-i{padding:9px 11px}
+.bots .bx-soon-name{margin:0;font-family:var(--display);font-weight:700;font-size:17px;line-height:1.3;color:var(--bright);overflow-wrap:anywhere}
+.bots .bx-soon-strip .bx-soon-name{font-size:15.5px}
+.bots .bx-soon-m{margin:2px 0 0;color:var(--dim);font-size:13.5px;line-height:1.4}
+.bots .bx-soon-strip .bx-soon-m{font-size:13px}
+@media(max-width:419.98px){.bots .bx-soon-name{font-size:15.5px}.bots .bx-soon-m{font-size:12.5px}}
+.bots .bx-soon-tag{display:inline-block;margin:9px 0 0;padding:2px 9px;border:1px solid var(--line2);border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
+.bots .bx-soon-more{margin:10px 0 0;font-size:15px}
+.bots .bx-soon-more a{color:var(--bright);text-decoration:underline;text-underline-offset:3px}
+
 /* Daily P&L (rows E732, E735): under the Monthly P&L list, the two latest months by day, the latest first, small; an earlier month pressed in
    that list opens in the place after them. Each cell shows its sign as well as its colour. */
 .bx-mo-li{margin:0;min-width:0}
