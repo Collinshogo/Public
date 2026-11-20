@@ -5,7 +5,7 @@ window.AFT_BOTS_CONFIG = {
   lifetime: true,
 
   // The link to the set-up guide. false = no link to it anywhere on the page.
-  setupGuide: false,
+  setupGuide: true,
   setupGuideUrl: "/trading-bots/setup/",
 
   // Each tier's Whop checkout link. Empty = the bar's button reads "Opening soon" and does nothing.

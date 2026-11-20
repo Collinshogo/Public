@@ -568,6 +568,14 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 /* the open strategy's name takes focus when the view opens (for screen readers); it is not a control, so no ring */
 .bots .bx-sheet h2:focus-visible{outline:0}
 
+/* The top menu's Setup entry (row E734): the site hides the menu under 860 px, so on a phone the bar shows this
+   one entry, a page link to the setup section, beside the logo. */
+@media(max-width:859.98px){
+  .bots .nav-links{display:flex;gap:0}
+  .bots .nav-links a:not(.nav-setup){display:none}
+  .bots .nav-links a.nav-setup{padding:12px 0 12px 12px}
+}
+
 /* Daily P&L (rows E732, E735): under the Monthly P&L list, the two latest months by day, the latest first, small; an earlier month pressed in
    that list opens in the place after them. Each cell shows its sign as well as its colour. */
 .bx-mo-li{margin:0;min-width:0}
