@@ -277,6 +277,10 @@
     if (num(t.start_capital_usd) !== null) cap.push(A.usd(t.start_capital_usd, false, false) + ' start');
     if (t.commission && t.slippage) cap.push('after commission and slippage');
     else if (t.commission) cap.push('after commission');
+    // Under the Monthly P&L list: the two latest months by day, the latest on top (rows E732, E735), drawn by bots.js as in the open strategy view.
+    var cals = A.dailyCals(d, 'bxc-' + d.slug);
+    var daily = cals ? '<div class="bx-daily"><h3 class="bx-mo-h">Daily P&amp;L</h3>' + cals +
+      '<p class="bx-cap bx-daily-n">Each day is the total of the trades closed that day. K is thousands.</p></div>' : '';
     var basis = num(f.trades) !== null && num(f.trading_days) !== null
       ? '<p class="bx-cap">' + esc(f.trades.toLocaleString('en-US') + ' trades over ' + f.trading_days.toLocaleString('en-US') + ' trading days') + '</p>' : '';
     return '<div class="bx-first">' +
@@ -291,10 +295,9 @@
       '<p class="bx-cap">' + cap.map(esc).join(' · ') + '</p>' + basis +
       (hasMonths ? '<div class="bx-mo"><h3 class="bx-mo-h">Monthly P&amp;L</h3>' +
         '<ul class="bx-months' + (moLen >= 12 ? ' is-long is-xlong' : (moLen >= 11 ? ' is-long' : '')) + '" aria-label="Monthly P&amp;L" style="--mo-n:' + Math.min(12, d.months.length) + '">' + d.months.map(function (m, i) {
-          return '<li class="bx-month ' + (m.pnl_usd > 0 ? 'is-win' : (m.pnl_usd < 0 ? 'is-loss' : '')) + '"><span>' + esc(month(m.month)) + '</span>' +
-            '<b class="' + A.tone(m.pnl_usd) + '">' + esc(moWords[i]) + '</b></li>';
+          return A.monthItem(d, m, moWords[i], 'bxc-' + d.slug);
         }).join('') + '</ul></div>' : '') +
-      '</div>';
+      '</div>' + daily;
   }
   function closeCard() {
     var det = $('#rows .bx-det');

@@ -567,3 +567,25 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 
 /* the open strategy's name takes focus when the view opens (for screen readers); it is not a control, so no ring */
 .bots .bx-sheet h2:focus-visible{outline:0}
+
+/* Daily P&L (rows E732, E735): under the Monthly P&L list, the two latest months by day, the latest first, small; an earlier month pressed in
+   that list opens in the place after them. Each cell shows its sign as well as its colour. */
+.bx-mo-li{margin:0;min-width:0}
+.bx-mo-b{width:100%;margin:0;font-family:inherit;font-size:inherit;font-weight:inherit;letter-spacing:inherit;color:inherit;text-align:left;cursor:pointer;-webkit-appearance:none;appearance:none}
+:where(.bx-mo-b){display:block}
+.bx-mo-b[data-cal="earlier"][aria-expanded="true"]{box-shadow:inset 0 0 0 1px var(--red-soft)}
+.bx-daily{display:flex;flex-direction:column;gap:6px;margin-top:14px;min-width:0}
+.bx-cals{display:grid;grid-template-columns:minmax(0,1fr);gap:10px 14px;min-width:0}
+@container (min-width:900px){.bx-cals{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:1180px){.bx-cals{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.bots .bx-cal{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:2px;margin:0;font-variant-numeric:tabular-nums}
+.bots .bx-cal[hidden]{display:none}
+.bots .bx-cal caption{caption-side:top;text-align:left;padding:0 2px 2px;font-size:11.5px;font-weight:600;line-height:1.3;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bots .bx-cal th{padding:0;border:0;background:none;font-size:10px;font-weight:500;line-height:1.2;color:var(--dim);text-align:center;white-space:nowrap;vertical-align:bottom}
+.bots .bx-cal td{height:24px;padding:1px 3px;border:1px solid var(--line);border-radius:4px;background:var(--panel);color:var(--text);font-weight:400;text-align:left;white-space:nowrap;vertical-align:top;line-height:1.1;overflow:hidden}
+.bots .bx-cal td.is-pad{border-color:transparent;background:none}
+.bots .bx-cal td.is-out{opacity:.38}
+.bots .bx-cal td.is-win{background:rgba(52,194,122,.09);border-color:rgba(52,194,122,.38)}
+.bots .bx-cal td.is-loss{background:rgba(255,107,107,.10);border-color:rgba(255,107,107,.45)}
+.bots .bx-cal td i{display:block;font-style:normal;font-size:10px;color:var(--dim)}
+.bots .bx-cal td b{display:block;font-size:11px;font-weight:600;text-align:right;white-space:nowrap}

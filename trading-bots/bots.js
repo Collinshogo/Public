@@ -44,6 +44,95 @@
   var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   function day(iso) { var p = String(iso).split('-'); return MON[Number(p[1]) - 1] + ' ' + Number(p[2]) + ', ' + p[0]; }
   function month(ym) { var p = ym.split('-'); return MON[Number(p[1]) - 1] + ' ' + p[0]; }
+
+  /* ---------- daily P&L (row E732): shared by the open strategy view and the Strategy Library's open card ---------- */
+  // The words in a day's cell: under 1,000 whole dollars with a sign, 1,000 to 9,999 in K with one decimal, 10,000 and over
+  // in whole K; half rounds away from zero; exactly zero is "0". Worked in whole cents so no float edge decides a rounding.
+  function dayWords(v) {
+    var c = Math.round(Math.abs(v) * 100), s = v < 0 ? MINUS : '+', r = Math.floor((c + 50) / 100), t;
+    if (c === 0) return '0';
+    if (r < 1000) return s + r;
+    t = Math.floor((c + 5000) / 10000);
+    if (t < 100) return s + (t / 10).toFixed(1) + 'K';
+    return s + Math.floor((c + 50000) / 100000) + 'K';
+  }
+  function dayExact(v) { return Math.round(v * 100) === 0 ? '$0.00' : usd(v, true); }
+  var DOW = [['Su', 'Sunday'], ['Mo', 'Monday'], ['Tu', 'Tuesday'], ['We', 'Wednesday'], ['Th', 'Thursday'], ['Fr', 'Friday'], ['Sa', 'Saturday']];
+  function hasDays(d) { return !!(d && d.days && d.days.length && d.months && d.months.length && d.test); }
+  function calId(key, ym) { return key + '-cal-' + ym; }
+  var SHOWN = 2;   // months shown by day, the latest on top (Collin 2026-11-20, row E735)
+  // One month of the Monthly P&L list. A record with days gets a button that shows that month's calendar; one without
+  // draws exactly as before.
+  function monthItem(d, m, words, key) {
+    var cls = 'bx-month ' + (m.pnl_usd > 0 ? 'is-win' : (m.pnl_usd < 0 ? 'is-loss' : ''));
+    var inner = '<span>' + esc(month(m.month)) + '</span><b class="' + tone(m.pnl_usd) + '">' + esc(words) + '</b>';
+    if (!hasDays(d)) return '<li class="' + cls + '">' + inner + '</li>';
+    var latest = d.months.indexOf(m) >= d.months.length - SHOWN;
+    return '<li class="bx-mo-li"><button type="button" class="' + cls + ' bx-mo-b" data-cal="' + (latest ? 'latest' : 'earlier') + '" aria-expanded="' + latest + '" aria-controls="' + calId(key, m.month) + '">' + inner + '</button></li>';
+  }
+  // The calendars: the two latest months shown, the latest first, every earlier month drawn hidden in the place after them
+  // (one at a time).
+  // Weeks are rows; Monday to Friday are columns, with a Sunday or a Saturday column only when the record has an entry on
+  // that weekday, then in every calendar of the record.
+  function dailyCals(d, key) {
+    if (!hasDays(d)) return '';
+    var amt = {}, on = {};
+    d.days.forEach(function (e) { amt[e[0]] = e[1]; on[new Date(e[0] + 'T00:00:00Z').getUTCDay()] = 1; });
+    var cols = [1, 2, 3, 4, 5];
+    if (on[0]) cols.unshift(0);
+    if (on[6]) cols.push(6);
+    var start = cols[0], from = d.test.window_from, to = d.test.window_to, cut = Math.max(0, d.months.length - SHOWN);
+    function iso(dt) { return dt.toISOString().slice(0, 10); }
+    function cell(dt, mo) {
+      if (dt.getUTCMonth() !== mo) return '<td class="is-pad"></td>';
+      var k = iso(dt), n = dt.getUTCDate(), name = day(k);
+      if (k < from || k > to) return '<td class="is-out"><i aria-hidden="true">' + n + '</i><span class="bx-vh">' + esc(name) + ': outside the test</span></td>';
+      if (!Object.prototype.hasOwnProperty.call(amt, k)) return '<td><i aria-hidden="true">' + n + '</i><span class="bx-vh">' + esc(name) + ': no trade closed</span></td>';
+      var v = amt[k], full = name + ': ' + dayExact(v);
+      return '<td class="' + (v > 0 ? 'is-win' : (v < 0 ? 'is-loss' : 'is-zero')) + '" title="' + esc(full) + '"><i aria-hidden="true">' + n + '</i>' +
+        '<b class="' + tone(v) + '" aria-hidden="true">' + esc(dayWords(v)) + '</b><span class="bx-vh">' + esc(full) + '</span></td>';
+    }
+    function cal(m, hidden) {
+      var y = Number(m.month.slice(0, 4)), mo = Number(m.month.slice(5, 7)) - 1;
+      var first = new Date(Date.UTC(y, mo, 1)), last = new Date(Date.UTC(y, mo + 1, 0));
+      var wk = new Date(first.getTime() - ((first.getUTCDay() - start + 7) % 7) * 864e5), rows = '';
+      while (wk <= last) {
+        var cells = '', inMonth = false;
+        cols.forEach(function (c) {
+          var dt = new Date(wk.getTime() + ((c - start + 7) % 7) * 864e5);
+          if (dt.getUTCMonth() === mo) inMonth = true;
+          cells += cell(dt, mo);
+        });
+        if (inMonth) rows += '<tr>' + cells + '</tr>';
+        wk = new Date(wk.getTime() + 7 * 864e5);
+      }
+      return '<table class="bx-cal" id="' + calId(key, m.month) + '"' + (hidden ? ' hidden' : '') + '><caption>' + esc(month(m.month) + ' · ' + usd(m.pnl_usd, true)) + '</caption>' +
+        '<thead><tr>' + cols.map(function (c) { return '<th scope="col" abbr="' + DOW[c][1] + '"><span aria-hidden="true">' + DOW[c][0] + '</span><span class="bx-vh">' + DOW[c][1] + '</span></th>'; }).join('') + '</tr></thead>' +
+        '<tbody>' + rows + '</tbody></table>';
+    }
+    return '<div class="bx-cals">' + d.months.slice(cut).reverse().map(function (m) { return cal(m, false); }).join('') +
+      d.months.slice(0, cut).map(function (m) { return cal(m, true); }).join('') + '</div>';
+  }
+  // A month button: an earlier month shows its calendar in the place after the two (pressing it again, or another
+  // month, closes or swaps it); one of the two latest scrolls its calendar into view.
+  document.addEventListener('click', function (e) {
+    var b = e.target && e.target.closest ? e.target.closest('button.bx-mo-b') : null;
+    var cal = b && document.getElementById(b.getAttribute('aria-controls'));
+    if (!cal) return;
+    var how = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    if (b.getAttribute('data-cal') !== 'earlier') { cal.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: how }); return; }
+    var opening = b.getAttribute('aria-expanded') !== 'true';
+    $$('button.bx-mo-b[data-cal="earlier"]', b.closest('.bx-months')).forEach(function (o) {
+      var c = document.getElementById(o.getAttribute('aria-controls'));
+      o.setAttribute('aria-expanded', 'false');
+      if (c) c.hidden = true;
+    });
+    if (opening) {
+      b.setAttribute('aria-expanded', 'true');
+      cal.hidden = false;
+      cal.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: how });
+    }
+  });
   var TBS = 'Price to be set';   // a tier whose card carries no data-price
   function priceWords(p) { return p.price === null ? TBS : '$' + p.price.toLocaleString('en-US') + (p.kind === 'lifetime' ? ' once' : ' a month'); }
   function colour(c) { return /^#[0-9a-f]{3,8}$/i.test(String(c)); }
@@ -579,10 +668,14 @@
       '<p class="bx-cap">' + cap.map(esc).join(' · ') + '</p>' +
       (hasMonths ? '<div class="bx-mo"><h3 class="bx-mo-h" id="bx-mo-h">Monthly P&amp;L</h3>' +
       '<ul class="bx-months' + (moLen >= 12 ? ' is-long is-xlong' : (moLen >= 11 ? ' is-long' : '')) + '" aria-labelledby="bx-mo-h" style="--mo-n:' + Math.min(12, d.months.length) + '">' + d.months.map(function (m, i) {
-        return '<li class="bx-month ' + (m.pnl_usd > 0 ? 'is-win' : (m.pnl_usd < 0 ? 'is-loss' : '')) + '"><span>' + esc(month(m.month)) + '</span>' +
-          '<b class="' + tone(m.pnl_usd) + '">' + esc(moWords[i]) + '</b></li>';
+        return monthItem(d, m, moWords[i], 'bxs');
       }).join('') + '</ul></div>' : '') +
       '</div>';
+
+    // Under the Monthly P&L list: the two latest months by day, the latest on top (rows E732, E735). The first screen above keeps its height.
+    var cals = dailyCals(d, 'bxs');
+    var daily = cals ? '<div class="bx-daily"><h3 class="bx-mo-h">Daily P&amp;L</h3>' + cals +
+      '<p class="bx-cap bx-daily-n">Each day is the total of the trades closed that day. K is thousands.</p></div>' : '';
 
     // Below the first screen: what it is, the test, the other figures, the proof.
     var tiles = tile('Trades', f.trades.toLocaleString('en-US'), '', has(f.winners) ? f.winners.toLocaleString('en-US') + ' winners' : '');
@@ -604,7 +697,7 @@
       ]) + '</section>' +
       '</div>';
 
-    sheetBody.innerHTML = first + more;
+    sheetBody.innerHTML = first + daily + more;
     if (hasCurve) {
       var box = $('#bx-chart');
       drawChart(box, d.equity);
@@ -724,7 +817,7 @@
 
   /* ---------- start ---------- */
   window.AFT_BOTS = { named: named, listed: listed, plans: plans, ladder: ladder, nameSpan: nameSpan, grade: grade, finish: finish, esc: esc,
-    usd: usd, day: day, tone: tone, dollars: dollars, priceWords: priceWords };
+    usd: usd, day: day, tone: tone, dollars: dollars, priceWords: priceWords, dayWords: dayWords, monthItem: monthItem, dailyCals: dailyCals };
   load();
   render();
   if (stratGrid) slugs.forEach(function (slug) {
