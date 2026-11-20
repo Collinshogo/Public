@@ -395,15 +395,15 @@
     <li>You are on the <span class="ui">Inputs</span> tab. Under <span class="ui">★ SIZING ★</span>, leave <span class="ui">Multiplier (× the strategy's contracts)</span> at <code>1</code> for your first run.<small>What it does is under <a href="#multiplier">Changing the size</a>, further down this page.</small></li>
     <li>Scroll down to the group called <span class="ui">★ CROSSTRADE ★</span>.</li>
     <li>In <span class="ui">CrossTrade secret key</span>, paste your secret key from step 3.</li>
-    <li>In <span class="ui">Tradovate account</span>, paste your account name from step 2, exactly as CrossTrade shows it. For the first run, this is your demo account.</li>
+    <li>In <span class="ui">Tradovate account</span>, paste your account name from step 2, exactly as CrossTrade shows it. For the first run, this is your demo account.<small>In Midas (AFT) the label reads <span class="ui">Tradovate account (exact name, case-sensitive)</span>.</small></li>
     <li>Find the code of the current contract. <a href="#contract">How to work out your contract code</a>, just below this list, takes four short lines. <strong>Do not copy a code from this page: the right one changes every few months.</strong></li>
     <li>Type that code into the contract box. The box has a different name in each bot:
       <div class="panel">
         <div class="row"><div class="name">Slipstream (AFT)</div><div class="what">The box is <span class="ui">Contract symbol sent to CrossTrade</span>.</div></div>
-        <div class="row"><div class="name">Midas (AFT)</div><div class="what">The box is <span class="ui">Contract sent to CrossTrade (e.g. MGCG7)</span>. The code inside that label is only an example. Do not leave the box blank: nothing is sent while it is empty.</div></div>
+        <div class="row"><div class="name">Midas (AFT)</div><div class="what">The box is <span class="ui">Contract sent to CrossTrade (the dated contract, e.g. MGCG7)</span>. The code inside that label is only an example. Do not leave the box blank: nothing is sent while it is empty.</div></div>
       </div>
     </li>
-    <li>Last, scroll back up to the top of the <span class="ui">★ CROSSTRADE ★</span> group and tick <span class="ui">Send live orders to CrossTrade (off = log only)</span>.<small>With it off, nothing is sent to CrossTrade. "Live" here means "send the orders for real". It has nothing to do with Link Live in step 2: tick it for a demo account too.</small></li>
+    <li>Last, scroll back up to the top of the <span class="ui">★ CROSSTRADE ★</span> group and tick <span class="ui">Send live orders to CrossTrade</span>.<small>In Slipstream (AFT) the label reads <span class="ui">Send live orders to CrossTrade (off = log only)</span>. With it off, nothing is sent to CrossTrade. "Live" here means "send the orders for real". It has nothing to do with Link Live in step 2: tick it for a demo account too.</small></li>
     <li>Leave every other input as it came, and click <span class="ui">OK</span>.</li>
   </ul>
   <p class="see"><b>You should now see:</b> the settings window is closed and the strategy is on the chart with no error message.</p>
@@ -602,7 +602,7 @@
     <summary>Nothing arrives in CrossTrade</summary>
     <div>
       <ul>
-        <li><span class="ui">Send live orders to CrossTrade (off = log only)</span> is not ticked, or the key, the account or the contract box is empty. Fix the setting (step 5), then delete the alert and create it again (step 6).</li>
+        <li><span class="ui">Send live orders to CrossTrade</span> is not ticked, or the key, the account or the contract box is empty. Fix the setting (step 5), then delete the alert and create it again (step 6).</li>
         <li>The alert has no webhook URL, or two-factor authentication is off in TradingView. Open the alert log in TradingView: click the clock icon on the right edge, then the <span class="ui">Log</span> tab beside <span class="ui">Alerts</span>. Its <span class="ui">Webhook status</span> column shows delivery problems.</li>
         <li>The alert's condition is not <span class="ui">alert() function calls only</span>.</li>
         <li>The market is closed. With no new price bars, no messages are sent.</li>
