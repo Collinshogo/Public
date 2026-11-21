@@ -199,7 +199,6 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bx-list-h{margin:0;padding:9px 12px 0;font-size:13.5px;font-weight:600;line-height:1.3;color:var(--red-soft)}
 .bx-strats ul{list-style:none;margin:0;padding:8px 12px 10px;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
 .bx-srow{display:flex;min-width:0;max-width:100%;margin:0}
-.bx-srow[hidden]{display:none}
 .bots .bx-slink{display:flex;align-items:center;gap:7px;min-width:0;min-height:44px;box-sizing:border-box;padding:0 10px 0 12px;border:1px solid var(--line2);border-radius:9px;background:var(--panel);color:var(--bright);font-weight:600;white-space:nowrap}
 .bots .bx-slink:hover{text-decoration:none;border-color:var(--dim);background:rgba(255,255,255,.045)}
 .bx-sname.bx-wm{font-size:15px;line-height:1.3}
@@ -211,11 +210,6 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bx-tba small{font-size:13px;font-weight:400;color:var(--faint)}
 .bx-tba small::before{content:"\00a0\00b7\00a0"}
 .bx-plus{margin:0;padding:8px 12px;border-top:1px solid var(--line);font-size:13.5px;font-weight:500;line-height:1.4;color:var(--text);background:var(--red-tint)}
-/* a long list: the button that opens the rest of it in place */
-.bx-all{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;margin:0;padding:6px 12px;border:0;border-top:1px solid var(--line);background:transparent;color:var(--bright);font-family:var(--sans);font-size:14.5px;font-weight:600;cursor:pointer}
-.bx-all:hover{background:rgba(255,255,255,.045)}
-.bx-all::after{content:"";width:7px;height:7px;margin-top:-4px;border-right:2px solid var(--red-soft);border-bottom:2px solid var(--red-soft);transform:rotate(45deg)}
-.bx-all[aria-expanded="true"]::after{margin-top:4px;transform:rotate(-135deg)}
 
 .bx-inc{list-style:none;margin:0;padding:0;font-size:14px;line-height:1.4;color:var(--text)}
 .bx-inc li{position:relative;padding-left:22px;margin:0}
@@ -262,8 +256,6 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 /* A hyphenated word in those texts stays whole: no line ends at its hyphen. */
 .bx-nb{white-space:nowrap}
 .bots .bx-choose{width:100%;min-height:44px;padding:9px 16px;font-size:15.5px}
-/* while a list is open the cards stop stretching to the tallest one (the page script holds each at its closed height) */
-.bx-plan-grid.has-open{align-items:start}
 .bots .bx-plan.is-chosen .bx-choose{background:var(--red-btn);border-color:var(--red-edge);color:#fff}
 
 /* The one-time plan: a band under the tier cards, as wide as their grid. It is the top tier paid once and has no
@@ -568,13 +560,17 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 /* the open strategy's name takes focus when the view opens (for screen readers); it is not a control, so no ring */
 .bots .bx-sheet h2:focus-visible{outline:0}
 
-/* The top menu's Setup entry (row E734): the site hides the menu under 860 px, so on a phone the bar shows this
-   one entry, a page link to the setup section, beside the logo. */
+/* The top menu's Setup entry (row E734) and Calculator entry (row E737): the site hides the menu under 860 px, so on a
+   phone the bar shows these two entries beside the logo. */
 @media(max-width:859.98px){
   .bots .nav-links{display:flex;gap:0}
-  .bots .nav-links a:not(.nav-setup){display:none}
-  .bots .nav-links a.nav-setup{padding:12px 0 12px 12px}
+  .bots .nav-links a:not(.nav-setup):not(.nav-calc){display:none}
+  .bots .nav-links a.nav-setup,.bots .nav-links a.nav-calc{padding:12px 0 12px 14px}
 }
+/* the open record's link to the account rules calculator (row E737) */
+.bots .bx-calc-l{margin:14px 0 0;font-size:15.5px;font-weight:600}
+.bots .bx-calc-l a{color:var(--bright);text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:3px}
+.bots .bx-calc-l a:hover{text-decoration-color:var(--bright)}
 
 /* Coming soon (row E736): one small card per item, a name, its market line and chart; no figure, tier, price or link.
    The bots page's strip is the same list, names and markets only, in narrower cards. */

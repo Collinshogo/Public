@@ -297,7 +297,7 @@
         '<ul class="bx-months' + (moLen >= 12 ? ' is-long is-xlong' : (moLen >= 11 ? ' is-long' : '')) + '" aria-label="Monthly P&amp;L" style="--mo-n:' + Math.min(12, d.months.length) + '">' + d.months.map(function (m, i) {
           return A.monthItem(d, m, moWords[i], 'bxc-' + d.slug);
         }).join('') + '</ul></div>' : '') +
-      '</div>' + daily;
+      '</div>' + daily + A.calcLink(d);
   }
   function closeCard() {
     var det = $('#rows .bx-det');

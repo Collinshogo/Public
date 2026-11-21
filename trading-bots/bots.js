@@ -10,9 +10,7 @@
      bots-config.js. Its look follows its place among the tiers, worked out here: the lettering of its title and
      of its strategies' names, the card's finish, the tier pill, the bar and the open strategy's tier line.
      A card with no data-price reads "Price to be set" wherever its price would stand.
-   - A tier's list: one chip per named strategy, side by side. A list longer than SHOW chips shows SHOW
-     and a "Show all <count>" button that opens the rest in place. While an opened list is on screen and its
-     card's own Choose button is not, the bar offers that tier.
+   - A tier's list: one chip per named strategy, side by side, every one shown (row E752: no list is cut).
    - The open strategy: every strategy name is a real link (#slug). The hash opens the view in place,
      Back or Close returns to the same spot, and the choice in the bar is never lost. While a strategy
      is open the bar also carries the button that chooses that strategy's tier, so one bar is pinned, not two.
@@ -116,6 +114,11 @@
     }
     return '<div class="bx-cals">' + d.months.slice(cut).reverse().map(function (m) { return cal(m, false); }).join('') +
       d.months.slice(0, cut).map(function (m) { return cal(m, true); }).join('') + '</div>';
+  }
+  // Row E737: an open record with day paths links to the account rules calculator with that strategy chosen.
+  function calcLink(d) {
+    return d && Array.isArray(d.day_paths) && d.day_paths.length && /^[a-z0-9-]+$/.test(String(d.slug))
+      ? '<p class="bx-calc-l"><a href="/trading-bots/calculator/#s=' + d.slug + '">Run it through your account\'s rules</a></p>' : '';
   }
   // A month button: an earlier month shows its calendar in the place after the two (pressing it again, or another
   // month, closes or swaps it); one of the two latest scrolls its calendar into view.
@@ -329,57 +332,10 @@
     $('header', p.el).insertAdjacentHTML('afterend', '<p class="bx-save">Bought one by one: ' + dollars(all) + ' a month. You save ' + dollars(saved) + '.</p>');
   });
 
-  // A long list: SHOW rows and one button that opens the rest in place. The button is made only for a tier
-  // with more than SHOW named strategies, so it appears by itself when the catalog grows.
-  var SHOW = 5;
-  var planGrid = $('#plan-grid');
-  var openedAt = {};            // tier -> when its list was last opened
-  function namedRows(ul) { return $$('li', ul).filter(function (li) { return !!$('.bx-slink', li); }); }
-  function setList(ul, open) {
-    var rows = namedRows(ul), btn = $('.bx-all', ul.parentNode);
-    rows.forEach(function (li, i) { li.hidden = !open && i >= SHOW; });
-    if (!btn) return;
-    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    btn.firstChild.textContent = open ? 'Show fewer' : 'Show all ' + rows.length;
-    if (open) openedAt[ul.dataset.tierList] = Date.now(); else delete openedAt[ul.dataset.tierList];
-  }
-  // Cards stay level: while any list is open each card keeps the height it had with every list closed,
-  // so opening one list neither stretches its neighbours nor moves anything inside them.
-  function holdCards(hold) {
-    if (!planGrid) return;
-    var cards = $$('.bx-plan', planGrid);
-    if (hold && !planGrid.classList.contains('has-open')) {
-      var hs = cards.map(function (c) { return getComputedStyle(c).height; });   // the used height, to the fraction
-      cards.forEach(function (c, i) { c.style.minHeight = hs[i]; });
-      planGrid.classList.add('has-open');
-    } else if (!hold) {
-      planGrid.classList.remove('has-open');
-      cards.forEach(function (c) { c.style.minHeight = ''; });
-    }
-  }
+  // Every named strategy's chip shows in its tier card (row E752: Collin, 2026-11-20, every posted strategy on the page).
   $$('[data-tier-list]').forEach(function (ul) {
-    var rows = namedRows(ul), head = ul.previousElementSibling;
+    var head = ul.previousElementSibling;
     if (!ul.children.length && head && head.classList.contains('bx-list-h')) head.hidden = true;   // nothing to list yet
-    if (rows.length <= SHOW) return;
-    if (!ul.id) ul.id = 'tier-list-' + ul.dataset.tierList;
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'bx-all';
-    btn.setAttribute('aria-controls', ul.id);
-    btn.appendChild(document.createTextNode(''));
-    ul.parentNode.insertBefore(btn, ul.nextSibling);
-    setList(ul, false);
-    btn.addEventListener('click', function () {
-      var open = btn.getAttribute('aria-expanded') !== 'true';
-      var before = btn.getBoundingClientRect().top;
-      if (open) holdCards(true);
-      setList(ul, open);
-      if (!Object.keys(openedAt).length) holdCards(false);
-      // closing: the button stays where the buyer pressed it, whatever the browser does about the rows above it
-      var moved = btn.getBoundingClientRect().top - before;
-      if (!open && Math.abs(moved) > 1) window.scrollBy({ top: moved, left: 0, behavior: 'instant' });
-      watchLists();
-    });
   });
   // The strategy cards.
   var stratGrid = $('#strat-grid');
@@ -398,7 +354,6 @@
   var docs = {};                // slug -> loaded data file
   var sel = { plan: null };
   var openSlug = null, cameFromPage = false, lastTrigger = null, chosenAt = 0;
-  var listPlan = null;          // the tier whose opened list is on screen while its own Choose button is not
 
   var bar = $('#bar'), barPlan = $('#bar-plan'), barDetail = $('#bar-detail'), barPrice = $('#bar-price'), barBtn = $('#bar-btn'), barAlt = $('#bar-alt');
   var sheet = $('#sheet'), backdrop = $('#backdrop'), sheetK = $('#sheet-k'), sheetTitle = $('#sheet-title');
@@ -447,14 +402,14 @@
       btn.textContent = on ? plans[id].name + ' chosen' : 'Choose ' + plans[id].name;
       btn.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
-    var own = openSlug ? plans[tiers[openSlug]] : (listPlan ? plans[listPlan] : null), nm = openSlug ? names[openSlug] : '';
+    var own = openSlug ? plans[tiers[openSlug]] : null, nm = openSlug ? names[openSlug] : '';
     var two = false;
     bar.classList.toggle('has-sel', !!p);
     barAlt.hidden = true;
     if (!p) {
       barPrice.hidden = true;
       if (own) {
-        barPlan.textContent = openSlug ? gradeWords(own.id) : own.name + ' tier';
+        barPlan.textContent = gradeWords(own.id);
         barDetail.textContent = priceWords(own);
         setBtn('choose', 'Choose ' + own.name, '', own.id);
       } else {
@@ -469,12 +424,12 @@
         : '$' + p.price.toLocaleString('en-US') + '<small>' + (p.kind === 'lifetime' ? 'once' : 'a month') + '</small>';
       var link = checkoutLink(p.id);
       if (link) setBtn('checkout', 'Checkout', link); else setBtn('soon', 'Opening soon');
-      if (!own || (!openSlug && own.id === p.id)) {
+      if (!own) {
         barDetail.textContent = holds(p);
-      } else if (openSlug && includes(p.id, openSlug)) {
+      } else if (includes(p.id, openSlug)) {
         barDetail.textContent = '✓ Includes ' + nm;
       } else {
-        barDetail.textContent = openSlug ? nm + ': ' + gradeWords(own.id) : 'Viewing the ' + own.name + ' list';
+        barDetail.textContent = nm + ': ' + gradeWords(own.id);
         barAlt.textContent = 'Switch to ' + own.name + (own.price === null ? '' : ' · $' + own.price.toLocaleString('en-US'));
         barAlt.dataset.plan = own.id;
         barAlt.hidden = false;
@@ -510,33 +465,6 @@
     barBtn.focus({ preventScroll: true });       // the tapped button is hidden now: keep focus in the bar
   });
 
-  // An opened list can be taller than the screen. While any of it is on screen and its card's own Choose
-  // button is not, the bar offers that tier, the way it does for an open strategy. With two such lists side
-  // by side, the one opened last.
-  function watchLists() {
-    var found = null, top = 0, bottom = bar.getBoundingClientRect().top;
-    var nav = $('header.nav');
-    if (nav) top = Math.max(0, nav.getBoundingClientRect().bottom);
-    if (!openSlug) {
-      Object.keys(openedAt).forEach(function (id) {
-        var ul = $('[data-tier-list="' + id + '"]'), own = plans[id] && $('.bx-choose', plans[id].el);
-        if (!ul || !own) return;
-        var r = ul.getBoundingClientRect(), b = own.getBoundingClientRect();
-        if (r.bottom <= top || r.top >= bottom) return;               // none of the list is on screen
-        if (b.top >= top && b.bottom <= bottom) return;               // its own button is in full view
-        if (!found || openedAt[id] > openedAt[found]) found = id;
-      });
-    }
-    if (found !== listPlan) { listPlan = found; render(); }
-  }
-  var listTick = 0;
-  function listSoon() {
-    if (listTick) return;
-    listTick = requestAnimationFrame(function () { listTick = 0; watchLists(); });
-  }
-  window.addEventListener('scroll', listSoon, { passive: true });
-  window.addEventListener('resize', listSoon);
-
   /* ---------- the open strategy ---------- */
   function hashSlug() {
     var h = '';
@@ -556,7 +484,6 @@
     }
     sheetK.textContent = gradeWords(tiers[slug]);
     sheetBody.innerHTML = '<p class="bx-note">Loading…</p>';
-    listPlan = null;
     render();
     backdrop.hidden = false;
     sheet.hidden = false;
@@ -574,7 +501,6 @@
     backdrop.hidden = true;
     document.body.classList.remove('noscroll');
     render();
-    watchLists();
     if (lastTrigger && document.contains(lastTrigger)) lastTrigger.focus({ preventScroll: true });
     lastTrigger = null;
   }
@@ -701,7 +627,7 @@
       ]) + '</section>' +
       '</div>';
 
-    sheetBody.innerHTML = first + daily + more;
+    sheetBody.innerHTML = first + daily + calcLink(d) + more;
     if (hasCurve) {
       var box = $('#bx-chart');
       drawChart(box, d.equity);
@@ -809,14 +735,10 @@
     drawChart(box, docs[openSlug].equity);
   }
   var chartWatch = window.ResizeObserver ? new ResizeObserver(redraw) : null;
-  var resizeTimer, lastWidth = window.innerWidth;
+  var resizeTimer;
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(redraw, 120);
-    if (window.innerWidth !== lastWidth) {     // a new width: the heights held for the open lists no longer apply
-      lastWidth = window.innerWidth;
-      if (planGrid) $$('.bx-plan', planGrid).forEach(function (c) { c.style.minHeight = ''; });
-    }
   });
 
   /* ---------- coming soon (row E736): a name, the market line and the chart, nothing else ---------- */
@@ -843,7 +765,8 @@
 
   /* ---------- start ---------- */
   window.AFT_BOTS = { named: named, listed: listed, plans: plans, ladder: ladder, nameSpan: nameSpan, grade: grade, finish: finish, esc: esc,
-    usd: usd, day: day, tone: tone, dollars: dollars, priceWords: priceWords, dayWords: dayWords, monthItem: monthItem, dailyCals: dailyCals };
+    usd: usd, day: day, tone: tone, dollars: dollars, priceWords: priceWords, dayWords: dayWords, monthItem: monthItem, dailyCals: dailyCals,
+    calcLink: calcLink };
   load();
   render();
   if (stratGrid) slugs.forEach(function (slug) {

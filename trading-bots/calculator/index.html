@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Account rules calculator | AFT Trading Bots | All Fluence Trading</title>
+<link rel="canonical" href="https://allfluencetrading.com/trading-bots/calculator/">
+<meta name="robots" content="noindex, follow">
+<meta name="theme-color" content="#0e0f16">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="../bots.css">
+<link rel="stylesheet" href="calc.css">
+<script src="/config.js"></script>
+<script src="/tracking.js" defer></script>
+<meta name="description" content="Replay an AFT strategy's hypothetical test results through your own account's rules: profit target, loss limit and its kind, daily loss limit, consistency rule.">
+</head>
+<body class="bots bx-calcpage" data-page="calculator" data-data-base="../data/">
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
+    <nav class="nav-links" aria-label="AFT Trading Bots">
+      <a href="../#plans">Tiers</a>
+      <a href="../strategies/">Strategy Library</a>
+      <a href="../#method">How results are shown</a>
+      <a href="../#how">How it works</a>
+      <a class="nav-setup" href="../setup/">Setup</a>
+      <a class="nav-calc" href="./" aria-current="page">Calculator</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="bx-s-head cx-head">
+  <div class="wrap">
+    <p class="bx-kicker"><a href="../">AFT Trading Bots</a></p>
+    <p class="cx-label" id="label">Hypothetical backtest</p>
+    <h1>Account rules calculator</h1>
+    <p class="bx-s-lead">Type your account's rules and replay a strategy's tested days through them, starting from every day it traded.</p>
+  </div>
+</section>
+
+<section class="cx-main">
+  <div class="wrap cx-grid">
+
+    <form class="cx-rules" id="rules" aria-labelledby="rules-h" novalidate>
+      <h2 class="cx-h2" id="rules-h">Your account's rules</h2>
+
+      <div class="cx-fld" id="pick-fld">
+        <label for="pick">Strategy</label>
+        <select id="pick"></select>
+        <p class="cx-cap" id="pick-cap"></p>
+      </div>
+
+      <div class="cx-ex" role="group" aria-labelledby="ex-h">
+        <p class="cx-ex-h" id="ex-h">Example numbers. Type your own account's rules.</p>
+        <div class="cx-ex-b" id="examples"></div>
+      </div>
+
+      <div class="cx-fld">
+        <label for="target">Profit target</label>
+        <div class="cx-money"><span aria-hidden="true">$</span><input id="target" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="target-err"></div>
+        <p class="cx-err" id="target-err" hidden></p>
+      </div>
+
+      <div class="cx-fld">
+        <label for="limit">Loss limit</label>
+        <div class="cx-money"><span aria-hidden="true">$</span><input id="limit" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="limit-err"></div>
+        <p class="cx-err" id="limit-err" hidden></p>
+      </div>
+
+      <fieldset class="cx-kind">
+        <legend>How the loss limit moves</legend>
+        <div id="kinds"></div>
+      </fieldset>
+
+      <div class="cx-sw" id="lock-row">
+        <label class="cx-check"><input type="checkbox" id="lock" aria-describedby="lock-use lock-hint"><span>Stops rising at the starting balance</span></label>
+        <p class="cx-hint cx-hint-b" id="lock-use">Usual on funded accounts only.</p>
+        <p class="cx-hint" id="lock-hint">For the two drawdown kinds: once the limit has risen to the starting balance, it stays there.</p>
+      </div>
+
+      <div class="cx-opt">
+        <label class="cx-check"><input type="checkbox" id="dl-on" aria-controls="dl-box"><span>Daily loss limit</span></label>
+        <div class="cx-fld cx-sub" id="dl-box" hidden>
+          <label for="dl">A day that falls this far stops trading until the next day</label>
+          <div class="cx-money"><span aria-hidden="true">$</span><input id="dl" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="dl-err"></div>
+          <p class="cx-err" id="dl-err" hidden></p>
+        </div>
+      </div>
+
+      <div class="cx-opt">
+        <label class="cx-check"><input type="checkbox" id="cp-on" aria-controls="cp-box"><span>Consistency rule</span></label>
+        <div class="cx-fld cx-sub" id="cp-box" hidden>
+          <label for="cp">No day may make more than this share of the profit target. A day that gets there stops trading until the next day.</label>
+          <div class="cx-money cx-pct"><input id="cp" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" aria-describedby="cp-err"><span aria-hidden="true">%</span></div>
+          <p class="cx-err" id="cp-err" hidden></p>
+        </div>
+      </div>
+
+      <div class="cx-fld">
+        <label for="md">Minimum trading days before the target counts</label>
+        <input id="md" class="cx-num" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" aria-describedby="md-err">
+        <p class="cx-err" id="md-err" hidden></p>
+      </div>
+
+      <div class="cx-fld" id="scale-fld" hidden>
+        <label for="scale">Scale of the results</label>
+        <select id="scale"></select>
+        <p class="cx-hint">Every day's numbers multiplied.</p>
+      </div>
+      <p class="cx-note" id="addr-note" role="status" hidden></p>
+      <p class="cx-msum" id="msum" hidden></p>
+    </form>
+
+    <div class="cx-out" id="out">
+      <div class="cx-tabs" role="tablist" aria-label="Views">
+        <button type="button" role="tab" id="tab-one" aria-controls="view-one" aria-selected="true">One strategy</button>
+        <button type="button" role="tab" id="tab-cmp" aria-controls="view-cmp" aria-selected="false" tabindex="-1">Compare all</button>
+      </div>
+      <p class="cx-status" id="status" role="status" aria-live="polite"></p>
+
+      <div class="cx-view" id="view-one" role="tabpanel" aria-labelledby="tab-one" tabindex="-1">
+        <h2 class="cx-name" id="one-name"></h2>
+        <div class="cx-top">
+          <div class="cx-card cx-dial-card" id="dial"></div>
+          <div class="cx-card cx-kinds-card">
+            <h3 class="cx-h3" id="trio-h">The three kinds of loss limit</h3>
+            <p class="cx-sub-l">The same numbers under each kind. Choose one to use it.</p>
+            <div class="cx-trio" id="trio" role="group" aria-labelledby="trio-h"></div>
+          </div>
+        </div>
+
+        <div class="cx-card cx-lines-card" id="lines-card">
+          <h3 class="cx-h3">Every start, drawn</h3>
+          <p class="cx-sub-l" id="lines-sub"></p>
+          <div class="cx-lines" id="lines"><canvas id="lines-c" role="img"></canvas></div>
+          <ul class="cx-legend" id="lines-legend"></ul>
+        </div>
+
+        <div class="cx-card" id="cal-card">
+          <h3 class="cx-h3">The start days</h3>
+          <p class="cx-sub-l">Each traded day is a start. Its colour is how that start ended.</p>
+          <ul class="cx-legend" id="cal-legend"></ul>
+          <div class="cx-cals" id="cals"></div>
+        </div>
+
+        <div class="cx-pair" id="pair">
+          <div class="cx-card cx-stops" id="stops" hidden></div>
+          <div class="cx-card" id="hist"></div>
+        </div>
+
+        <div class="cx-card" id="wl"></div>
+
+        <div class="cx-how">
+          <h3 class="cx-h3">How this is worked out</h3>
+          <p id="how-p">Every traded day is a start: the replay runs the strategy's tested days from each one, in order. Each day is replayed along its own ups and downs, from one turning point to the next. The test does not record whether a trade's best or worst point came first. The main result takes the worst point first in a trade that closed at a profit and the best point first in any other trade. The second result takes the best point first in every trade. Without a consistency rule, the second result is never the higher of the two. With a consistency rule on, it can be. Where trades overlap, they are taken one after another in the order they closed.</p>
+          <p>The loss limit is Static, a Trailing drawdown or an End-of-day drawdown, as chosen above. A daily loss limit stops that day at the limit, and a consistency rule stops a day at its share of the target; the account trades again the next day.</p>
+          <p>The success rate counts the starts that finished: those that reached the target and those that hit the loss limit. Starts that did not finish before the test ended are not counted in the rate. The account's own fees are not counted; commission and slippage are as in the test. Rules differ from account to account, so type your own.</p>
+          <p class="cx-must">A replay of hypothetical test results. Not a forecast, and not a chance of passing any account.</p>
+        </div>
+      </div>
+
+      <div class="cx-view" id="view-cmp" role="tabpanel" aria-labelledby="tab-cmp" tabindex="-1" hidden>
+        <h2 class="cx-name">Every strategy under these rules</h2>
+        <p class="cx-must cx-must-top">A replay of hypothetical test results. Not a forecast, and not a chance of passing any account.</p>
+        <p class="cx-sub-l">The success rate counts the starts that finished. Choose a heading to sort; choose a strategy to open it.</p>
+        <div class="cx-sort" id="cmp-sort"></div>
+        <table class="cx-cmp" id="cmp">
+          <caption class="bx-vh">Every strategy with figures, replayed through the rules above. For each: the success rate (the share of the starts that finished that reached the target), the starts that hit the loss limit, the starts that did not finish before the test ended, and the average trading days to the target.</caption>
+          <thead><tr id="cmp-head"></tr></thead>
+        </table>
+        <p class="cx-must">A replay of hypothetical test results. Not a forecast, and not a chance of passing any account.</p>
+      </div>
+      <noscript><p class="bx-sub">Turn on JavaScript to use the calculator.</p></noscript>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer class="site bx-foot">
+  <div class="wrap">
+    <p class="bx-foot-line">All Fluence Trading · AFT Trading Bots</p>
+    <p class="bx-foot-links"><a href="/">Front page</a> · <a href="../">AFT Trading Bots</a> · <a href="../strategies/">Strategy Library</a> · <a href="/legal/">Disclaimer</a> · <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a></p>
+    <p>For education only. Trading futures involves substantial risk of loss and is not suitable for every investor. You can lose more than your initial investment. Automated strategies can lose money, and an order routed to a broker can fail, be delayed or fill at a different price. Strategy Tester results are hypothetical, have inherent limitations and do not represent actual trading. All Fluence Trading provides educational software and training only and is not a registered investment adviser, broker-dealer or commodity trading advisor. Nothing here is financial advice.</p>
+  </div>
+</footer>
+
+<script src="../data/catalog.js"></script>
+<script src="calc.js"></script>
+</body>
+</html>
