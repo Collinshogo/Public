@@ -240,6 +240,19 @@
 .cx-lpl span{min-width:0}
 .cx-lpl small{display:block;color:var(--dim);font-size:13px;line-height:1.4}
 .cx-lpl small b{font-weight:600}
+/* Row E797: a multiplier beside each market's picker; the calendar start date; the combined drawdown shown large; each
+   strategy's own figures; the balance needed with its two parts */
+.cx-lpr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px}
+.cx-rules select.cx-lx{width:auto;padding:0 34px 0 10px;background-position:right 10px center}
+.cx-date{color-scheme:dark;font-variant-numeric:tabular-nums}
+.cx-ldn{color:var(--text)}
+.cx-ldn[hidden]{display:none}
+.cx-ddc{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cx-ddc dd{font-size:24px;letter-spacing:-.01em}
+.cx-lpl .cx-lpb{min-width:0;flex:1}
+.cx-st4{grid-template-columns:repeat(2,minmax(0,1fr));margin:8px 0 6px}
+@media(min-width:700px){.cx-st4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.cx-need tr.cx-need-sum th,.cx-need tr.cx-need-sum td{border-top:2px solid var(--line2)}
 .cx-inl>label{margin:0}
 .cx-inl[hidden]{display:none}
 .cx-rules .cx-inl select{min-height:40px}

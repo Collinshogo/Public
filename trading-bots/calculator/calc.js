@@ -243,7 +243,7 @@
   function runHarsh(rec, k, R) { return tally(replayC(scaled(rec, k).dp2, R, false), rec.dates); }
 
   /* ---------- the rules: inputs, checks and the address ---------- */
-  // Row E745 ruling 10 had the switch off by default. Row E793 (Collin 2026-11-21: "keep trailing on by default for
+  // Row E745 ruling 10 had the switch off by default. Row E793 (the owner, 2026-11-21: "keep trailing on by default for
   // trailing and end of day drawdown and intraday"): on by default; a link that carries lock=0 or lock=1 keeps its value.
   var DEF = { s: '', k: 'eod', t: 300000, l: 200000, lock: true, dlOn: false, dl: null, cpOn: false, cp: null, md: 0, x: 1, v: 'one' };
   var st = {};
@@ -251,7 +251,9 @@
   // Row E780: the Live account mode keeps its own state (lv), so the Prop firm account mode and its address are exactly as
   // before; the address carries a=live and the live keys only in the Live account mode.
   var MKTS = ['MNQ', 'MES', 'MGC'];
-  var lv = { on: false, s: { MNQ: '', MES: '', MGC: '' }, d: '', b: null, bSet: false };   // bSet: a starting balance was typed
+  var lv = { on: false, s: { MNQ: '', MES: '', MGC: '' }, d: '', b: null, bSet: false,   // bSet: a starting balance was typed
+    x: { MNQ: 1, MES: 1, MGC: 1 }, m: 20000, mSet: false };   // row E797: a multiplier per market; the margin per micro (mSet: typed)
+  var MPM = 20000;   // row E797: $200 of margin per micro contract by default (the owner, 2026-11-21), based on Tradovate's margins
   var MAXC = 1000000000;   // $10,000,000
   // A box's text to whole cents: digits with at most two decimals, a $ and commas allowed. Anything else says why.
   function readMoney(text) {
@@ -801,28 +803,48 @@
   // The combined account from a start date: each day's result is the sum of the picked records' results that day.
   // low is the worst case within the day: the balance before the day plus each record's own lowest point that day (never
   // above $0), as if they all came at the same moment; the records carry no trade times.
-  function liveRun(slugs, k, from) {
+  // Row E797: ks is one multiplier for every record, or one per record in the order of slugs. Each record's own figures
+  // from the start date are kept too: its net result, and its largest drop from a high on day closes (dd) and within the
+  // day (ddL, its own lowest point that day), each at its own multiplier.
+  function liveRun(slugs, ks, from) {
     var sp = liveSpan(slugs), days = sp.days.filter(function (x) { return x >= from; });
-    var per = slugs.map(function (s) {
+    var per = slugs.map(function (s, j) {
       var r = recs[s], at = {};
       r.dates.forEach(function (x, i) { at[x] = i; });
-      return { r: r, at: at, o: 0, own: [] };
+      return { r: r, at: at, k: Array.isArray(ks) ? ks[j] : ks, o: 0, own: [], pk: 0, dd: 0, ddL: 0 };
     });
     var day = [], cum = [], low = [], c = 0;
     days.forEach(function (x) {
       var tot = 0, dip = 0;
       per.forEach(function (p) {
-        var i = p.at[x];
+        var i = p.at[x], k = p.k;
         if (i !== undefined) {
           var path = p.r.dp[i], m = 0;
           for (var z = 0; z < path.length; z++) if (path[z] < m) m = path[z];
+          if (p.pk - (p.o + m * k) > p.ddL) p.ddL = p.pk - (p.o + m * k);
           tot += p.r.tot[i] * k; dip += m * k; p.o += p.r.tot[i] * k;
+          if (p.o > p.pk) p.pk = p.o;
+          if (p.pk - p.o > p.dd) p.dd = p.pk - p.o;
         }
         p.own.push(p.o);
       });
       low.push(c + dip); c += tot; day.push(tot); cum.push(c);
     });
-    return { slugs: slugs, k: k, span: sp, days: days, day: day, cum: cum, low: low, own: per.map(function (p) { return p.own; }) };
+    return { slugs: slugs, ks: per.map(function (p) { return p.k; }), span: sp, days: days, day: day, cum: cum, low: low,
+      own: per.map(function (p) { return p.own; }),
+      per: per.map(function (p) { return { net: p.o, dd: p.dd, ddL: Math.max(p.dd, p.ddL), k: p.k }; }) };
+  }
+  // Row E797: the margin the account needs: each record's most contracts open at once in its test (figures.max_contracts)
+  // times its multiplier, added up as if every record held its most at the same moment, times the margin per micro.
+  function mcOf(rec) { var v = ((rec.d || {}).figures || {}).max_contracts; return typeof v === 'number' && isFinite(v) && v >= 0 ? v : null; }
+  function liveMargin(slugs, ks, per) {
+    var parts = slugs.map(function (s, j) {
+      var c = mcOf(recs[s]), k = Array.isArray(ks) ? ks[j] : ks;
+      return { mc: c, k: k, micros: c === null ? null : c * k };
+    });
+    var micros = 0, missing = 0;
+    parts.forEach(function (p) { if (p.micros === null) missing++; else micros += p.micros; });
+    return { parts: parts, micros: micros, c: micros * per, per: per, missing: missing };
   }
   // The starting balance needed not to reach $0: from the start date, the lowest the balance went below the starting
   // balance; from the worst moment, the largest drop from a high (the start counts as a high). Each on day closes and
@@ -839,11 +861,13 @@
     }
     return { start: -minC, startL: -minL, dd: dd, ddL: Math.max(dd, ddL) };
   }
-  function liveZero(res, B) {   // the first day the balance reached $0: on a day close, and within the day in the worst case
-    var z = { close: null, low: null };
+  // The first day the balance reached the floor M (row E797: the margin needed; $0 when none is given): on a day close,
+  // and within the day in the worst case.
+  function liveZero(res, B, M) {
+    var z = { close: null, low: null }, f = M || 0;
     for (var i = 0; i < res.cum.length; i++) {
-      if (z.low === null && B + Math.min(res.low[i], res.cum[i]) <= 0) z.low = res.days[i];
-      if (z.close === null && B + res.cum[i] <= 0) z.close = res.days[i];
+      if (z.low === null && B + Math.min(res.low[i], res.cum[i]) <= f) z.low = res.days[i];
+      if (z.close === null && B + res.cum[i] <= f) z.close = res.days[i];
     }
     return z;
   }
@@ -875,22 +899,45 @@
   }
   function monthPart(x) { return monthWords(x.k) + (x.p ? ' (part month)' : ''); }
   function sizeWords(k) { return k === 1 ? 'as tested' : k + '\u00d7 tested'; }
-  window.AFT_CALC_LIVE = { run: function (slugs, k, from) { return liveRun(slugs, k, from); }, needs: liveNeeds, zero: liveZero, span: liveSpan };
+  function sizesWords(ks) {   // row E797: one size for all, or each its own
+    return ks.every(function (k) { return k === ks[0]; }) ? sizeWords(ks[0]) : 'at its own multiplier';
+  }
+  var WDAY = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  function wday(iso) { return WDAY[new Date(iso + 'T00:00:00Z').getUTCDay()] + ', ' + day(iso); }
+  function isDate(t) {
+    if (!/^\d{4}-\d\d-\d\d$/.test(t)) return false;
+    var d = new Date(t + 'T00:00:00Z');
+    return !isNaN(d.getTime()) && d.toISOString().slice(0, 10) === t;
+  }
+  function liveKs(slugs) { return slugs.map(function (s) { return lv.x[mktOf(recs[s])] || 1; }); }
+  window.AFT_CALC_LIVE = { run: function (slugs, ks, from) { return liveRun(slugs, ks, from); }, needs: liveNeeds, zero: liveZero, span: liveSpan,
+    margin: liveMargin };
 
-  var liveCur = null, liveKey = '', TEXTP = null;
+  var liveCur = null, TEXTP = null, ldOut = '';
   var LCOL = ['#8ea0ff', '#f5c542', '#c58cff'];
   var LEAD_LIVE = 'Choose up to three strategies, one per market, and see how one account holding them all would have gone from a start date.';
+  // Row E797: the start date is the browser's calendar, limited to the first and last tested days every chosen record
+  // covers (row E793's range). lv.d keeps the date as chosen (the address carries it); a date on which no chosen strategy
+  // traded starts on the next tested day, and the note under the box says so.
   function fillLiveDates(slugs) {
-    var key = slugs.join(','), sp = slugs.length ? liveSpan(slugs) : { lo: '', hi: '', days: [] };
-    if (key !== liveKey) {
-      liveKey = key;
-      F.ld.innerHTML = sp.days.map(function (x) { return '<option value="' + x + '">' + day(x) + '</option>'; }).join('');
+    var sp = slugs.length ? liveSpan(slugs) : { lo: '', hi: '', days: [] }, n = sp.days.length;
+    var a = n ? sp.days[0] : '', z = n ? sp.days[n - 1] : '';
+    if (lv.d && (!n || lv.d < a || lv.d > z)) lv.d = '';
+    F.ld.min = a; F.ld.max = z;
+    F.ld.value = lv.d || a;
+    F.ld.disabled = !n;
+    $('#ld-cap').textContent = n ? 'Any date from ' + day(a) + ' to ' + day(z) + ', the range every chosen record covers. A date with no trading starts on the next tested day.' : '';
+    var from = '', note = '';
+    if (n) {
+      from = a;
+      for (var i = 0; i < n; i++) if (sp.days[i] >= (lv.d || a)) { from = sp.days[i]; break; }
+      if (ldOut) note = day(ldOut) + ' is outside that range, so the start date is set to ' + wday(lv.d || a) + '.';
+      else if (lv.d && from !== lv.d) note = 'No chosen strategy traded on ' + wday(lv.d) + ', so the replay starts on the next tested day, ' + wday(from) + '.';
     }
-    if (sp.days.indexOf(lv.d) < 0) lv.d = sp.days.length ? sp.days[0] : '';
-    F.ld.value = lv.d;
-    F.ld.disabled = !sp.days.length;
-    // row E793 (E792 R4): the first and last tested days, not the test window's ends
-    $('#ld-cap').textContent = sp.days.length ? 'Any tested day from ' + day(sp.days[0]) + ' to ' + day(sp.days[sp.days.length - 1]) + ', within the range every chosen record covers.' : '';
+    ldOut = '';
+    var el = $('#ld-note');
+    el.hidden = !note; el.textContent = note;
+    sp.from = from;
     return sp;
   }
   // As the prop picker (row E791): the chosen strategy's own text is its name; the others show name, RoDD and max drawdown.
@@ -902,25 +949,30 @@
     grid.classList.toggle('is-live', lv.on);
     $('#rules-h').textContent = lv.on ? 'Your live account' : TEXTP.h2;
     lead.textContent = lv.on ? LEAD_LIVE : TEXTP.lead;
-    MKTS.forEach(function (m) { F['lp' + m].value = lv.s[m]; lpTexts(F['lp' + m]); });
+    MKTS.forEach(function (m) { F['lp' + m].value = lv.s[m]; lpTexts(F['lp' + m]); F['lx' + m].value = String(lv.x[m]); });
     var slugs = liveSlugs();
     fillLiveDates(slugs);
     F.lb.value = plain(lv.bSet && lv.b ? lv.b : liveDefB(slugs));
+    F.lm.value = plain(lv.mSet && lv.m ? lv.m : MPM);   // row E797
     errShow('lb', '');
+    errShow('lm', '');
   }
   function liveHash() {
     var p = ['a=live', 'ls=' + liveSlugs().map(encodeURIComponent).join(',')];
     if (lv.d && liveCur && liveCur.res.span.days[0] !== lv.d) p.push('ld=' + lv.d);
     if (lv.bSet && lv.b) p.push('lb=' + plain(lv.b));
-    if (SCALES.length > 1 && st.x !== 1) p.push('x=' + st.x);
+    MKTS.forEach(function (m) { if (lv.x[m] !== 1) p.push('x' + m + '=' + lv.x[m]); });   // row E797: a multiplier per market
+    if (lv.mSet && lv.m && lv.m !== MPM) p.push('mm=' + plain(lv.m));
     var h = '#' + p.join('&');
     if (location.hash !== h) { try { history.replaceState(null, '', h); } catch (e) { /* the view still works */ } }
   }
-  // The address in the Live account mode: a=live, ls (the strategies), ld (the start date), lb (the starting balance) and
-  // the shared x. Without a=live the page is the Prop firm account mode, exactly as before.
+  // The address in the Live account mode: a=live, ls (the strategies), ld (the start date), lb (the starting balance),
+  // xMNQ, xMES and xMGC (row E797: each market's multiplier; an older link's one x applies to every market) and mm (the
+  // margin per micro contract). Without a=live the page is the Prop firm account mode, exactly as before.
   function readLive() {
     var raw = location.hash.replace(/^#/, ''), q = {}, reset = [];
     lv.on = false; lv.s = { MNQ: '', MES: '', MGC: '' }; lv.d = ''; lv.b = null; lv.bSet = false;
+    lv.x = { MNQ: 1, MES: 1, MGC: 1 }; lv.m = MPM; lv.mSet = false;
     raw.split('&').forEach(function (kv) {
       var i = kv.indexOf('=');
       if (i > 0) { try { q[kv.slice(0, i)] = decodeURIComponent(kv.slice(i + 1)); } catch (e) { q[kv.slice(0, i)] = '\u0000'; } }
@@ -936,11 +988,19 @@
       });
       if (bad) reset.push('live account strategies');
     }
-    if ('ld' in q) {
-      var sl = liveSlugs();
-      if (sl.length && liveSpan(sl).days.indexOf(q.ld) >= 0) lv.d = q.ld; else reset.push('start date');
+    if ('ld' in q) {   // row E797: any date in the range every chosen record covers
+      var sl = liveSlugs(), sd = sl.length ? liveSpan(sl).days : [];
+      if (sd.length && isDate(q.ld) && q.ld >= sd[0] && q.ld <= sd[sd.length - 1]) lv.d = q.ld; else reset.push('start date');
     }
     if ('lb' in q) { var b = readMoney(q.lb); if (b.err) reset.push('starting balance'); else { lv.b = b.c; lv.bSet = true; } }
+    // row E797: an older link's one multiplier applies to every market (one that is not usable is reset by readHash)
+    if ('x' in q && /^\d$/.test(q.x) && SCALES.indexOf(Number(q.x)) >= 0) MKTS.forEach(function (m) { lv.x[m] = Number(q.x); });
+    MKTS.forEach(function (m) {
+      if (!(('x' + m) in q)) return;
+      var v = q['x' + m];
+      if (/^\d$/.test(v) && SCALES.indexOf(Number(v)) >= 0) lv.x[m] = Number(v); else reset.push(m + ' multiplier');
+    });
+    if ('mm' in q) { var mm = readMoney(q.mm); if (mm.err) reset.push('margin per micro contract'); else { lv.m = mm.c; lv.mSet = true; } }
     return reset;
   }
   function setAcct(on) {
@@ -953,9 +1013,9 @@
     return '<div><dt>' + label + '</dt><dd class="' + (signed ? tone(c) : '') + '">' + moneyFull(c, signed) + (small ? '<small>' + esc(small) + '</small>' : '') + '</dd></div>';
   }
   function renderLive() {
-    var out = $('#out'), msg = $('#live-msg'), slugs = liveSlugs(), k = st.x;
+    var out = $('#out'), msg = $('#live-msg'), slugs = liveSlugs(), ks = liveKs(slugs);
     $('#label').textContent = 'Hypothetical backtest';
-    fillLiveDates(slugs);
+    var sp0 = fillLiveDates(slugs);
     out.classList.remove('is-stale');
     function done() { drawn++; out.setAttribute('data-drawn', String(drawn)); }
     if (!slugs.length) {
@@ -965,45 +1025,68 @@
       liveHash(); done();
       return;
     }
-    var b = readMoney(F.lb.value);
+    var b = readMoney(F.lb.value), mm = readMoney(F.lm.value), wait = [];
     errShow('lb', b.err);
-    if (b.err) {
+    errShow('lm', mm.err);   // row E797
+    if (b.err) wait.push('Starting balance');
+    if (mm.err) wait.push('Margin per micro contract');
+    if (wait.length) {
       out.classList.add('is-stale');
-      msg.hidden = false; msg.textContent = 'The results wait for: Starting balance. Fix the box above to see them again.';
+      msg.hidden = false; msg.textContent = 'The results wait for: ' + wait.join(', ') + '. Fix the box' + (wait.length > 1 ? 'es' : '') + ' above to see them again.';
       return;
     }
     if (lv.bSet) lv.b = b.c;
+    if (lv.mSet) lv.m = mm.c;
     msg.hidden = true; msg.textContent = '';
     $('#live-res').hidden = false;
-    var res = liveRun(slugs, k, lv.d), B = b.c, n = res.days.length;
-    var net = n ? res.cum[n - 1] : 0, nd = liveNeeds(res), z = liveZero(res, B), mo = liveParts(liveMonths(res), res);
-    liveCur = { res: res, B: B };
+    var res = liveRun(slugs, ks, sp0.from), B = b.c, n = res.days.length, mg = liveMargin(slugs, ks, mm.c);
+    var net = n ? res.cum[n - 1] : 0, nd = liveNeeds(res), z = liveZero(res, B, mg.c), mo = liveParts(liveMonths(res), res);
+    liveCur = { res: res, B: B, mg: mg };
     var best = null, worst = null;
     mo.forEach(function (x) { if (best === null || x.v > best.v) best = x; if (worst === null || x.v < worst.v) worst = x; });
     var avg = mo.length ? (net < 0 ? -1 : 1) * halfUp(Math.abs(net), mo.length) : 0;
     $('#live-sum').innerHTML = '<h3 class="cx-h3">The account</h3>' +
       '<p class="cx-sub-l">Hypothetical backtest, ' + (n ? day(res.days[0]) + ' to ' + day(res.days[n - 1]) + ', ' + plural(n, 'trading day', 'trading days') : 'no trading days') +
-      ', from a starting balance of ' + money(B) + '; each strategy ' + sizeWords(k) + '.</p>' +
+      ', from a starting balance of ' + money(B) + '; each strategy ' + sizesWords(ks) + '.</p>' +
       '<dl class="cx-stats cx-st6">' + stat('Ending balance', B + net, '', false) + stat('Net profit', net, '', true) +
       stat('Max drawdown', nd.dd, 'from a high, on day closes', false) +
       stat('Average month', avg, 'over ' + plural(mo.length, 'month', 'months') + partWords(mo), true) +
       (best ? stat('Best month', best.v, monthPart(best), true) + stat('Worst month', worst.v, monthPart(worst), true) : '') + '</dl>';
-    function cell(c) { return '<td><b>' + moneyFull(c) + '</b></td>'; }
+    function cell(c, strong) { return '<td>' + (strong ? '<b>' + moneyFull(c) + '</b>' : moneyFull(c)) + '</td>'; }
+    // Row E797: the most the account fell, shown large; it follows every multiplier.
+    $('#live-dd').innerHTML = '<h3 class="cx-h3">How much the account could have lost</h3>' +
+      '<p class="cx-sub-l">The most the account fell from a high in this test, at the multipliers chosen.</p>' +
+      '<dl class="cx-stats cx-ddc">' + stat('On day closes', nd.dd, '', false) + stat('Within the day, worst case', nd.ddL, '', false) + '</dl>';
+    // Row E797: the balance needed is the margin plus the most the account fell (within the day, worst case); the $0 line
+    // is now the margin needed.
+    var mWords = mg.parts.map(function (p) { return p.micros === null ? DASH : num(p.micros); }).join(' + ') +
+      (mg.parts.length > 1 ? ' = ' + plural(mg.micros, 'micro', 'micros') : (mg.micros === 1 ? ' micro' : ' micros')) + ', times ' + money(mg.per) + ' a micro';
     var zw = 'With a starting balance of ' + money(B) + ': ' +
-      (z.close ? 'on day closes the balance would have reached $0 on ' + day(z.close) : 'on day closes the balance would not have reached $0') + '; ' +
-      (z.low ? 'within the day, in the worst case, on ' + day(z.low) + '.' : 'within the day, in the worst case, it would not have either.') +
+      (z.close ? 'on day closes the balance would have fallen to the margin needed (' + moneyFull(mg.c) + ') on ' + day(z.close)
+        : 'on day closes the balance would have stayed above the margin needed (' + moneyFull(mg.c) + ')') + '; ' +
+      (z.low ? (z.close ? 'within the day, in the worst case, on ' + day(z.low) + '.' : 'within the day, in the worst case, it would have fallen to it on ' + day(z.low) + '.')
+        : 'within the day, in the worst case, it would have too.') +
       (z.close || z.low ? ' The figures after that day assume the account kept trading, which it could not have.' : '');
-    $('#live-need').innerHTML = '<h3 class="cx-h3">Starting balance needed not to blow</h3>' +
-      '<p class="cx-sub-l">A starting balance has to be more than these amounts for the balance never to reach $0.</p>' +
-      '<table class="cx-need"><thead><tr><td></td><th scope="col">On day closes</th><th scope="col">Within the day, worst case</th></tr></thead><tbody>' +
-      '<tr><th scope="row">From this start date<small>the lowest the balance went below the starting balance</small></th>' + cell(nd.start) + cell(nd.startL) + '</tr>' +
-      '<tr><th scope="row">From the worst moment in the period<small>the largest drop from a high</small></th>' + cell(nd.dd) + cell(nd.ddL) + '</tr></tbody></table>' +
-      '<p class="cx-hint">The records carry no trade times. So the worst case adds up each strategy\u2019s own lowest point within that day, as if they all came at the same moment.</p>' +
+    $('#live-need').innerHTML = '<h3 class="cx-h3">Starting balance needed</h3>' +
+      '<p class="cx-sub-l">For the balance never to fall to the margin the open contracts need, a starting balance has to be more than the margin plus the most the account fell.</p>' +
+      '<table class="cx-need"><thead><tr><td></td><th scope="col">From this start date</th><th scope="col">From the worst moment in the period</th></tr></thead><tbody>' +
+      '<tr><th scope="row">The most it fell<small>within the day, worst case: from the start date, the lowest the balance went below the starting balance; from the worst moment, the largest drop from a high</small></th>' + cell(nd.startL) + cell(nd.ddL) + '</tr>' +
+      '<tr><th scope="row">Margin<small>' + esc(mWords) + '</small></th>' + cell(mg.c) + cell(mg.c) + '</tr>' +
+      '<tr class="cx-need-sum"><th scope="row">Starting balance needed</th>' + cell(nd.startL + mg.c, true) + cell(nd.ddL + mg.c, true) + '</tr></tbody></table>' +
+      '<p class="cx-hint">The margin assumes every strategy holds its most micros at the same moment. The records carry no trade times. So the worst case adds up each strategy\u2019s own lowest point within that day, as if they all came at the same moment.</p>' +
+      (mg.missing ? '<p class="cx-hint">A record without its most contracts open at once adds no margin.</p>' : '') +
       '<p class="cx-zero ' + (z.close || z.low ? 'bx-neg' : '') + '">' + esc(zw) + '</p>';
-    $('#live-picks').innerHTML = '<h3 class="cx-h3">The strategies in the account</h3><ul class="cx-lpl">' + slugs.map(function (s, i) {
-      var r = recs[s], own = res.own[i], o = own.length ? own[own.length - 1] : 0;
-      return '<li><i style="background:' + LCOL[i] + '" aria-hidden="true"></i><span>' + nameSpan(r.s) + '<small>' + esc(mktOf(r)) + ' \u00b7 ' + esc(sizeWords(k)) +
-        ' \u00b7 its own net profit in this period <b class="' + tone(o) + '">' + moneyFull(o, true) + '</b></small><small>' + esc(capFor(r.d)) + '</small></span></li>';
+    // Row E797: each strategy's own figures from the start date, at its own multiplier, in the stats style of the account.
+    $('#live-picks').innerHTML = '<h3 class="cx-h3">The strategies in the account</h3>' +
+      '<p class="cx-sub-l">Each strategy on its own from the start date, at its own multiplier.</p><ul class="cx-lpl">' + slugs.map(function (s, i) {
+      var r = recs[s], g = res.per[i], q = mg.parts[i], k = g.k;
+      var mic = q.micros === null ? DASH : num(q.micros), micS = q.micros === null ? 'not in the record' : (k === 1 ? 'as in its test' : num(q.mc) + ' in its test \u00d7 ' + k);
+      return '<li><i style="background:' + LCOL[i] + '" aria-hidden="true"></i><div class="cx-lpb">' + nameSpan(r.s) + '<small>' + esc(mktOf(r)) + ' \u00b7 ' + esc(sizeWords(k)) + '</small>' +
+        '<dl class="cx-stats cx-st4">' + stat('Net profit', g.net, '', true) +
+        stat('Max drawdown', g.ddL, 'within the day; ' + moneyFull(g.dd) + ' on day closes', false) +
+        '<div><dt>Most micros open at once</dt><dd>' + mic + '<small>' + esc(micS) + '</small></dd></div>' +
+        '<div><dt>Margin for those</dt><dd>' + (q.micros === null ? DASH : moneyFull(q.micros * mg.per)) + '<small>' + (q.micros === null ? '' : esc(mic + ' \u00d7 ' + money(mg.per))) + '</small></dd></div></dl>' +
+        '<small>' + esc(capFor(r.d)) + '</small></div></li>';
     }).join('') + '</ul>';
     drawLiveChart();
     liveHash(); done();
@@ -1063,7 +1146,7 @@
       ', ends at ' + moneyFull(B + r.cum[n - 1]) + ', and its lowest day close is ' + moneyFull(B + mn) + '.');
   }
 
-  // Row E791 (review E789 R1; Collin for E779: "take away that whole daily loss limit thing"): the method note names the
+  // Row E791 (review E789 R1; the owner for E779: "take away that whole daily loss limit thing"): the method note names the
   // daily loss limit only while one is set, and the consistency rule only while it is on; with both on it reads as before.
   function howRules(R) {
     var w = 'The loss limit is Static, a Trailing drawdown or an End-of-day drawdown, as chosen above.';
@@ -1147,8 +1230,11 @@
       return '<button type="button" class="btn btn-ghost btn-sm" data-ex="' + i + '" aria-label="Example numbers, ' + esc(e.label) + ': target ' + money(e.t) + ', loss limit ' + money(e.l) + '">' + esc(e.label.replace(' account', '')) + '<small>' + money(e.t) + ' / ' + money(e.l) + '</small></button>';
     }).join('');
     // row E780: the Account type choice and the Live account mode's boxes
-    F.acct = $('#acct'); F.ld = $('#ld'); F.lb = $('#lb');
+    F.acct = $('#acct'); F.ld = $('#ld'); F.lb = $('#lb'); F.lm = $('#lm');
     MKTS.forEach(function (m) {
+      var xs = F['lx' + m] = $('#lx-' + m);   // row E797: the market's own multiplier, the prop mode's choices
+      xs.innerHTML = SCALES.map(function (x) { return '<option value="' + x + '">' + (x === 1 ? 'As tested' : x + ' \u00d7 tested') + '</option>'; }).join('');
+      xs.addEventListener('change', function () { lv.x[m] = Number(xs.value); render(true); });
       var sel = F['lp' + m] = $('#lp-' + m);
       sel.innerHTML = '<option value="">None</option>' + order.filter(function (s) { return mktOf(recs[s]) === m; }).map(function (s) {
         return '<option value="' + esc(s) + '">' + esc(optText(recs[s])) + '</option>';
@@ -1157,8 +1243,13 @@
       sel.addEventListener('change', function () { lv.s[m] = sel.value; lpTexts(sel); if (!lv.bSet) F.lb.value = plain(liveDefB(liveSlugs())); render(true); });
     });
     F.acct.addEventListener('change', function () { setAcct(F.acct.value === 'live'); });
-    F.ld.addEventListener('change', function () { lv.d = F.ld.value; render(true); });
+    F.ld.addEventListener('change', function () {   // row E797: a date outside the range is set to its nearer end
+      var v = F.ld.value, a = F.ld.min, z = F.ld.max;
+      if (v && a && v < a) { ldOut = v; v = a; } else if (v && z && v > z) { ldOut = v; v = z; }
+      lv.d = v; render(true);
+    });
     F.lb.addEventListener('input', function () { lv.bSet = true; render(false); });
+    F.lm.addEventListener('input', function () { lv.mSet = true; render(false); });
     if (SCALES.length > 1) {
       F.scale = $('#scale');
       F.scale.innerHTML = SCALES.map(function (x) { return '<option value="' + x + '">' + (x === 1 ? 'As tested' : x + ' × tested') + '</option>'; }).join('');

@@ -64,10 +64,11 @@
 
       <fieldset class="cx-kind cx-lp cx-live" id="live-pick">
         <legend>Choose up to three strategies, one per market</legend>
-        <div class="cx-fld cx-inl"><label for="lp-MNQ">MNQ</label><select id="lp-MNQ"></select></div>
-        <div class="cx-fld cx-inl"><label for="lp-MES">MES</label><select id="lp-MES"></select></div>
-        <div class="cx-fld cx-inl"><label for="lp-MGC">MGC</label><select id="lp-MGC"></select></div>
-        <p class="cx-hint">One strategy per market, all in the same account. Each trades at its tested size times the Multiplier.</p>
+        <!-- Row E797: each market has its own multiplier, beside its picker; the shared Multiplier is the prop mode's only. -->
+        <div class="cx-fld cx-inl"><label for="lp-MNQ">MNQ</label><div class="cx-lpr"><select id="lp-MNQ"></select><select id="lx-MNQ" class="cx-lx" aria-label="MNQ multiplier"></select></div></div>
+        <div class="cx-fld cx-inl"><label for="lp-MES">MES</label><div class="cx-lpr"><select id="lp-MES"></select><select id="lx-MES" class="cx-lx" aria-label="MES multiplier"></select></div></div>
+        <div class="cx-fld cx-inl"><label for="lp-MGC">MGC</label><div class="cx-lpr"><select id="lp-MGC"></select><select id="lx-MGC" class="cx-lx" aria-label="MGC multiplier"></select></div></div>
+        <p class="cx-hint">One strategy per market, all in the same account. Each trades at its tested size times the multiplier beside it.</p>
       </fieldset>
 
       <div class="cx-fld cx-prop" id="pick-fld">
@@ -76,7 +77,7 @@
         <p class="cx-cap" id="pick-cap"></p>
       </div>
 
-      <div class="cx-fld cx-inl" id="scale-fld" hidden>
+      <div class="cx-fld cx-inl cx-prop" id="scale-fld" hidden>
         <label for="scale">Multiplier</label>
         <select id="scale" aria-describedby="mx-n"></select>
       </div>
@@ -86,8 +87,16 @@
 
       <div class="cx-fld cx-live">
         <label for="ld">Start date</label>
-        <select id="ld"></select>
+        <input id="ld" class="cx-num cx-date" type="date" aria-describedby="ld-cap ld-note">
         <p class="cx-cap" id="ld-cap"></p>
+        <p class="cx-cap cx-ldn" id="ld-note" role="status" hidden></p>
+      </div>
+
+      <div class="cx-fld cx-live">
+        <label for="lm">Margin per micro contract</label>
+        <div class="cx-money"><span aria-hidden="true">$</span><input id="lm" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="lm-err lm-hint"></div>
+        <p class="cx-err" id="lm-err" hidden></p>
+        <p class="cx-hint" id="lm-hint">Margin is set at $200 per micro contract by default, based on Tradovate’s margins (on Nov 21, 2026, Tradovate’s own day-trading margin for these micros was $50 to $200, and its initial margin, for a position held overnight, $1,933.80 to $4,360.16); change it to your broker’s rate.</p>
       </div>
 
       <div class="cx-fld cx-live">
@@ -223,6 +232,7 @@
         <p class="cx-note" id="live-msg" role="status" hidden></p>
         <div id="live-res">
           <div class="cx-card" id="live-sum"></div>
+          <div class="cx-card cx-ddcard" id="live-dd"></div>
           <div class="cx-card cx-lines-card">
             <h3 class="cx-h3">The account's balance</h3>
             <p class="cx-sub-l" id="live-chart-sub"></p>
@@ -234,9 +244,10 @@
         </div>
         <div class="cx-how">
           <h3 class="cx-h3">How this is worked out</h3>
-          <p>The account holds the chosen strategies together, each at its tested size times the Multiplier. Each day's result is the sum of the strategies' tested results that day; a strategy that did not trade that day adds nothing. The period runs from the start date to the last day every chosen record covers.</p>
+          <p>The account holds the chosen strategies together, each at its tested size times its own multiplier. Each day's result is the sum of the strategies' tested results that day; a strategy that did not trade that day adds nothing. The period runs from the start date to the last day every chosen record covers.</p>
           <p>Max drawdown is the largest drop from a high on day closes. The records carry no trade times, so the worst case within a day adds up each strategy's own lowest point that day, as if they all came at the same moment.</p>
-          <p>The figures are after the commission and slippage in each test. Broker margin, other fees and live fills are not included.</p>
+          <p>Margin is the most micro contracts each strategy held open at one time in its test, times its multiplier, added up as if every strategy held its most at the same moment, times the margin per micro contract. The starting balance needed is that margin plus the most the account fell, within the day in the worst case.</p>
+          <p>The figures are after the commission and slippage in each test. Other fees and live fills are not included.</p>
           <p class="cx-must">A replay of hypothetical test results. Not a forecast.</p>
         </div>
       </div>

@@ -197,9 +197,13 @@
         '<article class="bx-plan bx-life" data-plan="lifetime" data-name="Lifetime" data-price="10000" data-kind="lifetime" data-rank="' + esc(topCard.dataset.rank) + '">' +
         '<div class="bx-life-main"><header><h3 class="bx-wm bx-tname">Lifetime</h3>' +
         '<p class="bx-plan-for">Pay once, with no monthly charge. Every strategy in every tier, and everything new the bots produce in future.</p>' +
-        '<p class="bx-life-note">Yours for life, with every update pushed to you automatically and ' + esc(topCard.dataset.name) + '\'s support and access.</p></header></div>' +
+        '<p class="bx-life-note">Yours for life, with every update pushed to you automatically and ' + esc(topCard.dataset.name) + '\'s support and access.</p>' +
+        // row E796 (the owner, 2026-11-21): Lifetime alone adds these two; no monthly tier offers a call or session (SD-158)
+        '<ul class="bx-inc bx-life-adds"><li>Premium support</li>' +
+        '<li>A one-on-one with the founder: help setting up your strategies and answers to your questions</li></ul></header></div>' +
         '<div class="bx-life-buy"><p class="bx-price"><span class="bx-amt">$10,000</span><span class="bx-per">once</span></p>' +
-        '<button class="btn btn-ghost bx-choose" type="button" data-choose="lifetime">Choose Lifetime</button></div>' +
+        '<button class="btn btn-ghost bx-choose" type="button" data-choose="lifetime">Choose Lifetime</button>' +
+        '<p class="bx-life-fine">No refund once paid.</p></div>' +
         '</article>');
     }
   }

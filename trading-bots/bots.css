@@ -265,6 +265,9 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bx-life{margin-top:12px}
 .bx-life-note{margin:0;color:var(--dim);font-size:14px;line-height:1.4}
 .bx-life-buy{display:flex;flex-direction:column;gap:12px}
+/* row E796: what Lifetime adds (a short list under its two lines) and its no-refund line (under its button) */
+.bx-life-adds{margin:10px 0 0;display:grid;gap:4px}
+.bx-life-fine{margin:-4px 0 0;color:var(--dim);font-size:13px;line-height:1.35;text-align:center}
 @media(max-width:999.98px){
   .bx-life>.bx-life-main,.bx-life>.bx-life-main>header,.bx-life>.bx-life-buy{display:contents}
   .bx-life h3{order:1;flex:0 1 auto}
@@ -272,6 +275,8 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
   .bx-life .bx-plan-for{order:3;flex:0 0 100%;margin-top:-7px}
   .bx-life .bx-life-note{order:3;flex:0 0 100%;margin-top:-8px}
   .bx-life .bx-choose{order:4}
+  .bx-life .bx-life-adds{order:3;flex:0 0 100%;margin-top:-2px}
+  .bx-life .bx-life-fine{order:5;flex:0 0 100%;margin-top:-6px}
 }
 .bx-rule{margin:20px 0 0;padding:18px 20px;border:1px solid var(--line);border-left:3px solid var(--red-edge);border-radius:10px;background:var(--bg2);max-width:860px}
 .bx-rule h3{font-size:19px;margin:0 0 6px}

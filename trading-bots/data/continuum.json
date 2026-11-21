@@ -49,6 +49,7 @@
   "trading_days": 231,
   "trade_frequency": 10.3896,
   "winners": 1716,
+  "max_contracts": 6,
   "monthly_profit_usd": 8967.41
  },
  "months": [

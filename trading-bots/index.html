@@ -14,6 +14,28 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/style.css">
 <link rel="stylesheet" href="bots.css">
+<style>
+/* row E795: the hero. Phone: title, video, words, buttons. Wide: words and buttons left, the video right. */
+.bx-hero-in{display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:"t" "v" "l" "c"}
+.bx-hero-in h1{grid-area:t;margin-bottom:18px}
+.bx-hero-fig{grid-area:v;margin:0 0 22px}
+.bx-hero-vid{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#000;aspect-ratio:900/616}
+/* row E799 (review E798 R1, WCAG 2.2.2): a visible, labelled pause/play button under the video, right-aligned */
+.bx-hero-pp{display:flex;justify-content:flex-end;margin:8px 0 0}
+.bx-hero-pp button{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--text);font:500 14px/1 var(--sans);cursor:pointer}
+.bx-hero-pp button[hidden]{display:none}
+.bx-hero-pp button:hover{border-color:var(--text)}
+.bx-hero-pp button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.bx-hero-pp button::before{content:"";width:10px;height:12px;background:currentColor;clip-path:polygon(0 0,100% 50%,0 100%)}
+.bx-hero-pp button[data-state="playing"]::before{clip-path:polygon(0 0,35% 0,35% 100%,0 100%,0 0,65% 0,100% 0,100% 100%,65% 100%,65% 0)}
+.bx-hero-vid video{display:block;width:100%;height:100%;object-fit:cover}
+.bx-hero-in .bx-lead{grid-area:l}
+.bx-hero-in .bx-cta{grid-area:c;margin:0}
+@media(min-width:900px){
+  .bx-hero-in{grid-template-columns:minmax(0,5fr) minmax(0,6fr);grid-template-rows:auto auto 1fr;grid-template-areas:"t v" "l v" "c v";column-gap:48px}
+  .bx-hero-fig{margin:0;align-self:center}
+}
+</style>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="All Fluence Trading">
 <meta property="og:title" content="All Fluence Trading — AFT Trading Bots">
@@ -49,16 +71,16 @@
 <main>
 
 <section class="bx-hero">
-  <div class="wrap">
-    <p class="bx-kicker">AFT Trading Bots</p>
-    <h1>Automated futures strategies for TradingView.</h1>
-    <p class="bx-lead">Rules-based strategies built on the All Fluence method, sold in four tiers. Open any strategy right where you are to read what it trades. Its record is shown there once its test is posted.</p>
+  <div class="wrap bx-hero-in">
+    <h1>AFT Trading Bots</h1>
+    <!-- row E795: the homepage's bots video, large, muted and looping; its source is set after first paint (script below).
+         Row E799: its own cropped copy, zoomed to the chart (the homepage keeps its file), and a pause/play button. -->
+    <div class="bx-hero-fig"><div class="bx-hero-vid"><video id="hero-vid" muted loop playsinline preload="none" width="1166" height="798" disablepictureinpicture aria-label="A strategy's trade playing out on a TradingView chart"
+      poster="/assets/video/bots-hero-poster.jpg"
+      data-src="/assets/video/bots-hero.mp4"></video></div>
+    <p class="bx-hero-pp"><button type="button" id="hero-pp" aria-controls="hero-vid" data-state="paused" hidden>Play video</button></p></div>
+    <p class="bx-lead">Automated futures strategies for TradingView, built by All Fluence Trading on its own method and found nowhere else: each is invite-only, and access comes only through All Fluence Trading. Sold in four tiers; open any strategy to read what it trades, and its record shows once its test is posted.</p>
     <p class="bx-cta"><a class="btn bx-btn-red btn-lg" href="#plans">See the tiers</a><a class="btn btn-ghost btn-lg" href="#strategies">See the strategies</a></p>
-    <ul class="bx-facts">
-      <li>Runs in TradingView on the 1-minute chart</li>
-      <li>Fixed rules on closed bars. Nothing repaints.</li>
-      <li>Sold separately from the All Fluence membership</li>
-    </ul>
   </div>
 </section>
 
@@ -270,7 +292,7 @@
       </details>
       <details>
         <summary>What does Lifetime include?</summary>
-        <p>Lifetime is one payment of $10,000 through Whop, with no monthly charge, and it is yours for life: every strategy in every tier, every new strategy and everything new the bots produce in future, every update pushed to you automatically, and Ultimate's support and access. No refunds once charged.</p>
+        <p>Lifetime is one payment of $10,000 through Whop, with no monthly charge, and it is yours for life: every strategy in every tier, every new strategy and everything new the bots produce in future, every update pushed to you automatically, Ultimate's support and access, premium support, and a one-on-one with the founder of All Fluence Trading: help setting up your strategies and answers to your questions. No refunds once charged.</p>
       </details>
       <details>
         <summary>Is this part of the All Fluence membership?</summary>
@@ -332,5 +354,26 @@
 <script src="bots-config.js"></script>
 <script src="data/catalog.js"></script>
 <script src="bots.js"></script>
+<script>
+/* row E795: the hero video. Its source is set after first paint; it plays muted and looping while on screen. With reduced
+   motion or Save-Data it shows the poster and a play control instead (nothing downloads until play is pressed).
+   Row E799: the button under it pauses and plays it at every width and says which it will do; a pause by the button
+   holds, so scrolling away and back does not restart it until the button is pressed again. */
+(function(){
+var v=document.getElementById('hero-vid');if(!v)return;
+var still=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches,c=navigator.connection||{};
+var b=document.getElementById('hero-pp'),held=false;
+function src(){if(!v.getAttribute('src'))v.src=v.getAttribute('data-src');}
+function play(){var p=v.play();if(p&&p.catch)p.catch(function(){v.controls=true;});}
+function say(){if(!b)return;var p=v.paused;b.textContent=p?'Play video':'Pause video';b.setAttribute('data-state',p?'paused':'playing');}
+if(b){v.addEventListener('play',say);v.addEventListener('pause',say);
+  b.addEventListener('click',function(){if(v.paused){held=false;src();play();}else{held=true;v.pause();}});
+  say();b.hidden=false;}
+if(still||c.saveData){v.controls=true;src();return;}
+var on=true;
+if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){on=e.isIntersecting;if(!v.getAttribute('src'))return;if(on&&!held)play();else if(!on)v.pause();});}).observe(v);}
+requestAnimationFrame(function(){setTimeout(function(){src();if(on&&!held)play();},0);});
+})();
+</script>
 </body>
 </html>
