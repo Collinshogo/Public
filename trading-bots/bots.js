@@ -29,7 +29,7 @@
 
   var CFG = window.AFT_BOTS_CONFIG || {};
   var CAT = window.AFT_BOTS_CATALOG || {};
-  // Row E754 (Collin, 2026-11-21): a coming-soon strategy is a catalog entry like any other that also carries
+  // Row E754 (2026-11-21): a coming-soon strategy is a catalog entry like any other that also carries
   // coming_soon: true. It is in the regular lists with the tag "Coming soon" beside its name (soonTag), and in its
   // tier's card when it has a tier. Its figures come only from its own data file; without one it reads as "No figures
   // published yet". Its instrument, when the catalog gives none, is the first word of its market line.
@@ -71,7 +71,7 @@
   var DOW = [['Su', 'Sunday'], ['Mo', 'Monday'], ['Tu', 'Tuesday'], ['We', 'Wednesday'], ['Th', 'Thursday'], ['Fr', 'Friday'], ['Sa', 'Saturday']];
   function hasDays(d) { return !!(d && d.days && d.days.length && d.months && d.months.length && d.test); }
   function calId(key, ym) { return key + '-cal-' + ym; }
-  var SHOWN = 2;   // months shown by day, the latest on top (Collin 2026-11-20, row E735)
+  var SHOWN = 2;   // months shown by day, the latest on top (2026-11-20, row E735)
   // One month of the Monthly P&L list. A record with days gets a button that shows that month's calendar; one without
   // draws exactly as before.
   function monthItem(d, m, words, key) {
@@ -236,9 +236,11 @@
     if (!lit(fin) && sh) t.removeChild(sh);
   }
   ladder.forEach(function (p, i) {
-    var n = ladder.length;
+    var n = ladder.length, hd = $('header', p.el);
     FIN[p.id] = i === 0 ? 'plain' : (i === n - 1 ? 'sheen' : (n >= 4 && i === n - 2 ? 'polished' : 'gradient'));
     wear(p, FIN[p.id]);
+    // Row E766: each tier card keeps its name and leads with its badge, "Tier n", as the strategy cards show it
+    if (hd && !$('.bx-plan-tier', hd)) hd.insertAdjacentHTML('afterbegin', '<span class="bx-plan-tl"><span class="bx-tier bx-plan-tier" data-lvl="' + FIN[p.id] + '">Tier ' + (n - i) + '</span></span>');
   });
   // The one-time plan is the top tier paid once. It has no finish of its own: its card and its title wear the
   // top tier's, so the top tier's own rules (bots.css) draw them, and it follows the top tier if the tiers change.
@@ -258,6 +260,10 @@
     if (!plans[tier]) return 'Tier not set';
     return 'Tier ' + grade(tier) + ' · ' + plans[tier].name + (plans[tier] === ladder[ladder.length - 1] ? '' : ' and up');
   }
+  // Row E766: wherever a strategy's tier is shown it is the card's badge, "Tier n" in its tier's finish; where the line
+  // also names what to buy, the tier card's name stands beside it.
+  function tierBadge(tier) { return plans[tier] ? '<span class="bx-tier" data-lvl="' + finish(tier) + '">Tier ' + grade(tier) + '</span>' : 'Tier not set'; }
+  function tierWith(tier) { return plans[tier] ? tierBadge(tier) + ' ' + esc(plans[tier].name) : 'Tier not set'; }
 
   // What a tier gives beyond its strategies. A tier's own lines are the items of the [data-perks] list in its card
   // (index.html), and a tier has every line of the tiers under it as well. Its card shows its own lines, marked as
@@ -346,14 +352,14 @@
     $('header', p.el).insertAdjacentHTML('afterend', '<p class="bx-save">Bought one by one: ' + dollars(all) + ' a month. You save ' + dollars(saved) + '.</p>');
   });
 
-  // Every named strategy's chip shows in its tier card (row E752: Collin, 2026-11-20, every posted strategy on the page).
+  // Every named strategy's chip shows in its tier card (row E752, 2026-11-20: every posted strategy on the page).
   $$('[data-tier-list]').forEach(function (ul) {
     var head = ul.previousElementSibling;
     if (!ul.children.length && head && head.classList.contains('bx-list-h')) head.hidden = true;   // nothing to list yet
     // Row E758: the heading promises access, so a list holding a coming-soon build says when that one joins.
     if (head && head.classList.contains('bx-list-h') && $('.bx-cs', ul)) head.insertAdjacentHTML('afterend', '<p class="bx-list-soon">Marked Coming soon: joins the tier at release.</p>');
   });
-  // The strategy cards. Row E763 (Collin, 2026-11-21; the director's example card): one title line (the name, the market
+  // The strategy cards. Row E763 (2026-11-21; the example card): one title line (the name, the market
   // code in a small chip, the badge "Tier n" at the right), one line of figures, the equity chart from the record's own
   // turning points with the total profit written on it; the max drawdown and the profit factor bottom left (row E760).
   // Every name on the grid takes one size, 16px or, where the widest name does not fit at 16px, the size at which it does
@@ -361,7 +367,7 @@
   // readers.
   function tierNo(s) { return plans[s.tier] ? 'Tier ' + (CAT.tiers.length - plans[s.tier].rank + 1) : gradeWords(s.tier); }
   function marketCode(s) { return s.chip || String(s.market_line || '').split(' \u00b7 ')[0]; }
-  // Row E761 (Collin, 2026-11-21): the grid runs by tier, tier 1 first, and within a tier by return on drawdown, highest
+  // Row E761 (2026-11-21): the grid runs by tier, tier 1 first, and within a tier by return on drawdown, highest
   // first; a coming-soon build sits in its tier by the same rule. A card with no tier or no figures comes after the ones
   // that have them; ties keep the catalog's order. Only this grid is ordered so: the Library keeps its own order.
   function byTier(list) {
@@ -462,7 +468,7 @@
     if (!p) {
       barPrice.hidden = true;
       if (own) {
-        barPlan.textContent = gradeWords(own.id);
+        barPlan.innerHTML = tierWith(own.id);
         barDetail.textContent = priceWords(own);
         setBtn('choose', 'Choose ' + own.name, '', own.id);
       } else {
@@ -471,7 +477,7 @@
         setBtn('tiers', 'See tiers');
       }
     } else {
-      barPlan.innerHTML = esc(p.name) + '<span class="bx-bp-price"> · ' + esc(priceWords(p)) + '</span>';
+      barPlan.innerHTML = (p.kind === 'monthly' ? tierBadge(p.id) + ' ' : '') + esc(p.name) + '<span class="bx-bp-price"> · ' + esc(priceWords(p)) + '</span>';
       barPrice.hidden = false;
       barPrice.innerHTML = p.price === null ? '<small class="bx-tbs-bar">' + TBS + '</small>'
         : '$' + p.price.toLocaleString('en-US') + '<small>' + (p.kind === 'lifetime' ? 'once' : 'a month') + '</small>';
@@ -482,7 +488,7 @@
       } else if (includes(p.id, openSlug)) {
         barDetail.textContent = '✓ Includes ' + nm;
       } else {
-        barDetail.textContent = nm + ': ' + gradeWords(own.id);
+        barDetail.innerHTML = esc(nm) + ': ' + tierBadge(own.id);
         barAlt.textContent = 'Switch to ' + own.name + (own.price === null ? '' : ' · $' + own.price.toLocaleString('en-US'));
         barAlt.dataset.plan = own.id;
         barAlt.hidden = false;
@@ -539,7 +545,7 @@
         sheetTitle.style.setProperty('--n', String(String(s.name).length + 6));
       }
     }
-    sheetK.textContent = gradeWords(tiers[slug]);
+    sheetK.innerHTML = tierBadge(tiers[slug]);
     sheetBody.innerHTML = '<p class="bx-note">Loading…</p>';
     render();
     backdrop.hidden = false;
@@ -616,14 +622,14 @@
   function has(v) { return v !== undefined && v !== null && v !== ''; }
 
   function renderPanel(d) {
-    var w = d.what || {}, tierName = gradeWords(tiers[d.slug]);
+    var w = d.what || {};
     var own = shown.filter(function (x) { return x.slug === d.slug; })[0] || {};
     var ownPrice = typeof own.price === 'number' && own.price > 0 ? dollars(own.price) + ' a month' : 'Price at release';
-    sheetK.textContent = (w.market_line ? w.market_line + ' · ' : '') + tierName;
+    sheetK.innerHTML = (w.market_line ? esc(w.market_line) + ' · ' : '') + tierBadge(tiers[d.slug]);
 
     var what = '<section class="bx-part"><h3>The strategy</h3>' +
       dl([['Market', has(w.market_line) && esc(w.market_line)], ['Chart', has(w.timeframe) && esc(w.timeframe)],
-        ['Tier', esc(tierName)], ['On its own', !isSoon(own) && esc(ownPrice)]]) + '</section>';   // row E758: a coming-soon build is not sold on its own, so no price of its own
+        ['Tier', tierWith(tiers[d.slug])], ['On its own', !isSoon(own) && esc(ownPrice)]]) + '</section>';   // row E758: a coming-soon build is not sold on its own, so no price of its own
 
     if (d.status !== 'figures') {
       sheetBody.innerHTML = '<div class="bx-nofig">' +
@@ -767,7 +773,7 @@
     box.dataset.w = w; box.dataset.h = hgt;
   }
 
-  // A card's quick highlights (Collin 2026-11-18, row E702): the record's own display figures, as the Strategy Library
+  // A card's quick highlights (2026-11-18, row E702): the record's own display figures, as the Strategy Library
   // table prints them, label over figure. The card carries no label words; the sheet and the Strategy Library keep them.
   function highlights(d) {
     if (d.status !== 'figures' || !d.figures || !d.figures.display) return '';

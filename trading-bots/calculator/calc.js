@@ -12,6 +12,11 @@
      both.
    - What the visitor chose is kept in the address after # so a view can be reopened. A value there that is not usable is
      reset to its starting value, and the page says which.
+   - Row E768: the picker names each strategy's return on drawdown and max drawdown; a panel under the picker and the size
+     control shows the record as tested and at the chosen multiple (the record's amounts times n, to the cent) and its max
+     drawdown against the loss limit typed; the compare view shows each max drawdown at the multiple. The form is shorter:
+     example accounts first, target and loss limit side by side, the kind as one switch, the other rules under "More
+     rules". Every input, its meaning and its default are as before.
    - Strategy names are lettered by the site's rule (bots.js, rows E728 and E704): a grade sets the tier, and a name wears
      its tier's finish only in the upper half of the tiers. */
 (function () {
@@ -22,7 +27,7 @@
   var MINUS = '−', DASH = '–';
   // Row E745 ruling 8 and row E746 ruling 13: the line every result stands beside, in both views.
   var MUST = 'A replay of hypothetical test results. Not a forecast, and not a chance of passing any account.';
-  // Row E737: the multiples of the tested results. Collin ruled on 2026-11-20 that the control stays (SCALES = [1] would remove it).
+  // Row E737: the multiples of the tested results. It was ruled on 2026-11-20 that the control stays (SCALES = [1] would remove it).
   var SCALES = [1, 2, 3, 4, 5];
   // Row E745 ruling 9: his names, in his order. The ids (and the address keys) are those of row E737.
   var KINDS = [
@@ -337,7 +342,19 @@
     var moving = st.k !== 'fixed';
     F.lock.disabled = !moving;
     $('#lock-row').classList.toggle('is-off', !moving);
-    $('#lock-hint').textContent = moving ? 'Once the limit has risen to the starting balance, it stays there.' : 'Only for the two drawdown kinds. A static limit never moves.';
+    $('#lock-hint').textContent = moving ? 'Usual on funded accounts only. Once the limit has risen to the starting balance, it stays there.' : 'Only for the two drawdown kinds. A static limit never moves.';
+    var kd = KINDS.filter(function (x) { return x.id === st.k; })[0];
+    $('#kind-note').textContent = kd ? kd.name + ': ' + kd.note.charAt(0).toLowerCase() + kd.note.slice(1) : '';
+    moreCount();
+  }
+  // Row E768: the rules under "More rules" that are on, named on the closed control.
+  function moreCount() {
+    var on = [];
+    if (st.lock && st.k !== 'fixed') on.push('starting balance');
+    if (st.dlOn) on.push('daily loss limit');
+    if (st.cpOn) on.push('consistency');
+    if (st.md) on.push('minimum days');
+    $('#more-n').textContent = on.length ? on.length + ' on: ' + on.join(', ') : '';
   }
 
   /* ---------- drawing helpers ---------- */
@@ -611,6 +628,54 @@
     return cap.join(' · ');
   }
 
+  /* ---------- row E768: the record as tested and at the chosen multiple ---------- */
+  function recFig(rec) {   // the record's own figures in whole cents; return on drawdown as the record writes it
+    var f = (rec.d && rec.d.figures) || {}, d = f.display || {};
+    function c(v) { return typeof v === 'number' && isFinite(v) ? cents(v) : null; }
+    return { net: c(f.net_profit_usd), dd: c(f.max_drawdown_usd), mon: c(f.monthly_profit_usd),
+      rod: d.return_on_drawdown ? String(d.return_on_drawdown) : (typeof f.return_on_drawdown === 'number' ? f.return_on_drawdown.toFixed(2) : null) };
+  }
+  function times(c, k) { return c === null ? null : c * k; }
+  function amt(c, signed) { return c === null ? DASH : moneyFull(c, signed); }
+  function tone(c) { return c === null || c === 0 ? '' : (c > 0 ? 'bx-pos' : 'bx-neg'); }
+  function atWords(k) { return 'At ' + k + '\u00d7'; }
+  // Row E776 (review E774 R2): the closed picker shows the strategy's name only (and its Coming soon mark); the open list
+  // keeps name, RoDD and max drawdown (optText), and the panel under it shows both.
+  function pickName(rec) { return rec.s.name + (rec.s.coming_soon === true ? ' (Coming soon)' : ''); }
+  function optText(rec) {
+    var g = recFig(rec), s = rec.s;
+    return s.name + (s.coming_soon === true ? ' (Coming soon)' : '') + (g.rod ? ' \u00b7 RoDD ' + g.rod : '') + (g.dd !== null ? ' \u00b7 Max DD ' + moneyFull(g.dd) : '');
+  }
+  // Row E776 (review E774 C1): the two amounts only. The record's max drawdown is not measured the way the replay applies
+  // the chosen kind of loss limit, so no verdict is drawn from it; the replay, which applies the kind, says how many starts hit it.
+  function limitLine(g, k) {
+    var x = times(g.dd, k), lim = readMoney(F.limit.value);
+    if (x === null) return '';
+    return 'Largest drawdown in the test at ' + k + '\u00d7: ' + moneyFull(x) + '; your loss limit: ' + (lim.err ? DASH : money(lim.c)) +
+      '. The replay shows how many starts hit it.';
+  }
+  function drawMx(rec, k) {
+    var g = recFig(rec), ll = limitLine(g, k);
+    var rows = [
+      ['Total profit', 'net', amt(g.net, true), amt(times(g.net, k), true), tone(g.net)],
+      ['Max drawdown', 'dd', amt(g.dd), amt(times(g.dd, k)), ''],
+      ['Avg per month', 'mon', amt(g.mon, true), amt(times(g.mon, k), true), tone(g.mon)],
+      ['RoDD', 'rod', g.rod || DASH, g.rod || DASH, '']
+    ];
+    $('#mx').innerHTML = '<h3 class="cx-mx-h" id="mx-h">Its tested record</h3>' +
+      '<table class="cx-mxt"><thead><tr><td></td><th scope="col">As tested</th><th scope="col">' + atWords(k) + '</th></tr></thead><tbody>' +
+      rows.map(function (r) {
+        return '<tr data-row="' + r[1] + '"><th scope="row">' + r[0] + '</th><td class="' + r[4] + '">' + r[2] + '</td><td class="' + r[4] + '">' + r[3] + '</td></tr>';
+      }).join('') + '</tbody></table>' +
+      '<p class="cx-mxn" id="mx-n">Hypothetical backtest results. ' + atWords(k) + ': every day times ' + k +
+        '. RoDD, return on drawdown (total profit \u00f7 max drawdown), is the same at any scale.</p>' +
+      (ll ? '<p class="cx-mxl" id="mx-l">' + esc(ll) + '</p>' : '');
+  }
+  function mxShort(rec, k) {   // the same in one line, repeated by the result line on a phone
+    var g = recFig(rec);
+    return (k === 1 ? 'As tested' : atWords(k)) + ': total profit ' + amt(times(g.net, k), true) + ' \u00b7 max drawdown ' + amt(times(g.dd, k)) + ' \u00b7 RoDD ' + (g.rod || DASH);
+  }
+
   /* ---------- the compare view ---------- */
   // Row E745 ruling 7: success rate (of finished starts), hit the loss limit, did not finish, average days.
   var sortBy = { key: 'rate', dir: -1 };
@@ -618,13 +683,14 @@
     { key: 'rate', label: 'Success rate' },
     { key: 'limit', label: 'Hit the loss limit' },
     { key: 'open', label: 'Did not finish' },
-    { key: 'avg', label: 'Average days' }
+    { key: 'avg', label: 'Average days' },
+    { key: 'dd', label: 'Max drawdown' }   // row E768: at the chosen multiple
   ];
   function nullLast(x, y, dir) { return x === null && y === null ? 0 : x === null ? 1 : y === null ? -1 : dir * (x - y); }
   function drawCompare(R, k) {
     var rows = order.map(function (slug) {
       var rec = recs[slug], t = tally(run(rec, k, R, false), rec.dates), h = runHarsh(rec, k, R);
-      return { slug: slug, rec: rec, t: t, h: h, rate: t.rate, limit: t.fin ? t.limit / t.fin : null, open: t.open, avg: t.avgT };
+      return { slug: slug, rec: rec, t: t, h: h, rate: t.rate, limit: t.fin ? t.limit / t.fin : null, open: t.open, avg: t.avgT, dd: times(recFig(rec).dd, k) };
     });
     rows.sort(function (a, b) {
       if (sortBy.key === 'name') return sortBy.dir * a.rec.s.name.localeCompare(b.rec.s.name);
@@ -642,14 +708,15 @@
     Array.prototype.forEach.call(tb, function (x) { x.parentNode.removeChild(x); });
     var html = rows.map(function (r) {
       var t = r.t, hs = harshShows(t, r.h, R.kind);
-      return '<tbody data-slug="' + esc(r.slug) + '"><tr class="cx-cn"><th scope="rowgroup" colspan="4"><button type="button" class="cx-open" data-open="' + esc(r.slug) + '">' + nameSpan(r.rec.s) +
+      return '<tbody data-slug="' + esc(r.slug) + '"><tr class="cx-cn"><th scope="rowgroup" colspan="5"><button type="button" class="cx-open" data-open="' + esc(r.slug) + '">' + nameSpan(r.rec.s) +
         '<span class="cx-cn-m">' + esc(r.rec.s.market_line || '') + ' · ' + plural(t.n, 'start day', 'start days') + '</span><span class="bx-vh">, open it in the one-strategy view</span></button></th></tr>' +
         '<tr class="cx-cv">' +
         '<td class="is-t"><b>' + rateText(t) + '</b><small>' + (t.fin ? num(t.target) + ' of ' + num(t.fin) + ' finished' : 'none finished') + '</small>' + bar(t.target, t.fin, COL.target) +
           (hs ? '<small class="cx-harsh-s">' + esc(harshShort(r.h)) + '</small>' : '') + '</td>' +
         '<td class="is-l"><b>' + num(t.limit) + '</b><small>' + (t.fin ? pct(t.limit, t.fin) + '% of finished' : 'none finished') + '</small>' + bar(t.limit, t.fin, COL.limit) + '</td>' +
         '<td class="is-o"><b>' + num(t.open) + '</b><small>not counted</small></td>' +
-        '<td class="is-m"><b>' + (t.avgT === null ? DASH : tenths(t.avgT)) + '</b><small>' + (t.avgT === null ? 'none reached' : 'trading days') + '</small></td></tr></tbody>';
+        '<td class="is-m"><b>' + (t.avgT === null ? DASH : tenths(t.avgT)) + '</b><small>' + (t.avgT === null ? 'none reached' : 'trading days') + '</small></td>' +
+        '<td class="is-d"><b>' + amt(r.dd) + '</b><small>' + (k === 1 ? 'as tested' : 'at ' + k + '\u00d7') + '</small></td></tr></tbody>';
     }).join('');
     $('#cmp').insertAdjacentHTML('beforeend', html);
   }
@@ -660,6 +727,10 @@
     var t0 = (window.performance && performance.now) ? performance.now() : 0;
     var bad = readAll();
     var out = $('#out');
+    moreCount();
+    if (bad.some(function (b) { return /^(Daily|Consistency|Minimum)/.test(b); })) $('#more').open = true;
+    if (recs[st.s]) $('#pick-name').textContent = pickName(recs[st.s]);
+    if (st.v !== 'compare' && recs[st.s]) drawMx(recs[st.s], st.x);
     if (bad.length) {
       out.classList.add('is-stale');
       $('#msum').classList.add('is-stale');
@@ -687,7 +758,7 @@
       drawHist(cur.tal);
       drawWL(rec, k);
       var t = cur.tal;
-      $('#msum').innerHTML = '<b>' + rateText(t) + '</b> success rate · ' + num(t.target) + ' reached the target · ' + num(t.limit) + ' hit the loss limit · ' +
+      $('#msum').innerHTML = '<span class="cx-msum-mx">' + esc(mxShort(rec, k)) + '</span><b>' + rateText(t) + '</b> success rate · ' + num(t.target) + ' reached the target · ' + num(t.limit) + ' hit the loss limit · ' +
         num(t.open) + ' did not finish · ' + (t.avgT === null ? 'no average time' : 'average ' + tenths(t.avgT) + ' trading days') +
         (harshShows(t, cur.tal2, R.kind) ? ' · <span class="cx-harsh-s">' + esc(harshShort(cur.tal2)) + '</span>' : '') + '. <button type="button" class="cx-jump">See it drawn</button>' +
         '<span class="cx-must cx-must-s">' + MUST + '</span>';
@@ -704,6 +775,7 @@
     $('#tab-cmp').setAttribute('aria-selected', String(!one)); $('#tab-cmp').tabIndex = one ? -1 : 0;
     $('#view-one').hidden = !one; $('#view-cmp').hidden = one;
     $('#pick-fld').hidden = !one;
+    $('#mx').hidden = !one;
     render(one);
     if (focus) (one ? $('#tab-one') : $('#tab-cmp')).focus();
   }
@@ -711,16 +783,16 @@
   /* ---------- start ---------- */
   function build() {
     F = { pick: $('#pick'), target: $('#target'), limit: $('#limit'), lock: $('#lock'), dlOn: $('#dl-on'), dl: $('#dl'), cpOn: $('#cp-on'), cp: $('#cp'), md: $('#md'), scale: null };
-    F.pick.innerHTML = order.map(function (slug) { return '<option value="' + esc(slug) + '">' + esc(recs[slug].s.name) + (recs[slug].s.coming_soon === true ? ' (Coming soon)' : '') + '</option>'; }).join('');
+    F.pick.innerHTML = order.map(function (slug) { return '<option value="' + esc(slug) + '">' + esc(optText(recs[slug])) + '</option>'; }).join('');
     $('#kinds').innerHTML = KINDS.map(function (kd) {
-      return '<label class="cx-radio"><input type="radio" name="kind" value="' + kd.id + '"><span><b>' + esc(kd.name) + '</b><small>' + esc(kd.note) + '</small></span></label>';
+      return '<label class="cx-sgo"><input type="radio" name="kind" value="' + kd.id + '" aria-describedby="kind-note"><span>' + esc(kd.name) + '</span></label>';
     }).join('');
     $('#examples').innerHTML = EXAMPLES.map(function (e, i) {
-      return '<button type="button" class="btn btn-ghost btn-sm" data-ex="' + i + '" aria-label="Example numbers, ' + esc(e.label) + ': target ' + money(e.t) + ', loss limit ' + money(e.l) + '">' + esc(e.label) + '<small>' + money(e.t) + ' / ' + money(e.l) + '</small></button>';
+      return '<button type="button" class="btn btn-ghost btn-sm" data-ex="' + i + '" aria-label="Example numbers, ' + esc(e.label) + ': target ' + money(e.t) + ', loss limit ' + money(e.l) + '">' + esc(e.label.replace(' account', '')) + '<small>' + money(e.t) + ' / ' + money(e.l) + '</small></button>';
     }).join('');
     if (SCALES.length > 1) {
       F.scale = $('#scale');
-      F.scale.innerHTML = SCALES.map(function (x) { return '<option value="' + x + '">' + (x === 1 ? 'As tested' : x + ' × the tested results') + '</option>'; }).join('');
+      F.scale.innerHTML = SCALES.map(function (x) { return '<option value="' + x + '">' + (x === 1 ? 'As tested' : x + ' × tested') + '</option>'; }).join('');
       $('#scale-fld').hidden = false;
     }
     var form = $('#rules');
@@ -759,7 +831,7 @@
       var s = e.target.closest('button[data-sort]'), o = e.target.closest('button[data-open]');
       if (s) {
         var key = s.dataset.sort;
-        sortBy = sortBy.key === key ? { key: key, dir: -sortBy.dir } : { key: key, dir: key === 'name' || key === 'avg' || key === 'limit' || key === 'open' ? 1 : -1 };
+        sortBy = sortBy.key === key ? { key: key, dir: -sortBy.dir } : { key: key, dir: key === 'name' || key === 'avg' || key === 'limit' || key === 'open' || key === 'dd' ? 1 : -1 };
         render(false);
         var again = $('#view-cmp button[data-sort="' + key + '"]');
         if (again) again.focus();

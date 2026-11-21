@@ -54,67 +54,75 @@
 
       <div class="cx-fld" id="pick-fld">
         <label for="pick">Strategy</label>
-        <select id="pick"></select>
+        <div class="cx-pickbox"><select id="pick"></select><span class="cx-pickname" id="pick-name" aria-hidden="true"></span></div>
         <p class="cx-cap" id="pick-cap"></p>
       </div>
 
+      <div class="cx-fld cx-inl" id="scale-fld" hidden>
+        <label for="scale">Scale of the results</label>
+        <select id="scale" aria-describedby="mx-n"></select>
+      </div>
+
+      <!-- Row E768: the chosen strategy's record as tested and at the chosen multiple, by the picker and the size control. -->
+      <div class="cx-mx" id="mx" role="group" aria-labelledby="mx-h"></div>
+
       <div class="cx-ex" role="group" aria-labelledby="ex-h">
-        <p class="cx-ex-h" id="ex-h">Example numbers. Type your own account's rules.</p>
+        <p class="cx-ex-h" id="ex-h">Example accounts. Type your own if they differ.</p>
         <div class="cx-ex-b" id="examples"></div>
       </div>
 
-      <div class="cx-fld">
-        <label for="target">Profit target</label>
-        <div class="cx-money"><span aria-hidden="true">$</span><input id="target" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="target-err"></div>
-        <p class="cx-err" id="target-err" hidden></p>
-      </div>
+      <div class="cx-two">
+        <div class="cx-fld">
+          <label for="target">Profit target</label>
+          <div class="cx-money"><span aria-hidden="true">$</span><input id="target" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="target-err"></div>
+          <p class="cx-err" id="target-err" hidden></p>
+        </div>
 
-      <div class="cx-fld">
-        <label for="limit">Loss limit</label>
-        <div class="cx-money"><span aria-hidden="true">$</span><input id="limit" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="limit-err"></div>
-        <p class="cx-err" id="limit-err" hidden></p>
+        <div class="cx-fld">
+          <label for="limit">Loss limit</label>
+          <div class="cx-money"><span aria-hidden="true">$</span><input id="limit" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="limit-err"></div>
+          <p class="cx-err" id="limit-err" hidden></p>
+        </div>
       </div>
 
       <fieldset class="cx-kind">
         <legend>How the loss limit moves</legend>
-        <div id="kinds"></div>
+        <div class="cx-segs" id="kinds"></div>
+        <p class="cx-hint" id="kind-note"></p>
       </fieldset>
 
-      <div class="cx-sw" id="lock-row">
-        <label class="cx-check"><input type="checkbox" id="lock" aria-describedby="lock-use lock-hint"><span>Stops rising at the starting balance</span></label>
-        <p class="cx-hint cx-hint-b" id="lock-use">Usual on funded accounts only.</p>
-        <p class="cx-hint" id="lock-hint">For the two drawdown kinds: once the limit has risen to the starting balance, it stays there.</p>
-      </div>
+      <details class="cx-more" id="more">
+        <summary><span>More rules</span> <small id="more-n"></small></summary>
 
-      <div class="cx-opt">
-        <label class="cx-check"><input type="checkbox" id="dl-on" aria-controls="dl-box"><span>Daily loss limit</span></label>
-        <div class="cx-fld cx-sub" id="dl-box" hidden>
-          <label for="dl">A day that falls this far stops trading until the next day</label>
-          <div class="cx-money"><span aria-hidden="true">$</span><input id="dl" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="dl-err"></div>
-          <p class="cx-err" id="dl-err" hidden></p>
+        <div class="cx-sw" id="lock-row">
+          <label class="cx-check"><input type="checkbox" id="lock" aria-describedby="lock-hint"><span>Stops rising at the starting balance</span></label>
+          <p class="cx-hint" id="lock-hint">Usual on funded accounts only. Once the limit has risen to the starting balance, it stays there.</p>
         </div>
-      </div>
 
-      <div class="cx-opt">
-        <label class="cx-check"><input type="checkbox" id="cp-on" aria-controls="cp-box"><span>Consistency rule</span></label>
-        <div class="cx-fld cx-sub" id="cp-box" hidden>
-          <label for="cp">No day may make more than this share of the profit target. A day that gets there stops trading until the next day.</label>
-          <div class="cx-money cx-pct"><input id="cp" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" aria-describedby="cp-err"><span aria-hidden="true">%</span></div>
-          <p class="cx-err" id="cp-err" hidden></p>
+        <div class="cx-opt">
+          <label class="cx-check"><input type="checkbox" id="dl-on" aria-controls="dl-box"><span>Daily loss limit</span></label>
+          <div class="cx-fld cx-sub" id="dl-box" hidden>
+            <label for="dl">A day that falls this far stops until the next day</label>
+            <div class="cx-money"><span aria-hidden="true">$</span><input id="dl" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="dl-err"></div>
+            <p class="cx-err" id="dl-err" hidden></p>
+          </div>
         </div>
-      </div>
 
-      <div class="cx-fld">
-        <label for="md">Minimum trading days before the target counts</label>
-        <input id="md" class="cx-num" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" aria-describedby="md-err">
-        <p class="cx-err" id="md-err" hidden></p>
-      </div>
+        <div class="cx-opt">
+          <label class="cx-check"><input type="checkbox" id="cp-on" aria-controls="cp-box"><span>Consistency rule</span></label>
+          <div class="cx-fld cx-sub" id="cp-box" hidden>
+            <label for="cp">The largest share of the target one day may make; a day that gets there stops until the next day</label>
+            <div class="cx-money cx-pct"><input id="cp" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" aria-describedby="cp-err"><span aria-hidden="true">%</span></div>
+            <p class="cx-err" id="cp-err" hidden></p>
+          </div>
+        </div>
 
-      <div class="cx-fld" id="scale-fld" hidden>
-        <label for="scale">Scale of the results</label>
-        <select id="scale"></select>
-        <p class="cx-hint">Every day's numbers multiplied.</p>
-      </div>
+        <div class="cx-fld cx-opt">
+          <label for="md">Minimum trading days before the target counts</label>
+          <input id="md" class="cx-num" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" aria-describedby="md-err">
+          <p class="cx-err" id="md-err" hidden></p>
+        </div>
+      </details>
       <p class="cx-note" id="addr-note" role="status" hidden></p>
       <p class="cx-msum" id="msum" hidden></p>
     </form>
@@ -173,7 +181,7 @@
         <p class="cx-sub-l">The success rate counts the starts that finished. Choose a heading to sort; choose a strategy to open it.</p>
         <div class="cx-sort" id="cmp-sort"></div>
         <table class="cx-cmp" id="cmp">
-          <caption class="bx-vh">Every strategy with figures, replayed through the rules above. For each: the success rate (the share of the starts that finished that reached the target), the starts that hit the loss limit, the starts that did not finish before the test ended, and the average trading days to the target.</caption>
+          <caption class="bx-vh">Every strategy with figures, replayed through the rules above. For each: the success rate (the share of the starts that finished that reached the target), the starts that hit the loss limit, the starts that did not finish before the test ended, the average trading days to the target, and the largest drawdown in its test at the chosen scale.</caption>
           <thead><tr id="cmp-head"></tr></thead>
         </table>
         <p class="cx-must">A replay of hypothetical test results. Not a forecast, and not a chance of passing any account.</p>

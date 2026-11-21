@@ -8,9 +8,9 @@
 // grade is the strategy's grade, 1 (the strongest) to 4. null = it follows tier (base 4, select 3, supreme 2, ultimate 1).
 // A grade that is set decides the tier: 1 ultimate, 2 supreme, 3 select, 4 base.
 // tier may also be null: the tier is not set yet. Such a strategy shows "Tier not set", belongs to no plan, and appears on no
-// tier card and in no plan's savings. Only Collin sets a tier.
+// tier card and in no plan's savings. The tier is set in the catalog: no figure and no rule sets it.
 // tv_url is the strategy's public TradingView script page. The Strategies page lists only the entries that have one.
-// price is what the strategy costs on its own, in US dollars a month. null = "Price at release". Only Collin sets a price.
+// price is what the strategy costs on its own, in US dollars a month. null = "Price at release". A price is set only by the owner.
 // tiers repeats each tier card of index.html, so the Strategies page can show the same tiers; aft_bots_publish.py refuses
 // to run if the two differ.
 // Each named strategy also needs its data file beside this one: data/<slug>.json, written by aft_bots_publish.py.
@@ -216,7 +216,6 @@ window.AFT_BOTS_CATALOG = {
       name: "The Ingot",
       tv_url: "https://www.tradingview.com/script/UNIo4H1s-The-Ingot-AFT/",
       tier: "base",
-      tier_by: "collin",
       grade: 4,
       price: 97,
       chip: "MGC",
@@ -242,7 +241,6 @@ window.AFT_BOTS_CATALOG = {
       market_line: "MNQ · Micro Nasdaq",
       timeframe: "1-minute chart",
       tier: "base",
-      tier_by: "collin",
       grade: 4,
       price: 97
     },
@@ -303,7 +301,6 @@ window.AFT_BOTS_CATALOG = {
       market_line: "MGC · Micro Gold",
       timeframe: "1-minute chart",
       tier: "base",
-      tier_by: "collin",
       grade: 4,
       price: 97
     }

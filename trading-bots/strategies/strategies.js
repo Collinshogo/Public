@@ -186,7 +186,7 @@
   function rowHtml(r) {
     var s = r.s;
     return '<tr class="bx-row" data-slug="' + esc(s.slug) + '">' +
-      '<th scope="row" class="bx-c-name"><button type="button" class="bx-r-open" aria-expanded="false">' + '<span class="bx-r-id">' + A.nameSpan(s) + '<span class="bx-r-sub">' + (s.chip ? esc(s.chip) + ' · ' : '') + (r.g === null ? 'Tier not set' : 'Tier ' + r.g) + '</span></span><span class="bx-r-chev" aria-hidden="true">›</span></button></th>' +
+      '<th scope="row" class="bx-c-name"><button type="button" class="bx-r-open" aria-expanded="false">' + '<span class="bx-r-id">' + A.nameSpan(s) + '<span class="bx-r-sub">' + (s.chip ? esc(s.chip) + ' ' : '') + (r.g === null ? 'Tier not set' : '<span class="bx-tier" data-lvl="' + A.finish(s.tier) + '">Tier ' + r.g + '</span>') + '</span></span><span class="bx-r-chev" aria-hidden="true">›</span></button></th>' +
       '<td class="bx-c-inst">' + (s.chip ? esc(s.chip) : NONE) + '</td>' +
       '<td class="bx-c-tier"><span class="bx-tier" data-lvl="' + A.finish(s.tier) + '">' + (r.g === null ? 'Tier not set' : 'Tier ' + r.g) + '</span></td>' +
       COLS.filter(function (c) { return c.f; }).map(function (c) { return cell(r, c); }).join('') +
