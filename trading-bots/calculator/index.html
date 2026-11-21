@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Account rules calculator | AFT Trading Bots | All Fluence Trading</title>
+<title>Trading bot risk calculator | AFT Trading Bots | All Fluence Trading</title>
 <link rel="canonical" href="https://allfluencetrading.com/trading-bots/calculator/">
 <meta name="robots" content="noindex, follow">
 <meta name="theme-color" content="#0e0f16">
@@ -41,7 +41,11 @@
   <div class="wrap">
     <p class="bx-kicker"><a href="../">AFT Trading Bots</a></p>
     <p class="cx-label" id="label">Hypothetical backtest</p>
-    <h1>Account rules calculator</h1>
+    <h1>Trading bot risk calculator</h1>
+    <div class="cx-notice" id="notice">
+      <p>Results are based on hypothetical backtests on historical data. They are not a guarantee of future performance, but can be used as a reference to gauge potential risk.</p>
+      <p>This calculator does not constitute financial advice. All information here is strictly informational and for entertainment purposes only.</p>
+    </div>
     <p class="bx-s-lead">Type your account's rules and replay a strategy's tested days through them, starting from every day it traded.</p>
   </div>
 </section>
@@ -52,26 +56,52 @@
     <form class="cx-rules" id="rules" aria-labelledby="rules-h" novalidate>
       <h2 class="cx-h2" id="rules-h">Your account's rules</h2>
 
-      <div class="cx-fld" id="pick-fld">
-        <label for="pick">Strategy</label>
-        <div class="cx-pickbox"><select id="pick"></select><span class="cx-pickname" id="pick-name" aria-hidden="true"></span></div>
+      <!-- Row E780: the Account type choice; the Live account mode keeps the Multiplier and has its own boxes. -->
+      <div class="cx-fld cx-acct" id="acct-fld">
+        <label for="acct">Account type</label>
+        <select id="acct"><option value="prop">Prop firm account</option><option value="live">Live account</option></select>
+      </div>
+
+      <fieldset class="cx-kind cx-lp cx-live" id="live-pick">
+        <legend>Choose up to three strategies, one per market</legend>
+        <div class="cx-fld cx-inl"><label for="lp-MNQ">MNQ</label><select id="lp-MNQ"></select></div>
+        <div class="cx-fld cx-inl"><label for="lp-MES">MES</label><select id="lp-MES"></select></div>
+        <div class="cx-fld cx-inl"><label for="lp-MGC">MGC</label><select id="lp-MGC"></select></div>
+        <p class="cx-hint">One strategy per market, all in the same account. Each trades at its tested size times the Multiplier.</p>
+      </fieldset>
+
+      <div class="cx-fld cx-prop" id="pick-fld">
+        <label for="pick">Choose a strategy</label>
+        <select id="pick"></select>
         <p class="cx-cap" id="pick-cap"></p>
       </div>
 
       <div class="cx-fld cx-inl" id="scale-fld" hidden>
-        <label for="scale">Scale of the results</label>
+        <label for="scale">Multiplier</label>
         <select id="scale" aria-describedby="mx-n"></select>
       </div>
 
       <!-- Row E768: the chosen strategy's record as tested and at the chosen multiple, by the picker and the size control. -->
-      <div class="cx-mx" id="mx" role="group" aria-labelledby="mx-h"></div>
+      <div class="cx-mx cx-prop" id="mx" role="group" aria-labelledby="mx-h"></div>
 
-      <div class="cx-ex" role="group" aria-labelledby="ex-h">
+      <div class="cx-fld cx-live">
+        <label for="ld">Start date</label>
+        <select id="ld"></select>
+        <p class="cx-cap" id="ld-cap"></p>
+      </div>
+
+      <div class="cx-fld cx-live">
+        <label for="lb">Starting balance</label>
+        <div class="cx-money"><span aria-hidden="true">$</span><input id="lb" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="lb-err"></div>
+        <p class="cx-err" id="lb-err" hidden></p>
+      </div>
+
+      <div class="cx-ex cx-prop" role="group" aria-labelledby="ex-h">
         <p class="cx-ex-h" id="ex-h">Example accounts. Type your own if they differ.</p>
         <div class="cx-ex-b" id="examples"></div>
       </div>
 
-      <div class="cx-two">
+      <div class="cx-two cx-prop">
         <div class="cx-fld">
           <label for="target">Profit target</label>
           <div class="cx-money"><span aria-hidden="true">$</span><input id="target" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="target-err"></div>
@@ -85,13 +115,13 @@
         </div>
       </div>
 
-      <fieldset class="cx-kind">
+      <fieldset class="cx-kind cx-prop">
         <legend>How the loss limit moves</legend>
         <div class="cx-segs" id="kinds"></div>
         <p class="cx-hint" id="kind-note"></p>
       </fieldset>
 
-      <details class="cx-more" id="more">
+      <details class="cx-more cx-prop" id="more">
         <summary><span>More rules</span> <small id="more-n"></small></summary>
 
         <div class="cx-sw" id="lock-row">
@@ -118,23 +148,23 @@
         </div>
 
         <div class="cx-fld cx-opt">
-          <label for="md">Minimum trading days before the target counts</label>
+          <label for="md">Required days to pass</label>
           <input id="md" class="cx-num" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" aria-describedby="md-err">
           <p class="cx-err" id="md-err" hidden></p>
         </div>
       </details>
       <p class="cx-note" id="addr-note" role="status" hidden></p>
-      <p class="cx-msum" id="msum" hidden></p>
+      <p class="cx-msum cx-prop" id="msum" hidden></p>
     </form>
 
     <div class="cx-out" id="out">
-      <div class="cx-tabs" role="tablist" aria-label="Views">
+      <div class="cx-tabs cx-prop" role="tablist" aria-label="Views">
         <button type="button" role="tab" id="tab-one" aria-controls="view-one" aria-selected="true">One strategy</button>
         <button type="button" role="tab" id="tab-cmp" aria-controls="view-cmp" aria-selected="false" tabindex="-1">Compare all</button>
       </div>
-      <p class="cx-status" id="status" role="status" aria-live="polite"></p>
+      <p class="cx-status cx-prop" id="status" role="status" aria-live="polite"></p>
 
-      <div class="cx-view" id="view-one" role="tabpanel" aria-labelledby="tab-one" tabindex="-1">
+      <div class="cx-view cx-prop" id="view-one" role="tabpanel" aria-labelledby="tab-one" tabindex="-1">
         <h2 class="cx-name" id="one-name"></h2>
         <div class="cx-top">
           <div class="cx-card cx-dial-card" id="dial"></div>
@@ -153,8 +183,8 @@
         </div>
 
         <div class="cx-card" id="cal-card">
-          <h3 class="cx-h3">The start days</h3>
-          <p class="cx-sub-l">Each traded day is a start. Its colour is how that start ended.</p>
+          <h3 class="cx-h3">The trading days</h3>
+          <p class="cx-sub-l" id="cal-sub">Each square is one trading day in the test, coloured by what happened that day: red, accounts were blown that day (the number in the square is how many); green, none was.</p>
           <ul class="cx-legend" id="cal-legend"></ul>
           <div class="cx-cals" id="cals"></div>
         </div>
@@ -169,22 +199,46 @@
         <div class="cx-how">
           <h3 class="cx-h3">How this is worked out</h3>
           <p id="how-p">Every traded day is a start: the replay runs the strategy's tested days from each one, in order. Each day is replayed along its own ups and downs, from one turning point to the next. The test does not record whether a trade's best or worst point came first. The main result takes the worst point first in a trade that closed at a profit and the best point first in any other trade. The second result takes the best point first in every trade. Without a consistency rule, the second result is never the higher of the two. With a consistency rule on, it can be. Where trades overlap, they are taken one after another in the order they closed.</p>
-          <p>The loss limit is Static, a Trailing drawdown or an End-of-day drawdown, as chosen above. A daily loss limit stops that day at the limit, and a consistency rule stops a day at its share of the target; the account trades again the next day.</p>
-          <p>The success rate counts the starts that finished: those that reached the target and those that hit the loss limit. Starts that did not finish before the test ended are not counted in the rate. The account's own fees are not counted; commission and slippage are as in the test. Rules differ from account to account, so type your own.</p>
+          <p id="how-rules">The loss limit is Static, a Trailing drawdown or an End-of-day drawdown, as chosen above.</p>
+          <p>The success rate counts passed and blown accounts; accounts still in progress when the test ended are left out. The ring shows all three: green passed, red blown, grey in progress. Days to the target are calendar days, from the start day to the day the target was reached, both counted; the required-days rule and the lines chart count days with trades. The account's own fees are not counted; commission and slippage are as in the test. Rules differ from account to account, so type your own.</p>
           <p class="cx-must">A replay of hypothetical test results. Not a forecast, and not a chance of passing any account.</p>
         </div>
       </div>
 
-      <div class="cx-view" id="view-cmp" role="tabpanel" aria-labelledby="tab-cmp" tabindex="-1" hidden>
+      <div class="cx-view cx-prop" id="view-cmp" role="tabpanel" aria-labelledby="tab-cmp" tabindex="-1" hidden>
         <h2 class="cx-name">Every strategy under these rules</h2>
         <p class="cx-must cx-must-top">A replay of hypothetical test results. Not a forecast, and not a chance of passing any account.</p>
-        <p class="cx-sub-l">The success rate counts the starts that finished. Choose a heading to sort; choose a strategy to open it.</p>
+        <p class="cx-sub-l">The success rate counts passed and blown accounts, not those in progress. Choose a heading to sort; choose a strategy to open it.</p>
         <div class="cx-sort" id="cmp-sort"></div>
         <table class="cx-cmp" id="cmp">
-          <caption class="bx-vh">Every strategy with figures, replayed through the rules above. For each: the success rate (the share of the starts that finished that reached the target), the starts that hit the loss limit, the starts that did not finish before the test ended, the average trading days to the target, and the largest drawdown in its test at the chosen scale.</caption>
+          <caption class="bx-vh">Every strategy with figures, replayed through the rules above. For each: the success rate (the share of the finished starts, passed or blown, that passed), the starts blown, the starts still in progress when the test ended, the average days to the target (calendar days), and the largest drawdown in its test at the chosen multiplier.</caption>
           <thead><tr id="cmp-head"></tr></thead>
         </table>
         <p class="cx-must">A replay of hypothetical test results. Not a forecast, and not a chance of passing any account.</p>
+      </div>
+      <!-- Row E780: the Live account mode's results. -->
+      <div class="cx-view cx-live" id="view-live" tabindex="-1" aria-labelledby="live-name">
+        <h2 class="cx-name" id="live-name">One live account, hypothetical backtest</h2>
+        <p class="cx-must cx-must-top">A replay of hypothetical test results. Not a forecast, and not a chance of passing any account.</p>
+        <p class="cx-note" id="live-msg" role="status" hidden></p>
+        <div id="live-res">
+          <div class="cx-card" id="live-sum"></div>
+          <div class="cx-card cx-lines-card">
+            <h3 class="cx-h3">The account's balance</h3>
+            <p class="cx-sub-l" id="live-chart-sub"></p>
+            <div class="cx-lines" id="live-lines"><canvas id="live-c" role="img"></canvas></div>
+            <ul class="cx-legend" id="live-legend"></ul>
+          </div>
+          <div class="cx-card" id="live-need"></div>
+          <div class="cx-card" id="live-picks"></div>
+        </div>
+        <div class="cx-how">
+          <h3 class="cx-h3">How this is worked out</h3>
+          <p>The account holds the chosen strategies together, each at its tested size times the Multiplier. Each day's result is the sum of the strategies' tested results that day; a strategy that did not trade that day adds nothing. The period runs from the start date to the last day every chosen record covers.</p>
+          <p>Max drawdown is the largest drop from a high on day closes. The records carry no trade times, so the worst case within a day adds up each strategy's own lowest point that day, as if they all came at the same moment.</p>
+          <p>Broker margin, fees and real fills are not included.</p>
+          <p class="cx-must">A replay of hypothetical test results. Not a forecast, and not a chance of passing any account.</p>
+        </div>
       </div>
       <noscript><p class="bx-sub">Turn on JavaScript to use the calculator.</p></noscript>
     </div>

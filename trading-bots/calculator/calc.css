@@ -6,6 +6,10 @@
 .bx-calcpage section{padding:0}
 .cx-head{padding:30px 0 22px !important}
 .cx-head h1{margin-bottom:10px}
+/* row E781: the notice right under the title */
+.cx-notice{max-width:70ch;margin:0 0 14px;padding:8px 12px;border-left:3px solid var(--line2);color:var(--text);font-size:14px;line-height:1.45}
+.cx-notice p{margin:0}
+.cx-notice p+p{margin-top:4px}
 .cx-label{display:inline-block;margin:0 0 12px;padding:3px 11px;border:1px solid var(--line2);border-radius:999px;font-size:12.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
 @media(min-width:900px){.cx-head{padding:48px 0 32px !important}}
 
@@ -22,13 +26,9 @@
 .cx-fld[hidden]{display:none}
 .cx-fld>label,.cx-kind legend{display:block;margin:0 0 6px;padding:0;color:var(--text);font-size:14.5px;font-weight:600;line-height:1.35}
 .cx-rules select,.cx-num,.cx-money{width:100%;min-height:46px;border:1px solid var(--line2);border-radius:9px;background:var(--bg);color:var(--bright);font:16px/1.2 var(--sans)}
-.cx-rules select{padding:0 10px}
-/* Row E776 (review E774 R2): the closed picker shows the name only. The select stays the box people tap and focus; its own
-   text is hidden and the name is laid over it. The open list is the select's own, each option with name, RoDD and max drawdown. */
-.cx-pickbox{position:relative}
-.cx-pickbox select{-webkit-text-fill-color:transparent;text-shadow:none}
-.cx-pickbox select option{-webkit-text-fill-color:var(--bright);color:var(--bright);background:var(--bg)}
-.cx-pickname{position:absolute;left:11px;right:34px;top:0;bottom:0;display:block;min-width:0;color:var(--bright);font:16px/46px var(--sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.cx-rules select{padding:0 40px 0 10px;-webkit-appearance:none;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 6l4.5 4.5L12.5 6' fill='none' stroke='%23e8eaf2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:16px 16px}
+.cx-rules select:hover{border-color:#8ea0ff;background-color:rgba(61,91,217,.10)}
+.cx-rules select option{background:var(--bg);color:var(--bright)}
 .cx-num{padding:0 12px}
 .cx-money{display:flex;align-items:center;padding:0 0 0 12px}
 .cx-money span{color:var(--dim);font-weight:600}
@@ -106,20 +106,22 @@
 .cx-dial-mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
 .cx-big{font-family:var(--display);font-size:54px;font-weight:700;line-height:1;color:var(--bright);font-variant-numeric:tabular-nums;letter-spacing:-.03em;text-shadow:0 0 22px rgba(52,194,122,.35)}
 .cx-dial-mid span{margin-top:6px;color:var(--dim);font-size:13.5px}
-.cx-dial-n{margin:10px 0 8px;color:var(--bright);font-size:16px;font-weight:600;font-variant-numeric:tabular-nums}
 .cx-legend{display:flex;flex-wrap:wrap;gap:4px 14px;margin:8px 0 0;padding:0;list-style:none;color:var(--dim);font-size:13.5px;line-height:1.4}
 .cx-legend li{display:flex;align-items:center;gap:6px}
 .cx-legend i{width:10px;height:10px;border-radius:3px;flex:none}
 .cx-legend li.is-mid i{height:3px;width:16px;box-shadow:0 0 6px rgba(255,255,255,.6)}
 .cx-legend b{color:var(--bright);font-variant-numeric:tabular-nums}
 .cx-dial-leg{justify-content:center}
+/* row E783: the ring's legend, small and as wide as its words, centred under the ring; the summary's coloured counts */
+.cx-out-leg{width:max-content;max-width:100%;margin:10px auto 8px;gap:2px 12px;font-size:12.5px}
+.cx-out-leg i{width:8px;height:8px;border-radius:2px}
+.cx-oc{white-space:nowrap}
+.cx-oc i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:5px;vertical-align:1px}
 .cx-avg{margin:0 0 6px;color:var(--text);font-size:14.5px;line-height:1.4;font-variant-numeric:tabular-nums}
-.cx-nc{margin:8px 0 0;color:var(--dim);font-size:13px;line-height:1.4}
 /* Row E748: the harsher order, in the plain text colour, never larger than the counts */
 .cx-harsh{margin:8px auto 0;max-width:34em;text-align:center;color:var(--text);font-size:13.5px;line-height:1.4;font-variant-numeric:tabular-nums}
 .cx-harsh-s{color:var(--text) !important;font-variant-numeric:tabular-nums}
 .cx-cv small.cx-harsh-s{margin:4px 0 0}
-.cx-nc:empty{display:none}
 .cx-hint-b{color:var(--text)}
 
 /* the three kinds */
@@ -145,11 +147,21 @@
 .cx-cal td.is-pad{border-color:transparent;background:none}
 .cx-cal td.is-out{opacity:.38}
 .cx-cal td i{display:block;font-style:normal;font-size:9.5px;line-height:1.2;color:var(--faint)}
-.cx-cal td.is-target{background:rgba(52,194,122,.55);border-color:rgba(52,194,122,.9)}
-.cx-cal td.is-limit{background:rgba(255,107,107,.55);border-color:rgba(255,107,107,.95)}
-.cx-cal td.is-open{background:rgba(86,93,120,.32);border-color:rgba(86,93,120,.7)}
+/* row E779: a square is a trading day: red where accounts were blown, yellow where the daily loss limit stopped trading,
+   green for neither; the consistency mark is a blue dot with a black ring in the lower-right corner, clear of the day
+   number: the ring keeps it 3:1 against the green, red and yellow fills */
+.cx-cal td.is-clear{background:rgba(52,194,122,.55);border-color:rgba(52,194,122,.9)}
+.cx-cal td.is-blown{background:rgba(255,107,107,.55);border-color:rgba(255,107,107,.95)}
+.cx-cal td.is-daily{background:rgba(245,197,66,.62);border-color:rgba(245,197,66,.95)}
 .cx-cal td[class^="is-"]:not(.is-pad) i{color:#0e0f16;font-weight:600}
-.cx-cal td.is-open i{color:var(--bright)}
+.cx-cal td.has-cm{position:relative}
+.cx-cal td .cx-cm{position:absolute;right:1px;bottom:1px;width:6px;height:6px;border-radius:50%;background:#4ea1ff;box-shadow:0 0 0 1px #000}
+/* row E790: a red square shows its count of accounts blown that day, without hover: a dark tag in the lower-left corner,
+   under the day number and clear of the blue dot; the squares are a little taller to hold both */
+.cx-cal td{height:28px}
+.cx-cal td.is-blown{position:relative}
+.cx-cal td .cx-bn{position:absolute;left:1px;bottom:1px;min-width:13px;padding:0 2px;border-radius:3px;background:#0e0f16;color:#fff;font-size:10px;font-weight:700;line-height:12px;text-align:center;font-variant-numeric:tabular-nums}
+.cx-legend li.is-cm i{border-radius:50%;box-shadow:0 0 0 1px #000}
 
 /* what ended, how long, winning and losing days */
 .cx-bars{margin:0;padding:0;list-style:none}
@@ -206,6 +218,28 @@
 
 /* Row E768: the size control on one line, the record panel under it, and the shorter form */
 .cx-inl{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:6px 10px;margin-bottom:10px}
+/* Row E780: the Account type choice and the Live account mode; the prop parts hide in it and the live parts show */
+.cx-grid:not(.is-live) .cx-live{display:none !important}
+.cx-grid.is-live .cx-prop{display:none !important}
+.cx-acct{padding:0 0 14px;margin:0 0 14px;border-bottom:1px solid var(--line)}
+.cx-lp .cx-inl{display:block;margin-bottom:10px}
+.cx-lp .cx-inl>label{display:block;margin:0 0 4px;font-size:14px}
+.cx-st6{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(min-width:520px){.cx-st6{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.cx-need{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.cx-need th,.cx-need td{padding:8px 6px;border-top:1px solid var(--line);text-align:left;vertical-align:top;font-size:14px;line-height:1.35}
+.cx-need thead th,.cx-need thead td{border-top:0;color:var(--dim);font-size:12.5px;font-weight:600}
+.cx-need tbody th{width:44%;color:var(--text);font-weight:600}
+.cx-need tbody th small{display:block;margin:2px 0 0;color:var(--dim);font-size:12px;font-weight:400}
+.cx-need td b{color:var(--bright);font-size:16px}
+.cx-zero{margin:10px 0 0;color:var(--text);font-size:14.5px;line-height:1.45}
+.cx-lpl{margin:0;padding:0;list-style:none}
+.cx-lpl li{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
+.cx-lpl li:first-child{border-top:0}
+.cx-lpl i{width:10px;height:10px;margin:7px 0 0;border-radius:3px;flex:none}
+.cx-lpl span{min-width:0}
+.cx-lpl small{display:block;color:var(--dim);font-size:13px;line-height:1.4}
+.cx-lpl small b{font-weight:600}
 .cx-inl>label{margin:0}
 .cx-inl[hidden]{display:none}
 .cx-rules .cx-inl select{min-height:40px}

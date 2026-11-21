@@ -102,6 +102,26 @@
   .start .jump a{display:inline-block;padding:13px 0}
   .alt{margin:0 0 12px;font-size:15.5px}
 
+  /* the checklist at the top of the page (row E786) */
+  .start ul.get{list-style:none;padding:0;margin:0 0 4px}
+  .start ul.get>li{margin:0;padding:10px 0;border-top:1px solid var(--line)}
+  .start ul.get>li:first-child{border-top:0}
+  .start ul.get small{display:block;color:var(--dim);font-size:14px;line-height:1.5;margin-top:4px}
+  .getgo{display:block;width:max-content;max-width:100%;margin:8px 0 2px;padding:10px 14px;border-radius:8px;background:var(--bright);color:#0e0f16;font-size:15px;font-weight:600;line-height:1.35;text-decoration:none}
+  .getgo:hover{text-decoration:underline;text-decoration-color:#0e0f16}
+
+  /* Phones: each step shows its heading and its action lines; the rest folds behind one More detail button per step,
+     closed by default (row E786). The button is made by the script at the end of the page, so without JavaScript
+     nothing folds. From 768 px up nothing folds. */
+  .more{display:none}
+  @media (max-width:767.98px){
+    .more{display:inline-flex;align-items:center;min-height:44px;gap:8px;font:inherit;font-size:14.5px;font-weight:600;color:var(--bright);background:transparent;border:1px solid var(--line2);border-radius:999px;padding:7px 14px;margin:0 0 4px;cursor:pointer}
+    .more::after{content:"";border-style:solid;border-width:6px 5px 0 5px;border-color:var(--green) transparent transparent transparent}
+    .more[aria-expanded="true"]::after{border-width:0 5px 6px 5px;border-color:transparent transparent var(--green) transparent}
+    .fold.shut>:not(.kicker):not(h2):not(h3):not(.do):not(.go):not(.act):not(.more){display:none}
+    .fold.shut .do>li>small{display:none}
+  }
+
   /* callouts */
   .callout{border:1px solid var(--line);border-left:3px solid var(--green);background:var(--green-tint);padding:16px 18px;margin:22px 0;border-radius:10px}
   .callout.warn{border-left-color:var(--amber);background:var(--amber-tint)}
@@ -180,6 +200,9 @@
   .chapters button b{display:inline-block;min-width:20px;color:var(--green);font-family:var(--display);font-weight:600}
   .chapters button .t{color:var(--dim);font-weight:400;font-size:14px;font-variant-numeric:tabular-nums}
   .chapters button.cur{border-color:var(--green);background:var(--green-tint)}
+  .phonevids{display:none}
+  .player.pp video{aspect-ratio:9/16;max-width:340px;margin:0 auto}
+  @media (max-width:767.98px){ .phonevids{display:block} }
   a.wl{display:inline-flex;align-items:center;min-height:44px;gap:8px;font-size:14.5px;font-weight:600;border:1px solid var(--line2);border-radius:999px;padding:7px 14px;text-decoration:none;margin:0 0 4px}
   a.wl::before{content:"";border-style:solid;border-width:5px 0 5px 8px;border-color:transparent transparent transparent var(--green)}
   a.wl:hover{border-color:var(--bright)}
@@ -217,6 +240,17 @@
   <h1>Set up your AFT trading bot</h1>
   <p class="tagline">Eight steps. When you finish, your bot runs on your own TradingView chart and sends its orders to your own Tradovate account.</p>
 
+  <div class="start" id="get-these">
+    <h2>Get these before you start</h2>
+    <ul class="get">
+      <li><strong>A TradingView account</strong><a class="getgo" href="https://www.tradingview.com/pricing/" rel="noopener" target="_blank">Click here to create a TradingView account</a><small>The bot needs a paid plan with two-factor authentication on, and real-time futures data, a paid monthly add-on (<a href="#need-tv">how</a>).</small></li>
+      <li><strong>A CrossTrade account</strong><a class="getgo" data-ev="content" data-name="setup-step1-crosstrade" href="https://crosstrade.io/pricing?ref=AFT" rel="noopener" target="_blank">Click here to create your CrossTrade account</a><small>Paid link</small><small>Standard runs the bot. To copy trades to more accounts, choose Pro ($49 a month).</small></li>
+      <li><strong>A Tradovate or prop firm account</strong>: demo, prop or live (<a href="#need-broker">how</a>).</li>
+      <li><strong>Your strategy access, claimed through Whop</strong> with your TradingView username (<a href="#need-bot">how</a>).</li>
+    </ul>
+    <p class="jump"><a href="#before">How to get each one ready</a></p>
+  </div>
+
   <nav class="insec" aria-labelledby="insec-h">
     <p class="insec-h" id="insec-h">In this section</p>
     <ul>
@@ -226,20 +260,9 @@
   </nav>
 
   <div class="start">
-    <h2>What you need first</h2>
-    <ul>
-      <li>A <strong>computer</strong> with a web browser.</li>
-      <li>A <strong>paid TradingView plan</strong> with two-factor authentication turned on.</li>
-      <li><strong>Real-time futures data</strong> on TradingView, a paid monthly add-on.</li>
-      <li>A <strong>Tradovate account</strong> (demo, prop or live).</li>
-      <li>A <strong>CrossTrade plan</strong>: free for 7 days, then a paid monthly plan (step 1).</li>
-      <li><strong>Your bot</strong> on your TradingView username.</li>
-    </ul>
-    <p class="jump"><a href="#before">How to get each one ready</a></p>
-    <hr>
     <h2>The eight steps</h2>
     <ol>
-      <li><a href="#step-1">Get a CrossTrade account</a></li>
+      <li><a href="#step-1">Sign in to CrossTrade</a></li>
       <li><a href="#step-2">Connect your Tradovate account</a></li>
       <li><a href="#step-3">Copy your webhook URL and secret key</a></li>
       <li><a href="#step-4">Add the strategy to your chart</a></li>
@@ -258,9 +281,36 @@
   </div>
 
   <!-- ============================== WATCH ============================== -->
+  <div class="fold vfold">
   <p class="kicker" id="watch">Prefer to watch</p>
   <h2>The whole setup on video</h2>
   <p>Every screen in it is a real TradingView, CrossTrade or Tradovate screen, with private details covered. The buttons under it jump to a step.</p>
+  <div class="phonevids">
+  <p class="chl">On a phone</p>
+  <p>Two short videos show the same steps on a phone: steps 1 and 2, then steps 3 to 7. Steps 1 to 3 are on CrossTrade's website in your phone's browser; steps 4 to 7 are in the TradingView app. <a href="#player">Watch the computer version (6:46)</a>.</p>
+  <div class="player pp" id="player-p1">
+    <video controls preload="none" playsinline poster="/trading-bots/setup/media/aft-phone-crosstrade-poster.jpg" aria-label="Set up CrossTrade on your phone"><source src="/trading-bots/setup/media/aft-phone-crosstrade.mp4" type="video/mp4"></video>
+    <p class="chl">Steps 1 and 2 (1:03)</p>
+    <ol class="chapters">
+      <li><button type="button" data-t="0.0"><span>Start here</span><span class="t">0:00</span></button></li>
+      <li><button type="button" data-t="4.0"><span><b>1</b>Sign in to CrossTrade</span><span class="t">0:04</span></button></li>
+      <li><button type="button" data-t="19.3"><span><b>2</b>Connect your Tradovate account</span><span class="t">0:19</span></button></li>
+    </ol>
+  </div>
+  <div class="player pp" id="player-p2">
+    <video controls preload="none" playsinline poster="/trading-bots/setup/media/aft-phone-tradingview-poster.jpg" aria-label="Connect TradingView on your phone"><source src="/trading-bots/setup/media/aft-phone-tradingview.mp4" type="video/mp4"></video>
+    <p class="chl">Steps 3 to 7 (2:11)</p>
+    <ol class="chapters">
+      <li><button type="button" data-t="0.0"><span>Start here</span><span class="t">0:00</span></button></li>
+      <li><button type="button" data-t="4.0"><span><b>3</b>Copy your webhook URL and secret key</span><span class="t">0:04</span></button></li>
+      <li><button type="button" data-t="18.1"><span><b>4</b>Add the strategy to your chart</span><span class="t">0:18</span></button></li>
+      <li><button type="button" data-t="41.2"><span><b>5</b>Fill in the strategy's settings</span><span class="t">0:41</span></button></li>
+      <li><button type="button" data-t="73.6"><span><b>6</b>Create the alert</span><span class="t">1:13</span></button></li>
+      <li><button type="button" data-t="118.8"><span><b>7</b>Check the alert says Active</span><span class="t">1:58</span></button></li>
+    </ol>
+  </div>
+  <p class="chl">On a computer</p>
+  </div>
   <div class="player" id="player">
     <video controls preload="none" playsinline poster="/trading-bots/setup/media/aft-bot-setup-poster.jpg" aria-label="Set up your AFT trading bot"><source src="/trading-bots/setup/media/aft-bot-setup.mp4" type="video/mp4"></video>
     <p class="chl">Jump to a step</p>
@@ -290,13 +340,14 @@
       </div>
     </div>
   </details>
+  </div>
 
   <!-- ============================== BEFORE YOU START ============================== -->
-  <section id="before">
+  <section id="before" class="fold">
   <p class="kicker">Before you start</p>
   <h2>Get these three things ready</h2>
   <p>The bot is a strategy that runs on your TradingView chart. A service called CrossTrade carries its orders to your Tradovate account. Every account is your own, and All Fluence Trading never has access to any of them.</p>
-  <p>Do the setup on a computer, in a web browser. TradingView, CrossTrade and Tradovate all open as websites. You can read along on your phone.</p>
+  <p>You can do the setup on a phone or a computer, in a web browser. TradingView, CrossTrade and Tradovate all open as websites. On a computer, you can read along on your phone. The steps and the video show the websites on a computer screen; on a phone, some buttons sit in other places.</p>
   <details id="words">
     <summary>Words used in this guide</summary>
     <div>
@@ -321,7 +372,7 @@
   <ul class="do">
     <li>Check your TradingView plan. It has to be a paid plan: Essential or higher. The <span class="ui">TradingView plans</span> button under this list shows the plans, and is where you upgrade.<small>A bot sends its orders as "webhook" messages, and TradingView's free Basic plan cannot send them.</small><small>On Essential and Plus, TradingView's plans page lists two months as the longest an alert lasts, so on those plans you create the bot's alert again every two months (step 6 says how). From Premium up, an alert can run with no end date.</small></li>
     <li>Turn on two-factor authentication. In TradingView open your profile menu, then <span class="ui">Account Settings</span>, then the <span class="ui">Privacy and Security</span> tab.<small>TradingView only allows webhook messages with two-factor authentication enabled.</small></li>
-    <li>Add real-time futures data to your TradingView account. The <span class="ui">Real-time futures data</span> button under this list opens TradingView's page for it; there, click <span class="ui">Subscribe to real-time CME Group futures</span>.<small>It is a paid monthly add-on from TradingView, and that page shows its price. One subscription covers both exchanges the bots trade: CME for Micro Nasdaq (MNQ) and COMEX for Micro Gold (MGC). Without it, TradingView's futures prices are delayed, and a strategy on delayed prices sends late orders.</small></li>
+    <li>Add real-time futures data to your TradingView account. The <span class="ui">Real-time futures data</span> button under this list opens TradingView's page for it; there, click <span class="ui">Subscribe to real-time CME Group futures</span>.<small>It is a paid monthly add-on from TradingView, and that page shows its price. TradingView sells it on its website, not in its phone app. One subscription covers both exchanges the bots trade: CME for Micro Nasdaq (MNQ) and COMEX for Micro Gold (MGC). Without it, TradingView's futures prices are delayed, and a strategy on delayed prices sends late orders.</small></li>
   </ul>
   <p class="go"><a href="https://www.tradingview.com/pricing/" rel="noopener" target="_blank">TradingView plans</a><a href="https://www.tradingview.com/support/solutions/43000572460-how-to-configure-2fa/" rel="noopener" target="_blank">How to turn on 2FA</a><a href="https://www.tradingview.com/cme/" rel="noopener" target="_blank">Real-time futures data</a></p>
 
@@ -336,38 +387,27 @@
     <p>Orders sent by a connected bot are real orders. Start on a Tradovate demo account and watch it through at least one full trade. Move to the account you intend to trade only after that. <strong>A prop evaluation or funded account is not a practice account</strong>: trades there count against your firm's limits.</p>
   </div>
 
-  <h3 id="need-bot">Your bot, added to your TradingView username</h3>
-  <p>Your bot is an invite-only strategy on TradingView. AFT adds it to your TradingView username, so AFT needs that username spelled exactly as TradingView shows it.</p>
-  <ul class="do">
-    <li>Find your username: in TradingView, open your profile menu. Your username is at the top of it.<small>It is also on your <a href="https://www.tradingview.com/settings/#account-settings" rel="noopener" target="_blank">TradingView account settings</a> page.</small></li>
-    <li>If you have not sent your username yet, or the strategy is not in your Invite-only list, write to support@allfluencetrading.com with your exact TradingView username. Send the username only, never a key or a password.</li>
-    <li>You are ready when the strategy shows in your Invite-only list. Step 4 opens that list.</li>
-  </ul>
-  <p class="go"><a href="mailto:support@allfluencetrading.com?subject=My%20TradingView%20username">Email support</a></p>
-  <p>No bot yet? See the <a href="/trading-bots/">AFT Trading Bots page</a>.</p>
+  <h3 id="need-bot">Claim access to strategies through Whop</h3>
+  <p class="act">All strategy access is claimed through Whop. Type your TradingView username in your Whop membership and claim your access there.</p>
   </section>
 
   <!-- ============================== STEP 1 ============================== -->
-  <section id="step-1">
+  <section id="step-1" class="fold">
   <p class="kicker">Step 1 of 8</p>
-  <h2>Get a CrossTrade account</h2>
-  <p><a class="wl" href="#watch" data-ch="1">Watch this part (0:48)</a></p>
+  <h2>Sign in to CrossTrade</h2>
+  <p><a class="wl" href="#watch" data-ch="1" data-pp="player-p1" data-pc="1" data-pt="0:04">Watch this part (0:48)</a></p>
   <ul class="do">
-    <li>Open CrossTrade's plans page with the button below.</li>
-    <li>Click <span class="ui">Sign Up</span>, at the top of the page.</li>
-    <li>Start the free 7-day trial, or pick a plan. Any plan works for this guide. Running the bot on several accounts, or adding a loss-limit monitor, needs the Pro plan or higher.<small>Sending a TradingView bot's orders to Tradovate is part of every CrossTrade plan, and the trial includes every feature. The plans page shows each plan's price. CrossTrade says you can change plans or cancel before the trial ends without being charged.</small></li>
-    <li>Create your account: your name, your email and a password.</li>
+    <li>Sign in to CrossTrade with the button below, with the account you created from <a href="#get-these">the checklist at the top</a>.<small>No account yet? Open CrossTrade's plans page with the link in <a href="#get-these">that checklist</a>. Click <span class="ui">Sign Up</span>, at the top of the page. Start the free 7-day trial, or pick a plan. Any plan works for this guide. Copying trades to several accounts, or adding a loss-limit monitor, needs the Pro plan or higher. Create your account: your name, your email and a password.</small><small>Sending a TradingView bot's orders to Tradovate is part of every CrossTrade plan, and the trial includes every feature. The plans page shows each plan's price. CrossTrade says you can change plans or cancel before the trial ends without being charged.</small></li>
   </ul>
-  <p class="go"><a class="primary" data-ev="content" data-name="setup-step1-crosstrade" href="https://crosstrade.io/pricing?ref=AFT" rel="noopener" target="_blank">Open CrossTrade's plans page</a></p>
-  <p class="fine">Referral link: All Fluence Trading earns a commission if you subscribe through it. Your price is the same.</p>
+  <p class="go"><a class="primary" href="https://crosstrade.io/login" rel="noopener" target="_blank">Sign in to CrossTrade</a></p>
   <p class="see"><b>You should now see:</b> you are signed in to CrossTrade. There is nothing to install: for Tradovate, CrossTrade runs in your browser.</p>
   </section>
 
   <!-- ============================== STEP 2 ============================== -->
-  <section id="step-2">
+  <section id="step-2" class="fold">
   <p class="kicker">Step 2 of 8</p>
   <h2>Connect your Tradovate account</h2>
-  <p><a class="wl" href="#watch" data-ch="2">Watch this part (1:07)</a></p>
+  <p><a class="wl" href="#watch" data-ch="2" data-pp="player-p1" data-pc="2" data-pt="0:19">Watch this part (1:07)</a></p>
   <ul class="do">
     <li><strong>Link your demo account first.</strong> The first run is on a demo account, not on a prop firm or real-money account. No demo account yet? Get one before you go on: <a href="#need-broker">Before you start</a> says where.</li>
     <li>In CrossTrade, open <span class="ui">My Account</span> with the button below, then click <span class="ui">Brokers</span> in the menu on the left.</li>
@@ -383,10 +423,10 @@
   </section>
 
   <!-- ============================== STEP 3 ============================== -->
-  <section id="step-3">
+  <section id="step-3" class="fold">
   <p class="kicker">Step 3 of 8</p>
   <h2>Copy your webhook URL and secret key</h2>
-  <p><a class="wl" href="#watch" data-ch="3">Watch this part (1:56)</a></p>
+  <p><a class="wl" href="#watch" data-ch="3" data-pp="player-p2" data-pc="1" data-pt="0:04">Watch this part (1:56)</a></p>
   <ul class="do">
     <li>Still in <span class="ui">My Account</span>, click <span class="ui">Security</span> in the menu on the left.</li>
     <li>Under <span class="ui">Webhook URL</span>, click <span class="ui">Copy</span>. Paste it somewhere private, such as a password manager or a note only you can open.<small>This is the address TradingView sends the bot's orders to. You need it in step 6.</small></li>
@@ -406,13 +446,13 @@
   </section>
 
   <!-- ============================== STEP 4 ============================== -->
-  <section id="step-4">
+  <section id="step-4" class="fold">
   <p class="kicker">Step 4 of 8</p>
   <h2>Add the strategy to your chart</h2>
-  <p><a class="wl" href="#watch" data-ch="4">Watch this part (2:42)</a></p>
+  <p><a class="wl" href="#watch" data-ch="4" data-pp="player-p2" data-pc="2" data-pt="0:18">Watch this part (2:42)</a></p>
   <p>This guide covers two bots. Each runs on one symbol, and only on the 1-minute chart. Not sure which one is yours? Open either chart below, click <span class="ui">Indicators</span>, <span class="ui">Invite-only</span>, <span class="ui">Strategies</span>, and read the name in the list without clicking it. Then open that bot's chart.</p>
   <ul class="do">
-    <li>Sign in to TradingView on your computer, and open the chart for your bot:
+    <li>Sign in to TradingView on your phone or computer, and open the chart for your bot:
       <div class="panel">
         <div class="row"><div class="name">Slipstream (AFT)</div><div class="what">Micro Nasdaq, <code>MNQ1!</code>, 1 minute<br><a href="https://www.tradingview.com/chart/?symbol=CME_MINI%3AMNQ1%21&amp;interval=1" rel="noopener" target="_blank">Open the MNQ chart</a></div></div>
         <div class="row"><div class="name">Midas (AFT)</div><div class="what">Micro Gold, <code>MGC1!</code>, 1 minute<br><a href="https://www.tradingview.com/chart/?symbol=COMEX_MINI%3AMGC1%21&amp;interval=1" rel="noopener" target="_blank">Open the MGC chart</a></div></div>
@@ -427,14 +467,14 @@
     <li>Click your strategy's name, once. Then close that window.</li>
   </ul>
   <p class="see"><b>You should now see:</b> the strategy's name at the top left of the chart.</p>
-  <p class="fine">Strategy not in the list? <a href="#need-bot">Send AFT your TradingView username</a>.</p>
+  <p class="fine">Strategy not in the list? <a href="#need-bot">Claim your access through Whop</a>.</p>
   </section>
 
   <!-- ============================== STEP 5 ============================== -->
-  <section id="step-5">
+  <section id="step-5" class="fold">
   <p class="kicker">Step 5 of 8</p>
   <h2>Fill in the strategy's settings</h2>
-  <p><a class="wl" href="#watch" data-ch="5">Watch this part (3:21)</a></p>
+  <p><a class="wl" href="#watch" data-ch="5" data-pp="player-p2" data-pc="3" data-pt="0:41">Watch this part (3:21)</a></p>
   <p>Fill the boxes first. Tick <span class="ui">Send live orders to CrossTrade</span> last: it is the first box of the group. The bot sends nothing until the key, the account and the contract are all filled in and that box is ticked.</p>
   <ul class="do">
     <li>Hover over the strategy's name at the top left of the chart, and click the gear icon (<span class="ui">Settings</span>).</li>
@@ -482,10 +522,10 @@
   </section>
 
   <!-- ============================== STEP 6 ============================== -->
-  <section id="step-6">
+  <section id="step-6" class="fold">
   <p class="kicker">Step 6 of 8</p>
   <h2>Create the alert</h2>
-  <p><a class="wl" href="#watch" data-ch="6">Watch this part (4:05)</a></p>
+  <p><a class="wl" href="#watch" data-ch="6" data-pp="player-p2" data-pc="4" data-pt="1:13">Watch this part (4:05)</a></p>
   <p>The alert keeps the bot running on TradingView's servers and delivers its messages to CrossTrade, so your computer can be off.</p>
   <ul class="do">
     <li><strong>First check your account is flat in that contract:</strong> no position and no orders waiting.<small>In Tradovate's web app, the <span class="ui">Positions</span> and <span class="ui">Orders</span> windows show them. Open each from the <span class="ui">+</span> menu at the top left.</small></li>
@@ -514,10 +554,10 @@
   </section>
 
   <!-- ============================== STEP 7 ============================== -->
-  <section id="step-7">
+  <section id="step-7" class="fold">
   <p class="kicker">Step 7 of 8</p>
   <h2>Check the alert says Active</h2>
-  <p><a class="wl" href="#watch" data-ch="7">Watch this part (5:07)</a></p>
+  <p><a class="wl" href="#watch" data-ch="7" data-pp="player-p2" data-pc="5" data-pt="1:58">Watch this part (5:07)</a></p>
   <ul class="do">
     <li>Click the clock icon on the right edge of TradingView. Your list of alerts opens.</li>
     <li>Find your alert in the list. It carries your strategy's name.</li>
@@ -528,7 +568,7 @@
   </section>
 
   <!-- ============================== STEP 8 ============================== -->
-  <section id="step-8">
+  <section id="step-8" class="fold">
   <p class="kicker">Step 8 of 8</p>
   <h2>Check the connection in CrossTrade</h2>
   <p><a class="wl" href="#watch" data-ch="8">Watch this part (5:32)</a></p>
@@ -737,6 +777,13 @@
       for(var j=0;j<btns.length;j++){ btns[j].classList.toggle('cur',j===cur); }
     });
   });
+  /* Phones (below 768 px): a step's Watch this part link plays the phone video at that step (row E787). */
+  if(window.matchMedia&&window.matchMedia('(max-width:767.98px)').matches){
+    Array.prototype.forEach.call(document.querySelectorAll('a.wl[data-pp]'),function(a){
+      a.setAttribute('href','#'+a.getAttribute('data-pp')); a.setAttribute('data-p',a.getAttribute('data-pp'));
+      a.setAttribute('data-ch',a.getAttribute('data-pc')); a.textContent='Watch this part ('+a.getAttribute('data-pt')+')';
+    });
+  }
   Array.prototype.forEach.call(document.querySelectorAll('a.wl[data-ch]'),function(a){
     a.addEventListener('click',function(){
       var box=document.getElementById(a.getAttribute('data-p')||'player');
@@ -744,12 +791,31 @@
     });
   });
 })();
-/* A link to a fold-out opens it: on a click, and on a load or change of the address with a fragment. */
+/* Phones (below 768 px, in the CSS): each .fold shows its heading and its action lines, and one button opens the rest.
+   Closed by default; the button is made here, so without JavaScript nothing folds (row E786). */
 (function(){
+  Array.prototype.forEach.call(document.querySelectorAll('.fold'),function(f){
+    var h=null;
+    for(var c=f.firstElementChild; c; c=c.nextElementSibling){ if(c.tagName==='H2'){ h=c; break; } }
+    if(!h) return;
+    var lab=f.classList.contains('vfold')?['Show the video','Hide the video']:['More detail','Less detail'];
+    var b=document.createElement('button'); b.type='button'; b.className='more';
+    function set(open){ f.classList.toggle('shut',!open); b.setAttribute('aria-expanded',open?'true':'false'); b.textContent=lab[open?1:0]; }
+    b.addEventListener('click',function(){ set(f.classList.contains('shut')); });
+    f.aftOpen=function(){ set(true); };
+    h.parentNode.insertBefore(b,h.nextSibling);
+    set(false);
+  });
+})();
+/* A link to a fold-out opens it: on a click, and on a load or change of the address with a fragment. A link into a
+   part folded on a phone opens that part; a link to the video opens the video. */
+(function(){
+  var unfolded=false;
   function openAt(h){
     if(!h||h.length<2) return null;
     var el; try{ el=document.getElementById(decodeURIComponent(h.slice(1))); }catch(e){ return null; }
     for(var d=el; d; d=d.parentElement){ if(d.tagName==='DETAILS') d.open=true; }
+    if(el&&(el.id==='watch'||!el.getClientRects().length)){ for(var f=el; f; f=f.parentElement){ if(f.aftOpen){ f.aftOpen(); unfolded=true; } } }
     return el;
   }
   document.addEventListener('click',function(e){
@@ -757,7 +823,7 @@
     if(a&&a.pathname===location.pathname&&a.hash) openAt(a.hash);
   });
   window.addEventListener('hashchange',function(){ openAt(location.hash); });
-  var t=openAt(location.hash); if(t&&t.tagName==='DETAILS') t.scrollIntoView();
+  var t=openAt(location.hash); if(t&&(t.tagName==='DETAILS'||unfolded)) t.scrollIntoView();
 })();
 </script>
 <script>
