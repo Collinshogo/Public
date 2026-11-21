@@ -243,8 +243,9 @@
   function runHarsh(rec, k, R) { return tally(replayC(scaled(rec, k).dp2, R, false), rec.dates); }
 
   /* ---------- the rules: inputs, checks and the address ---------- */
-  // Row E745 ruling 10: the switch is off by default.
-  var DEF = { s: '', k: 'eod', t: 300000, l: 200000, lock: false, dlOn: false, dl: null, cpOn: false, cp: null, md: 0, x: 1, v: 'one' };
+  // Row E745 ruling 10 had the switch off by default. Row E793 (Collin 2026-11-21: "keep trailing on by default for
+  // trailing and end of day drawdown and intraday"): on by default; a link that carries lock=0 or lock=1 keeps its value.
+  var DEF = { s: '', k: 'eod', t: 300000, l: 200000, lock: true, dlOn: false, dl: null, cpOn: false, cp: null, md: 0, x: 1, v: 'one' };
   var st = {};
   Object.keys(DEF).forEach(function (k) { st[k] = DEF[k]; });
   // Row E780: the Live account mode keeps its own state (lv), so the Prop firm account mode and its address are exactly as
@@ -358,7 +359,7 @@
     var moving = st.k !== 'fixed';
     F.lock.disabled = !moving;
     $('#lock-row').classList.toggle('is-off', !moving);
-    $('#lock-hint').textContent = moving ? 'Usual on funded accounts only. Once the limit has risen to the starting balance, it stays there.' : 'Only for the two drawdown kinds. A static limit never moves.';
+    $('#lock-hint').textContent = moving ? 'When ticked, once the trailing limit has risen to the starting balance, it stays there. Untick it if your firm\u2019s limit keeps rising.' : 'Only for the two drawdown kinds. A static limit never moves.';
     var kd = KINDS.filter(function (x) { return x.id === st.k; })[0];
     $('#kind-note').textContent = kd ? kd.name + ': ' + kd.note.charAt(0).toLowerCase() + kd.note.slice(1) : '';
     moreCount();
@@ -546,10 +547,10 @@
   // blown (only while one is set; red wins), green for neither; a blue dot where the consistency cap stopped trading
   // (only while the rule is on; stop code 2). Nothing here names a daily loss limit while none is set.
   function calWords(R, cap) {
-    var w = 'Each square is one trading day in the test, coloured by what happened that day: red, accounts were blown that day (the number in the square is how many); green, none was.';
+    var w = 'Each coloured square is one trading day in the test, coloured by what happened that day: red, accounts were blown that day (the number in the square is how many); green, none was.';   // row E793 (E792 R5): 'coloured'; the plain squares are named last
     if (R.dl !== null) w += ' Yellow: the daily loss limit stopped trading that day and no account was blown.';
     if (cap !== null) w += ' A blue dot: the day\u2019s profit reached the consistency cap of ' + money(cap) + ', so trading stopped for the day.';
-    return w;
+    return w + ' A plain square had no closed trade.';
   }
   function drawCals() {
     var d = cur.rec.d, res = cur.res, by = {}, on = {};
@@ -852,6 +853,27 @@
     return keys.map(function (k) { return { k: k, v: m[k] }; });
   }
   function monthWords(k) { return MONTH[Number(k.slice(5, 7)) - 1] + ' ' + k.slice(0, 4); }
+  // Row E793 (E792 R3): a month is a part month when the period leaves out some of its weekdays: the first month when the
+  // start date leaves out an earlier tested day of that month or the test window starts after its first weekday; the last
+  // month when the test window ends before its last weekday. The figures are unchanged; only the words mark it.
+  function wkEdge(k, last) {
+    var y = Number(k.slice(0, 4)), m = Number(k.slice(5, 7)) - 1, d = last ? new Date(Date.UTC(y, m + 1, 0)) : new Date(Date.UTC(y, m, 1));
+    while (d.getUTCDay() === 0 || d.getUTCDay() === 6) d = new Date(d.getTime() + (last ? -DAY_MS : DAY_MS));
+    return d.toISOString().slice(0, 10);
+  }
+  function liveParts(mo, res) {
+    if (!mo.length) return mo;
+    var sp = res.span, f = mo[0], l = mo[mo.length - 1], from = res.days[0];
+    f.p = sp.lo > wkEdge(f.k, false) || sp.days.some(function (x) { return x.slice(0, 7) === f.k && x < from; });
+    if (sp.hi < wkEdge(l.k, true)) l.p = true;
+    return mo;
+  }
+  function partWords(mo) {
+    var f = mo.length && mo[0].p, l = mo.length > 1 && mo[mo.length - 1].p;
+    if (mo.length === 1) return f ? ', a part month' : '';
+    return f && l ? ', the first and last part months' : f ? ', the first a part month' : l ? ', the last a part month' : '';
+  }
+  function monthPart(x) { return monthWords(x.k) + (x.p ? ' (part month)' : ''); }
   function sizeWords(k) { return k === 1 ? 'as tested' : k + '\u00d7 tested'; }
   window.AFT_CALC_LIVE = { run: function (slugs, k, from) { return liveRun(slugs, k, from); }, needs: liveNeeds, zero: liveZero, span: liveSpan };
 
@@ -867,7 +889,8 @@
     if (sp.days.indexOf(lv.d) < 0) lv.d = sp.days.length ? sp.days[0] : '';
     F.ld.value = lv.d;
     F.ld.disabled = !sp.days.length;
-    $('#ld-cap').textContent = sp.days.length ? 'Any tested day from ' + day(sp.lo) + ' to ' + day(sp.hi) + ', the range every chosen record covers.' : '';
+    // row E793 (E792 R4): the first and last tested days, not the test window's ends
+    $('#ld-cap').textContent = sp.days.length ? 'Any tested day from ' + day(sp.days[0]) + ' to ' + day(sp.days[sp.days.length - 1]) + ', within the range every chosen record covers.' : '';
     return sp;
   }
   // As the prop picker (row E791): the chosen strategy's own text is its name; the others show name, RoDD and max drawdown.
@@ -953,7 +976,7 @@
     msg.hidden = true; msg.textContent = '';
     $('#live-res').hidden = false;
     var res = liveRun(slugs, k, lv.d), B = b.c, n = res.days.length;
-    var net = n ? res.cum[n - 1] : 0, nd = liveNeeds(res), z = liveZero(res, B), mo = liveMonths(res);
+    var net = n ? res.cum[n - 1] : 0, nd = liveNeeds(res), z = liveZero(res, B), mo = liveParts(liveMonths(res), res);
     liveCur = { res: res, B: B };
     var best = null, worst = null;
     mo.forEach(function (x) { if (best === null || x.v > best.v) best = x; if (worst === null || x.v < worst.v) worst = x; });
@@ -963,8 +986,8 @@
       ', from a starting balance of ' + money(B) + '; each strategy ' + sizeWords(k) + '.</p>' +
       '<dl class="cx-stats cx-st6">' + stat('Ending balance', B + net, '', false) + stat('Net profit', net, '', true) +
       stat('Max drawdown', nd.dd, 'from a high, on day closes', false) +
-      stat('Average month', avg, 'over ' + plural(mo.length, 'month', 'months'), true) +
-      (best ? stat('Best month', best.v, monthWords(best.k), true) + stat('Worst month', worst.v, monthWords(worst.k), true) : '') + '</dl>';
+      stat('Average month', avg, 'over ' + plural(mo.length, 'month', 'months') + partWords(mo), true) +
+      (best ? stat('Best month', best.v, monthPart(best), true) + stat('Worst month', worst.v, monthPart(worst), true) : '') + '</dl>';
     function cell(c) { return '<td><b>' + moneyFull(c) + '</b></td>'; }
     var zw = 'With a starting balance of ' + money(B) + ': ' +
       (z.close ? 'on day closes the balance would have reached $0 on ' + day(z.close) : 'on day closes the balance would not have reached $0') + '; ' +
