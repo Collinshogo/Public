@@ -139,6 +139,8 @@ span.bx-r-btn{color:var(--dim);cursor:default}
 
 /* phones: instrument and tier stand under the name, so the first stat is on screen beside the frozen column */
 .bx-r-id{display:grid;gap:3px;min-width:0}
+/* Row E758: in the Library the tag goes under the name when both do not fit, so the name is never cut by it */
+.bx-r-open .bx-nt{flex-wrap:wrap;row-gap:3px}
 .bx-r-sub,.bx-h-more{display:none}
 @media(max-width:767.98px){
   .bx-table{width:max-content;min-width:100%}

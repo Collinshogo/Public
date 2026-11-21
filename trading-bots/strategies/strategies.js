@@ -55,7 +55,7 @@
   /* ---------- the rows' data ---------- */
   // A strategy whose tier is not set has no grade (g: null).
   var all = A.listed.map(function (s) {
-    return { s: s, f: FIG[s.slug] || null, g: A.grade(s.tier), price: num(s.price) !== null && s.price > 0 ? s.price : null };
+    return { s: s, f: FIG[s.slug] || null, g: A.grade(s.tier), price: !A.isSoon(s) && num(s.price) !== null && s.price > 0 ? s.price : null };   // row E758: no price of its own for a coming-soon build
   });
   var bySlug = {};
   all.forEach(function (r) { bySlug[r.s.slug] = r; });
@@ -190,7 +190,7 @@
       '<td class="bx-c-inst">' + (s.chip ? esc(s.chip) : NONE) + '</td>' +
       '<td class="bx-c-tier"><span class="bx-tier" data-lvl="' + A.finish(s.tier) + '">' + (r.g === null ? 'Tier not set' : 'Tier ' + r.g) + '</span></td>' +
       COLS.filter(function (c) { return c.f; }).map(function (c) { return cell(r, c); }).join('') +
-      '<td class="bx-c-price">' + (r.price !== null ? '<b>' + esc(A.dollars(r.price)) + '</b> <small>a month</small>' : '<span class="is-none">Price at release</span>') + '</td>' +
+      '<td class="bx-c-price">' + (r.price !== null ? '<b>' + esc(A.dollars(r.price)) + '</b> <small>a month</small>' : '<span class="is-none">' + (A.isSoon(s) ? 'Coming soon' : 'Price at release') + '</span>') + '</td>' +
       '</tr>';
   }
   $('#t-head').innerHTML = '<tr>' + COLS.map(function (c) {
@@ -228,10 +228,14 @@
     $('#swipe').hidden = !list.length;
     $('#table-notes').hidden = !list.length;
     $('#empty').hidden = !!list.length;
-    $('#dash-note').hidden = !list.some(function (r) { return !r.f || r.price === null; });
-    $('#count').textContent = list.length === all.length
-      ? all.length + (all.length === 1 ? ' strategy' : ' strategies')
-      : 'Showing ' + list.length + ' of ' + all.length + (all.length === 1 ? ' strategy' : ' strategies');
+    $('#dash-note').hidden = !list.some(function (r) { return !r.f || (r.price === null && !A.isSoon(r.s)); });
+    // Row E754: the count says how many are coming soon, so no number reads as strategies available today.
+    var soonAll = all.filter(function (r) { return A.isSoon(r.s); }).length, soonIn = list.filter(function (r) { return A.isSoon(r.s); }).length;
+    function strats(n) { return n + (n === 1 ? ' strategy' : ' strategies'); }
+    $('#count').textContent = !soonAll
+      ? (list.length === all.length ? strats(all.length) : 'Showing ' + list.length + ' of ' + strats(all.length))
+      : (list.length === all.length ? strats(all.length - soonAll) + ' and ' + soonAll + ' coming soon'
+        : 'Showing ' + list.length + ' of ' + all.length + ': ' + strats(list.length - soonIn) + ' and ' + soonIn + ' coming soon');
     var n = active(), badge = $('#f-n');
     badge.hidden = !n;
     badge.textContent = n ? String(n) : '';
@@ -252,6 +256,7 @@
     }).then(function (d) { docs[slug] = d; return d; });
   }
   function buyHtml(r) {
+    if (A.isSoon(r.s)) return '';   // row E754: a coming-soon strategy has no buy button and no "Opening soon"
     var link = LINKS[r.s.slug];
     return r.price !== null && typeof link === 'string' && /^https:\/\//.test(link)
       ? '<a class="btn bx-btn-red bx-r-btn" href="' + esc(link) + '" rel="noopener">Buy ' + esc(r.s.name) + '</a>'
@@ -260,7 +265,7 @@
   function cardHtml(r) {
     return '<div class="bx-c-rec">' + (r.f ? '<p class="bx-note">Loading…</p>' : '<p class="bx-c-none">No figures published yet</p>') + '</div>' +
       '<p class="bx-c-hyp">' + esc(HYPOTHETICAL) + '</p>' +
-      '<div class="bx-c-buy">' + buyHtml(r) + '</div>';
+      (A.isSoon(r.s) ? '' : '<div class="bx-c-buy">' + buyHtml(r) + '</div>');
   }
   function kpi(label, val, cls) {
     return '<div class="bx-kpi"><dt>' + esc(label) + '</dt><dd class="' + (cls || '') + '">' + esc(val) + '</dd></div>';

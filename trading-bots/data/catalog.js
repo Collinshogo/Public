@@ -15,9 +15,12 @@
 // to run if the two differ.
 // Each named strategy also needs its data file beside this one: data/<slug>.json, written by aft_bots_publish.py.
 // Nothing else on the page has to change to name a strategy, price it or move it to another tier.
-// coming_soon set to true marks a strategy that is not released yet (row E736). It carries a slug, its name, its market line and
-// its timeframe, and nothing else: no tier, grade, price, script page or data file. The pages show it only under
-// "Coming soon"; it sits on no tier card and in no plan, saving, table row, sort, filter or count.
+// coming_soon set to true marks a strategy that is not released yet (row E754, replacing E736). It is an entry like any other:
+// it may carry a tier, a grade, a price and a data file with figures, in the same shape as a released one, and never a
+// tv_url. The pages list it in the same places as the others (the Library's table, the strategy cards, its tier's card
+// when it has a tier, the calculator when it has figures) with the tag "Coming soon" beside its name. It has no script
+// link, buy button or checkout, and is in no "Bought one by one" sum. Without a tier or figures it shows as a strategy
+// whose tier is not set and whose figures are not published.
 window.AFT_BOTS_CATALOG = {
   schema: "aft.bots-catalog/3",
   tiers: [
@@ -57,7 +60,7 @@ window.AFT_BOTS_CATALOG = {
       name: "Continuum",
       tv_url: "https://www.tradingview.com/script/GoazA2iD-Continuum-AFT/",
       tier: "ultimate",
-      grade: null,
+      grade: 1,
       price: 797,
       chip: "MNQ",
       market_line: "MNQ · Micro Nasdaq",
@@ -80,9 +83,9 @@ window.AFT_BOTS_CATALOG = {
       named: true,
       name: "Slipstream",
       tv_url: "https://www.tradingview.com/script/ikYoLFYO-Slipstream-AFT/",
-      tier: "select",
-      grade: null,
-      price: 277,
+      tier: "ultimate",
+      grade: 1,
+      price: 797,
       chip: "MNQ",
       market_line: "MNQ · Micro Nasdaq",
       lettering: ["#f2f6f3", "#ff9fd0", "#b388ff"]
@@ -140,9 +143,9 @@ window.AFT_BOTS_CATALOG = {
       named: true,
       name: "Prime Meridian",
       tv_url: "https://www.tradingview.com/script/V6XGLqQq-Prime-Meridian-AFT/",
-      tier: null,
-      grade: null,
-      price: null,
+      tier: "supreme",
+      grade: 2,
+      price: 627,
       chip: "MES",
       market_line: "MES · Micro S&P 500",
       lettering: ["#eefcf4", "#5fe3a1", "#37c6d0"]
@@ -212,9 +215,10 @@ window.AFT_BOTS_CATALOG = {
       named: true,
       name: "The Ingot",
       tv_url: "https://www.tradingview.com/script/UNIo4H1s-The-Ingot-AFT/",
-      tier: "select",
-      grade: 3,
-      price: 277,
+      tier: "base",
+      tier_by: "collin",
+      grade: 4,
+      price: 97,
       chip: "MGC",
       market_line: "MGC · Micro Gold",
       lettering: ["#fff3da", "#ffb627", "#e85d04"]
@@ -236,47 +240,106 @@ window.AFT_BOTS_CATALOG = {
       coming_soon: true,
       name: "Undercurrent",
       market_line: "MNQ · Micro Nasdaq",
-      timeframe: "1-minute chart"
+      timeframe: "1-minute chart",
+      tier: "base",
+      tier_by: "collin",
+      grade: 4,
+      price: 97
     },
     {
       slug: "capstone",
       coming_soon: true,
       name: "Capstone",
       market_line: "MNQ · Micro Nasdaq",
-      timeframe: "1-minute chart"
+      timeframe: "1-minute chart",
+      tier: "supreme",
+      grade: 2,
+      price: 627
     },
     {
       slug: "keystone",
       coming_soon: true,
       name: "Keystone",
       market_line: "MNQ · Micro Nasdaq",
-      timeframe: "1-minute chart"
+      timeframe: "1-minute chart",
+      tier: "supreme",
+      grade: 2,
+      price: 627
     },
     {
       slug: "riptide",
       coming_soon: true,
       name: "Riptide",
       market_line: "MES · Micro S&P 500",
-      timeframe: "1-minute chart"
+      timeframe: "1-minute chart",
+      tier: "supreme",
+      grade: 2,
+      price: 627
     },
     {
       slug: "night-watch",
       coming_soon: true,
       name: "Night Watch",
       market_line: "MES · Micro S&P 500",
-      timeframe: "1-minute chart"
+      timeframe: "1-minute chart",
+      tier: "supreme",
+      grade: 2,
+      price: 627
     },
     {
       slug: "tripwire",
       coming_soon: true,
       name: "Tripwire",
       market_line: "MES · Micro S&P 500",
-      timeframe: "1-minute chart"
+      timeframe: "1-minute chart",
+      tier: "base",
+      grade: 4,
+      price: 97
+    },
+    {
+      slug: "the-kilo",
+      coming_soon: true,
+      name: "The Kilo",
+      market_line: "MGC · Micro Gold",
+      timeframe: "1-minute chart",
+      tier: "base",
+      tier_by: "collin",
+      grade: 4,
+      price: 97
     }
   ]
 };
 // ---- figures: written by aft_bots_publish.py from the data files; never edit by hand ----
 window.AFT_BOTS_CATALOG.figures = {
+ "continuum": {
+  "label": "Hypothetical backtest",
+  "window_from": "2026-01-01",
+  "window_to": "2026-11-19",
+  "run_date": "2026-11-21",
+  "start_capital_usd": 25000.0,
+  "net_profit_usd": 98641.5,
+  "profit_factor": 2.044,
+  "trades": 2400,
+  "win_rate_pct": 71.5,
+  "max_drawdown_usd": 1854.5,
+  "return_on_drawdown": 53.19,
+  "avg_trade_usd": 41.1,
+  "monthly_profit_usd": 8967.41,
+  "trading_days": 231,
+  "trade_frequency": 10.3896,
+  "display": {
+   "net_profit": "+$98,641.50",
+   "profit_factor": "2.044",
+   "trades": "2,400",
+   "win_rate": "71.50%",
+   "max_drawdown_usd": "$1,854.50",
+   "return_on_drawdown": "53.19",
+   "avg_trade": "+$41.10",
+   "monthly_profit": "+$8,967.41",
+   "trading_days": "231",
+   "trade_frequency": "10 per day"
+  }
+ },
  "midas": {
   "label": "Hypothetical backtest",
   "window_from": "2026-01-01",
@@ -304,6 +367,35 @@ window.AFT_BOTS_CATALOG.figures = {
    "monthly_profit": "+$9,415.36",
    "trading_days": "230",
    "trade_frequency": "5 per day"
+  }
+ },
+ "slipstream": {
+  "label": "Hypothetical backtest",
+  "window_from": "2026-01-01",
+  "window_to": "2026-11-19",
+  "run_date": "2026-11-21",
+  "start_capital_usd": 25000.0,
+  "net_profit_usd": 68901.0,
+  "profit_factor": 2.387,
+  "trades": 1389,
+  "win_rate_pct": 73.0,
+  "max_drawdown_usd": 1489.0,
+  "return_on_drawdown": 46.27,
+  "avg_trade_usd": 49.6,
+  "monthly_profit_usd": 6263.73,
+  "trading_days": 231,
+  "trade_frequency": 6.013,
+  "display": {
+   "net_profit": "+$68,901.00",
+   "profit_factor": "2.387",
+   "trades": "1,389",
+   "win_rate": "73.00%",
+   "max_drawdown_usd": "$1,489.00",
+   "return_on_drawdown": "46.27",
+   "avg_trade": "+$49.60",
+   "monthly_profit": "+$6,263.73",
+   "trading_days": "231",
+   "trade_frequency": "6 per day"
   }
  },
  "aftershock": {
@@ -420,6 +512,35 @@ window.AFT_BOTS_CATALOG.figures = {
    "monthly_profit": "+$3,907.55",
    "trading_days": "230",
    "trade_frequency": "2 per day"
+  }
+ },
+ "prime-meridian": {
+  "label": "Hypothetical backtest",
+  "window_from": "2026-01-01",
+  "window_to": "2026-11-20",
+  "run_date": "2026-11-21",
+  "start_capital_usd": 50000.0,
+  "net_profit_usd": 63392.75,
+  "profit_factor": 2.91,
+  "trades": 684,
+  "win_rate_pct": 46.05,
+  "max_drawdown_usd": 1616.25,
+  "return_on_drawdown": 39.22,
+  "avg_trade_usd": 92.68,
+  "monthly_profit_usd": 5762.98,
+  "trading_days": 232,
+  "trade_frequency": 2.9483,
+  "display": {
+   "net_profit": "+$63,392.75",
+   "profit_factor": "2.910",
+   "trades": "684",
+   "win_rate": "46.05%",
+   "max_drawdown_usd": "$1,616.25",
+   "return_on_drawdown": "39.22",
+   "avg_trade": "+$92.68",
+   "monthly_profit": "+$5,762.98",
+   "trading_days": "232",
+   "trade_frequency": "3 per day"
   }
  },
  "golden-meridian": {
@@ -623,6 +744,209 @@ window.AFT_BOTS_CATALOG.figures = {
    "monthly_profit": "+$3,842.32",
    "trading_days": "230",
    "trade_frequency": "1 per day"
+  }
+ },
+ "undercurrent": {
+  "label": "Hypothetical backtest",
+  "window_from": "2026-01-01",
+  "window_to": "2026-11-19",
+  "run_date": "2026-11-21",
+  "start_capital_usd": 25000.0,
+  "net_profit_usd": 28956.0,
+  "profit_factor": 5.112,
+  "trades": 46,
+  "win_rate_pct": 82.61,
+  "max_drawdown_usd": 1437.0,
+  "return_on_drawdown": 20.15,
+  "avg_trade_usd": 629.48,
+  "monthly_profit_usd": 2632.36,
+  "trading_days": 231,
+  "trade_frequency": 0.1991,
+  "display": {
+   "net_profit": "+$28,956.00",
+   "profit_factor": "5.112",
+   "trades": "46",
+   "win_rate": "82.61%",
+   "max_drawdown_usd": "$1,437.00",
+   "return_on_drawdown": "20.15",
+   "avg_trade": "+$629.48",
+   "monthly_profit": "+$2,632.36",
+   "trading_days": "231",
+   "trade_frequency": "1 per week"
+  }
+ },
+ "capstone": {
+  "label": "Hypothetical backtest",
+  "window_from": "2026-01-01",
+  "window_to": "2026-11-19",
+  "run_date": "2026-11-21",
+  "start_capital_usd": 25000.0,
+  "net_profit_usd": 74677.0,
+  "profit_factor": 2.249,
+  "trades": 844,
+  "win_rate_pct": 66.94,
+  "max_drawdown_usd": 1691.5,
+  "return_on_drawdown": 44.15,
+  "avg_trade_usd": 88.48,
+  "monthly_profit_usd": 6788.82,
+  "trading_days": 231,
+  "trade_frequency": 3.6537,
+  "display": {
+   "net_profit": "+$74,677.00",
+   "profit_factor": "2.249",
+   "trades": "844",
+   "win_rate": "66.94%",
+   "max_drawdown_usd": "$1,691.50",
+   "return_on_drawdown": "44.15",
+   "avg_trade": "+$88.48",
+   "monthly_profit": "+$6,788.82",
+   "trading_days": "231",
+   "trade_frequency": "4 per day"
+  }
+ },
+ "keystone": {
+  "label": "Hypothetical backtest",
+  "window_from": "2026-01-01",
+  "window_to": "2026-11-19",
+  "run_date": "2026-11-21",
+  "start_capital_usd": 25000.0,
+  "net_profit_usd": 58583.5,
+  "profit_factor": 2.385,
+  "trades": 826,
+  "win_rate_pct": 72.52,
+  "max_drawdown_usd": 1777.0,
+  "return_on_drawdown": 32.97,
+  "avg_trade_usd": 70.92,
+  "monthly_profit_usd": 5325.77,
+  "trading_days": 231,
+  "trade_frequency": 3.5758,
+  "display": {
+   "net_profit": "+$58,583.50",
+   "profit_factor": "2.385",
+   "trades": "826",
+   "win_rate": "72.52%",
+   "max_drawdown_usd": "$1,777.00",
+   "return_on_drawdown": "32.97",
+   "avg_trade": "+$70.92",
+   "monthly_profit": "+$5,325.77",
+   "trading_days": "231",
+   "trade_frequency": "4 per day"
+  }
+ },
+ "riptide": {
+  "label": "Hypothetical backtest",
+  "window_from": "2026-01-01",
+  "window_to": "2026-11-19",
+  "run_date": "2026-11-21",
+  "start_capital_usd": 25000.0,
+  "net_profit_usd": 45129.0,
+  "profit_factor": 2.304,
+  "trades": 544,
+  "win_rate_pct": 72.98,
+  "max_drawdown_usd": 1445.5,
+  "return_on_drawdown": 31.22,
+  "avg_trade_usd": 82.96,
+  "monthly_profit_usd": 4102.64,
+  "trading_days": 231,
+  "trade_frequency": 2.355,
+  "display": {
+   "net_profit": "+$45,129.00",
+   "profit_factor": "2.304",
+   "trades": "544",
+   "win_rate": "72.98%",
+   "max_drawdown_usd": "$1,445.50",
+   "return_on_drawdown": "31.22",
+   "avg_trade": "+$82.96",
+   "monthly_profit": "+$4,102.64",
+   "trading_days": "231",
+   "trade_frequency": "2 per day"
+  }
+ },
+ "night-watch": {
+  "label": "Hypothetical backtest",
+  "window_from": "2026-01-01",
+  "window_to": "2026-11-19",
+  "run_date": "2026-11-21",
+  "start_capital_usd": 25000.0,
+  "net_profit_usd": 39235.5,
+  "profit_factor": 2.57,
+  "trades": 366,
+  "win_rate_pct": 66.67,
+  "max_drawdown_usd": 1263.5,
+  "return_on_drawdown": 31.05,
+  "avg_trade_usd": 107.2,
+  "monthly_profit_usd": 3566.86,
+  "trading_days": 231,
+  "trade_frequency": 1.5844,
+  "display": {
+   "net_profit": "+$39,235.50",
+   "profit_factor": "2.570",
+   "trades": "366",
+   "win_rate": "66.67%",
+   "max_drawdown_usd": "$1,263.50",
+   "return_on_drawdown": "31.05",
+   "avg_trade": "+$107.20",
+   "monthly_profit": "+$3,566.86",
+   "trading_days": "231",
+   "trade_frequency": "2 per day"
+  }
+ },
+ "tripwire": {
+  "label": "Hypothetical backtest",
+  "window_from": "2026-01-01",
+  "window_to": "2026-11-19",
+  "run_date": "2026-11-21",
+  "start_capital_usd": 25000.0,
+  "net_profit_usd": 31452.0,
+  "profit_factor": 2.163,
+  "trades": 365,
+  "win_rate_pct": 78.9,
+  "max_drawdown_usd": 1961.5,
+  "return_on_drawdown": 16.03,
+  "avg_trade_usd": 86.17,
+  "monthly_profit_usd": 2859.27,
+  "trading_days": 231,
+  "trade_frequency": 1.5801,
+  "display": {
+   "net_profit": "+$31,452.00",
+   "profit_factor": "2.163",
+   "trades": "365",
+   "win_rate": "78.90%",
+   "max_drawdown_usd": "$1,961.50",
+   "return_on_drawdown": "16.03",
+   "avg_trade": "+$86.17",
+   "monthly_profit": "+$2,859.27",
+   "trading_days": "231",
+   "trade_frequency": "2 per day"
+  }
+ },
+ "the-kilo": {
+  "label": "Hypothetical backtest",
+  "window_from": "2026-01-01",
+  "window_to": "2026-11-20",
+  "run_date": "2026-11-21",
+  "start_capital_usd": 25000.0,
+  "net_profit_usd": 29451.0,
+  "profit_factor": 3.106,
+  "trades": 119,
+  "win_rate_pct": 74.79,
+  "max_drawdown_usd": 1552.5,
+  "return_on_drawdown": 18.97,
+  "avg_trade_usd": 247.49,
+  "monthly_profit_usd": 2677.36,
+  "trading_days": 232,
+  "trade_frequency": 0.5129,
+  "display": {
+   "net_profit": "+$29,451.00",
+   "profit_factor": "3.106",
+   "trades": "119",
+   "win_rate": "74.79%",
+   "max_drawdown_usd": "$1,552.50",
+   "return_on_drawdown": "18.97",
+   "avg_trade": "+$247.49",
+   "monthly_profit": "+$2,677.36",
+   "trading_days": "232",
+   "trade_frequency": "3 per week"
   }
  }
 };

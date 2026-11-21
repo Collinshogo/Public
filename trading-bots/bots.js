@@ -3,6 +3,9 @@
    - What is on the page comes from two small files: bots-config.js (the Lifetime plan, the set-up guide link,
      each tier's checkout link) and data/catalog.js (which strategies are named, and in which tier).
      A strategy that is not named there is not on the page; its tier shows the unnamed line instead.
+   - Coming soon (row E754): an entry with coming_soon set to true is listed like any other, in the same lists, with the
+     tag "Coming soon" beside its name wherever the name shows. It never links to a script page, a checkout or a trial,
+     it is in no "Bought one by one" sum, and with a strategy open the bar does not offer its tier.
    - Tiers and the selection bar: one choice, kept in localStorage. Tiers are bundles: each higher tier
      includes the ones below it (data-rank on each tier card). A tier with no checkout link yet shows
      "Opening soon" in the bar, and that button does nothing.
@@ -26,10 +29,16 @@
 
   var CFG = window.AFT_BOTS_CONFIG || {};
   var CAT = window.AFT_BOTS_CATALOG || {};
-  // Row E736: a coming-soon entry is not a released strategy. It is taken out of the list every other part of both
-  // pages reads, so it reaches no tier card, plan, saving, table row, sort, filter or count; only "Coming soon" shows it.
-  var SOON = (CAT.strategies || []).filter(function (s) { return s && s.coming_soon === true; });
-  if (CAT.strategies) CAT.strategies = CAT.strategies.filter(function (s) { return !(s && s.coming_soon === true); });
+  // Row E754 (Collin, 2026-11-21): a coming-soon strategy is a catalog entry like any other that also carries
+  // coming_soon: true. It is in the regular lists with the tag "Coming soon" beside its name (soonTag), and in its
+  // tier's card when it has a tier. Its figures come only from its own data file; without one it reads as "No figures
+  // published yet". Its instrument, when the catalog gives none, is the first word of its market line.
+  var FIGS = CAT.figures || {};
+  function isSoon(s) { return !!s && s.coming_soon === true; }
+  function hasFigs(s) { return !isSoon(s) || Object.prototype.hasOwnProperty.call(FIGS, s.slug); }   // no data file is fetched for one without figures
+  (CAT.strategies || []).forEach(function (s) {
+    if (isSoon(s) && !s.chip && /^[A-Z0-9]{2,6} · /.test(String(s.market_line))) s.chip = String(s.market_line).split(' · ')[0];
+  });
   var LINKS = CFG.checkout || {};
   var KEY = 'aft-bots-tier';
   var MINUS = '−';
@@ -288,21 +297,26 @@
   (CAT.strategies || []).forEach(function (s) {
     if (s && [1, 2, 3, 4].indexOf(s.grade) >= 0 && ladder[ladder.length - s.grade]) s.tier = ladder[ladder.length - s.grade].id;
   });
-  var names = {}, tiers = {}, slugs = [];
-  var named = (CAT.strategies || []).filter(function (s) {
-    return s && s.named === true && /^[a-z0-9-]+$/.test(String(s.slug)) && s.name && plans[s.tier] &&
-      plans[s.tier].kind === 'monthly' && !document.getElementById(s.slug);
-  });
-  // The Strategies page lists every entry with a TradingView page, a strategy whose tier is not set (tier: null) included.
-  // Only named strategies with a tier reach the tier cards and the savings.
+  var names = {}, tiers = {}, slugs = [], soon = {};
+  function onPage(s) { return s && (s.named === true || isSoon(s)) && /^[a-z0-9-]+$/.test(String(s.slug)) && s.name && !document.getElementById(s.slug); }
+  function inTier(s) { return !!plans[s.tier] && plans[s.tier].kind === 'monthly'; }
+  var named = (CAT.strategies || []).filter(function (s) { return onPage(s) && inTier(s); });
+  // The Strategies page lists every entry with a TradingView page, a strategy whose tier is not set (tier: null) included,
+  // and every coming-soon entry (it has no TradingView page). Only named strategies with a tier reach the tier cards.
   var listed = (CAT.strategies || []).filter(function (s) {
-    return s && s.named === true && /^[a-z0-9-]+$/.test(String(s.slug)) && s.name && !document.getElementById(s.slug) &&
-      /^https:\/\/www\.tradingview\.com\/script\//.test(String(s.tv_url)) && (s.tier === null || (plans[s.tier] && plans[s.tier].kind === 'monthly'));
+    return onPage(s) && (isSoon(s) || /^https:\/\/www\.tradingview\.com\/script\//.test(String(s.tv_url))) && (s.tier === null || s.tier === undefined && isSoon(s) || inTier(s));
   });
-  var shown = ON_LIST ? listed : named;
-  shown.forEach(function (s) { names[s.slug] = s.name; tiers[s.slug] = s.tier; slugs.push(s.slug); });
+  // The bots page's strategy cards: every named strategy with a tier, and every coming-soon entry, with or without one.
+  var carded = (CAT.strategies || []).filter(function (s) { return onPage(s) && (inTier(s) || (isSoon(s) && (s.tier === null || s.tier === undefined))); });
+  var shown = ON_LIST ? listed : carded;
+  shown.forEach(function (s) { names[s.slug] = s.name; tiers[s.slug] = s.tier; slugs.push(s.slug); if (isSoon(s)) soon[s.slug] = s; });
 
-  function nameSpan(s) { return '<span class="bx-sname bx-wm"' + lettering(s) + '>' + esc(s.name) + sheen(s) + '</span>'; }
+  // The one mark of a coming-soon strategy: a small plain tag right after its name, read with the name.
+  function soonTag(s) { return isSoon(s) ? '<span class="bx-cs"><span class="bx-vh">, </span>Coming soon</span>' : ''; }
+  function nameSpan(s) {
+    var n = '<span class="bx-sname bx-wm"' + lettering(s) + '>' + esc(s.name) + sheen(s) + '</span>';
+    return isSoon(s) ? '<span class="bx-nt">' + n + soonTag(s) + '</span>' : n;
+  }
 
   // Tier cards: each named strategy is a chip before its tier's unnamed chip, in the catalog's order.
   // A chip is the name and an arrow, and the whole chip opens the strategy (bots.css).
@@ -324,7 +338,7 @@
     return '$' + r.toLocaleString('en-US', { minimumFractionDigits: r % 1 ? 2 : 0, maximumFractionDigits: 2 });
   }
   ladder.forEach(function (p) {
-    var inc = (CAT.strategies || []).filter(function (s) { return s && plans[s.tier] && plans[s.tier].kind === 'monthly' && plans[s.tier].rank <= p.rank; });
+    var inc = (CAT.strategies || []).filter(function (s) { return s && !isSoon(s) && plans[s.tier] && plans[s.tier].kind === 'monthly' && plans[s.tier].rank <= p.rank; });
     if (!inc.length || p.price === null) return;
     if (!inc.every(function (s) { return typeof s.price === 'number' && s.price > 0; })) return;
     var all = inc.reduce(function (a, s) { return a + s.price; }, 0), saved = all - p.price;
@@ -336,20 +350,59 @@
   $$('[data-tier-list]').forEach(function (ul) {
     var head = ul.previousElementSibling;
     if (!ul.children.length && head && head.classList.contains('bx-list-h')) head.hidden = true;   // nothing to list yet
+    // Row E758: the heading promises access, so a list holding a coming-soon build says when that one joins.
+    if (head && head.classList.contains('bx-list-h') && $('.bx-cs', ul)) head.insertAdjacentHTML('afterend', '<p class="bx-list-soon">Marked Coming soon: joins the tier at release.</p>');
   });
-  // The strategy cards.
+  // The strategy cards. Row E763 (Collin, 2026-11-21; the director's example card): one title line (the name, the market
+  // code in a small chip, the badge "Tier n" at the right), one line of figures, the equity chart from the record's own
+  // turning points with the total profit written on it; the max drawdown and the profit factor bottom left (row E760).
+  // Every name on the grid takes one size, 16px or, where the widest name does not fit at 16px, the size at which it does
+  // (fitNames). A coming-soon card's mark sits on its chart, top left, the same place on each; its title says it to screen
+  // readers.
+  function tierNo(s) { return plans[s.tier] ? 'Tier ' + (CAT.tiers.length - plans[s.tier].rank + 1) : gradeWords(s.tier); }
+  function marketCode(s) { return s.chip || String(s.market_line || '').split(' \u00b7 ')[0]; }
+  // Row E761 (Collin, 2026-11-21): the grid runs by tier, tier 1 first, and within a tier by return on drawdown, highest
+  // first; a coming-soon build sits in its tier by the same rule. A card with no tier or no figures comes after the ones
+  // that have them; ties keep the catalog's order. Only this grid is ordered so: the Library keeps its own order.
+  function byTier(list) {
+    return list.map(function (s, i) { return { s: s, i: i }; }).sort(function (a, b) {
+      var ra = plans[a.s.tier] ? plans[a.s.tier].rank : -Infinity, rb = plans[b.s.tier] ? plans[b.s.tier].rank : -Infinity;
+      var fa = FIGS[a.s.slug], fb = FIGS[b.s.slug];
+      var da = fa && typeof fa.return_on_drawdown === 'number' ? fa.return_on_drawdown : -Infinity;
+      var db = fb && typeof fb.return_on_drawdown === 'number' ? fb.return_on_drawdown : -Infinity;
+      return (rb - ra) || (db - da) || (a.i - b.i);
+    }).map(function (x) { return x.s; });
+  }
   var stratGrid = $('#strat-grid');
   if (stratGrid) {
-    stratGrid.innerHTML = named.map(function (s) {
-      return '<a class="bx-strat" href="#' + s.slug + '" data-slug="' + s.slug + '" data-tier="' + esc(s.tier) + '" data-lvl="' + finish(s.tier) + '">' +
-        '<p class="bx-strat-k"><span>' + esc(s.market_line || '') + '</span><span class="bx-tier" data-lvl="' + finish(s.tier) + '">' + esc(gradeWords(s.tier)) + '</span></p>' +
-        '<h3><span class="bx-wm"' + lettering(s) + '>' + esc(s.name) + sheen(s) + '</span></h3>' +
+    stratGrid.innerHTML = byTier(carded).map(function (s) {
+      return '<a class="bx-strat" href="#' + s.slug + '" data-slug="' + s.slug + '" data-tier="' + esc(s.tier == null ? '' : s.tier) + '" data-lvl="' + finish(s.tier) + '">' +
+        '<div class="bx-strat-top"><h3><span class="bx-wm"' + lettering(s) + '>' + esc(s.name) + sheen(s) + '</span>' + (isSoon(s) ? '<span class="bx-vh">, Coming soon</span>' : '') + '</h3>' +
+        '<span class="bx-strat-k">' + esc(marketCode(s)) + '</span>' +
+        '<span class="bx-tier" data-lvl="' + finish(s.tier) + '">' + esc(tierNo(s)) + '</span></div>' +
         '<dl class="bx-hl" data-hl="' + s.slug + '"></dl>' +
         '<div class="bx-spark" data-spark="' + s.slug + '" aria-hidden="true"></div>' +
-        '<p class="bx-strat-go"><span class="bx-status" data-status="' + s.slug + '"></span><span class="bx-open">Open strategy</span></p>' +
+        '<p class="bx-strat-go"><span class="bx-risk" data-risk="' + s.slug + '"></span><span class="bx-open">Open strategy</span></p>' +
         '</a>';
     }).join('');
   }
+  // Row E763: the names' one size. Each name's width per pixel of font is measured (it scales with the font), and the grid
+  // gets the ratio of the widest and the room the code and the badge take; bots.css sizes every name from the card's width.
+  function fitNames() {
+    if (!stratGrid) return;
+    var widest = 0, room = 0;
+    $$('.bx-strat', stratGrid).forEach(function (c) {
+      var nm = $('h3 .bx-wm', c), code = $('.bx-strat-k', c), tier = $('.bx-tier', c);
+      var f = parseFloat(getComputedStyle(nm).fontSize);
+      if (f > 0) widest = Math.max(widest, nm.getBoundingClientRect().width / f);
+      room = Math.max(room, code.getBoundingClientRect().width + tier.getBoundingClientRect().width);
+    });
+    if (!(widest > 0)) return;
+    stratGrid.style.setProperty('--nm-k', (0.97 / widest).toFixed(5));
+    stratGrid.style.setProperty('--nm-r', Math.ceil(room + 2 * 8 + 4) + 'px');   // two 8px gaps and a little air (the badge sits at the right)
+  }
+  fitNames();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitNames);
 
   var docs = {};                // slug -> loaded data file
   var sel = { plan: null };
@@ -402,7 +455,7 @@
       btn.textContent = on ? plans[id].name + ' chosen' : 'Choose ' + plans[id].name;
       btn.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
-    var own = openSlug ? plans[tiers[openSlug]] : null, nm = openSlug ? names[openSlug] : '';
+    var own = openSlug && !soon[openSlug] ? plans[tiers[openSlug]] : null, nm = openSlug ? names[openSlug] : '';   // a coming-soon one's tier is not offered
     var two = false;
     bar.classList.toggle('has-sel', !!p);
     barAlt.hidden = true;
@@ -481,6 +534,10 @@
     if (s) {
       palette(s).forEach(function (p) { sheetTitle.style.setProperty(p[0], p[1]); });
       if (sheen(s)) sheetTitle.insertAdjacentHTML('beforeend', sheen(s));
+      if (isSoon(s)) {          // the tag takes about six letters' room, so the name's fitted size counts it (the title stays one line at 360 px)
+        sheetTitle.insertAdjacentHTML('beforeend', soonTag(s));
+        sheetTitle.style.setProperty('--n', String(String(s.name).length + 6));
+      }
     }
     sheetK.textContent = gradeWords(tiers[slug]);
     sheetBody.innerHTML = '<p class="bx-note">Loading…</p>';
@@ -490,6 +547,10 @@
     document.body.classList.add('noscroll');
     sheetBody.scrollTop = 0;
     sheetTitle.focus({ preventScroll: true });
+    if (soon[slug] && !hasFigs(soon[slug])) {   // no data file: the catalog's own words, as for a record with no figures
+      renderPanel({ slug: slug, name: names[slug], status: 'none', what: { market_line: soon[slug].market_line, timeframe: soon[slug].timeframe } });
+      return;
+    }
     getDoc(slug).then(function (doc) { if (openSlug === slug) renderPanel(doc); },
       function () { if (openSlug === slug) sheetBody.innerHTML = '<p class="bx-note">This strategy’s record did not load. Reload the page to try again.</p>'; });
   }
@@ -562,7 +623,7 @@
 
     var what = '<section class="bx-part"><h3>The strategy</h3>' +
       dl([['Market', has(w.market_line) && esc(w.market_line)], ['Chart', has(w.timeframe) && esc(w.timeframe)],
-        ['Tier', esc(tierName)], ['On its own', esc(ownPrice)]]) + '</section>';
+        ['Tier', esc(tierName)], ['On its own', !isSoon(own) && esc(ownPrice)]]) + '</section>';   // row E758: a coming-soon build is not sold on its own, so no price of its own
 
     if (d.status !== 'figures') {
       sheetBody.innerHTML = '<div class="bx-nofig">' +
@@ -623,7 +684,7 @@
         (wo && wo.note ? '<p class="bx-note">' + esc(wo.note) + '</p>' : '') + '</section>' +
       '<section class="bx-part"><h3>The proof</h3>' + dl([
         ['Test run', has(p.run_date) && esc(day(p.run_date))],
-        ['TradingView page', has(p.tradingview_url) && /^https:\/\/([a-z]+\.)?tradingview\.com\//.test(p.tradingview_url) && '<a href="' + esc(p.tradingview_url) + '" rel="noopener">Open the strategy on TradingView</a>']
+        ['TradingView page', !soon[d.slug] && has(p.tradingview_url) && /^https:\/\/([a-z]+\.)?tradingview\.com\//.test(p.tradingview_url) && '<a href="' + esc(p.tradingview_url) + '" rel="noopener">Open the strategy on TradingView</a>']
       ]) + '</section>' +
       '</div>';
 
@@ -711,21 +772,116 @@
   function highlights(d) {
     if (d.status !== 'figures' || !d.figures || !d.figures.display) return '';
     var f = d.figures, show = f.display;
+    // Row E763: three figures in one line; the total profit is written on the chart (spark).
     return [['Return on drawdown', show.return_on_drawdown, ''], ['Avg monthly profit', show.monthly_profit, tone(f.monthly_profit_usd)],
             ['Win rate', show.win_rate, '']].filter(function (h) { return h[1]; }).map(function (h) {
       return '<div class="bx-hl-i"><dt>' + esc(h[0]) + '</dt><dd' + (h[2] ? ' class="' + h[2] + '"' : '') + '>' + esc(h[1]) + '</dd></div>';
     }).join('');
   }
 
-  function spark(el, d) {
+  // Row E760: a card's bottom-left pair, labelled, as the record prints them; a strategy without figures shows none.
+  function risk(d) {
+    if (d.status !== 'figures' || !d.figures || !d.figures.display) return '';
+    var show = d.figures.display;
+    return [['Max drawdown', show.max_drawdown_usd], ['Profit factor', show.profit_factor]].filter(function (h) { return h[1]; }).map(function (h) {
+      return '<span class="bx-risk-i">' + esc(h[0]) + ' <b>' + esc(h[1]) + '</b></span>';
+    }).join('');
+  }
+
+  // Row E763: a card's equity chart, as the director's example card draws it. The line runs through every turning point
+  // inside every day (the record's day_paths, each day's path added to the close before it); where a record's paths do not
+  // match its days, the daily closes alone. Faint dollar gridlines labelled on the right ($0 dashed), month names along the
+  // bottom, a dot at the last point, a soft green fill. It is drawn at the box's own width and 230/600 of it high, so it is
+  // never stretched and its words keep their size. The total profit is written inside it, bottom right, where a rising
+  // line leaves room; where the line would cross it there, it goes top left (under a coming-soon card's mark, which sits
+  // top left), then the same two places a size smaller, and failing all four the place the line crosses least.
+  function cardPoints(d) {
+    var eq = d.equity, dp = d.day_paths, pts = [[0, 0]], base = 0, ok = Array.isArray(dp) && dp.length === eq.length;
+    if (ok) {
+      for (var i = 0; i < eq.length && ok; i++) {
+        var path = dp[i], k = path && path.length;
+        if (!k || Math.abs(base + Number(path[k - 1]) - Number(eq[i][1])) > 0.01) { ok = false; break; }
+        for (var j = 0; j < k; j++) pts.push([i + (j + 1) / k, base + Number(path[j])]);
+        base = Number(eq[i][1]);
+      }
+    }
+    if (!ok) pts = [[0, 0]].concat(eq.map(function (e, i) { return [i + 1, Number(e[1])]; }));
+    return pts;
+  }
+  function niceStep(span, n) {
+    var raw = (span || 1) / n, p = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10)), ms = [1, 2, 2.5, 5, 10];
+    for (var i = 0; i < ms.length; i++) if (ms[i] * p >= raw) return ms[i] * p;
+    return 10 * p;
+  }
+  function kWords(v) {
+    if (Math.abs(v) < 0.5) return '$0';
+    var a = Math.abs(v) / 1000, s = Math.abs(a - Math.round(a)) < 1e-9 ? String(Math.round(a)) : String(Math.round(a * 10) / 10);
+    return (v < 0 ? '\u2212' : '') + '$' + s + 'k';
+  }
+  function spark(el, d, isSoonCard) {
+    var mark = isSoonCard ? '<span class="bx-cs">Coming soon</span>' : '';
     if (d.status !== 'figures' || !d.equity || !d.equity.length) {
-      el.textContent = d.status === 'figures' ? '' : 'No figures published yet';
+      el.innerHTML = mark + (d.status === 'figures' ? '' : '<span class="bx-spark-none">No figures published yet</span>');
       return;
     }
-    var g = linePath(d.equity, 300, 68, { l: 4, r: 4, t: 8, b: 8 });
-    el.innerHTML = '<svg viewBox="0 0 300 68" preserveAspectRatio="none"><path d="' + g.d +
-      '" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="1.6" vector-effect="non-scaling-stroke"/></svg>';
+    var W = Math.round((el.getBoundingClientRect().width - el.clientLeft * 2) * 100) / 100;   // the box's exact width
+    if (!(W > 60)) return;
+    if (Number(el.dataset.w) === W) return;
+    el.dataset.w = W;
+    var H = Math.round(W * 230 / 600 * 100) / 100, pts = cardPoints(d), n = d.equity.length;
+    var lo = 0, hi = 0;
+    pts.forEach(function (p) { if (p[1] < lo) lo = p[1]; if (p[1] > hi) hi = p[1]; });
+    var span = (hi - lo) || 1, step = niceStep(span, 4), top = hi + span * .03, bot = lo - span * .05;
+    var padR = 46, padT = 10, padB = 20, pw = W - padR, ph = H - padT - padB;
+    var X = function (x) { return x / n * pw; }, Y = function (v) { return padT + (top - v) / (top - bot) * ph; };
+    var line = 'M' + pts.map(function (p) { return X(p[0]).toFixed(1) + ',' + Y(p[1]).toFixed(1); }).join(' L');
+    var area = line + ' L' + X(n).toFixed(1) + ',' + Y(bot).toFixed(1) + ' L0,' + Y(bot).toFixed(1) + ' Z';
+    var grid = '';
+    for (var k = Math.ceil(bot / step); k * step <= top + 1e-6; k++) {
+      var v = k * step, y = Y(v);
+      grid += '<line x1="0" x2="' + pw.toFixed(1) + '" y1="' + y.toFixed(1) + '" y2="' + y.toFixed(1) + '" class="gl' + (k === 0 ? ' z' : '') + '"/>' +
+        '<text x="' + (W - 4) + '" y="' + (y + 3.5).toFixed(1) + '" class="gt" text-anchor="end">' + kWords(v) + '</text>';
+    }
+    var seen = {}, ticks = '';
+    d.equity.forEach(function (e, i) {
+      var m = Number(String(e[0]).slice(5, 7));
+      if (!seen[m]) { seen[m] = 1; if ((m - 1) % 2 === 0) ticks += '<text x="' + (X(i) + 2).toFixed(1) + '" y="' + (H - 6) + '" class="gt">' + MON[m - 1] + '</text>'; }
+    });
+    var last = pts[pts.length - 1], ex = X(last[0]).toFixed(1), ey = Y(last[1]).toFixed(1), id = 'bxg-' + el.getAttribute('data-spark');
+    var f = d.figures || {}, net = f.display && f.display.net_profit;
+    el.innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '">' +
+      '<defs><linearGradient id="' + id + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34c27a" stop-opacity=".32"/><stop offset="1" stop-color="#34c27a" stop-opacity="0"/></linearGradient></defs>' +
+      grid + ticks + '<path d="' + area + '" fill="url(#' + id + ')"/>' +
+      '<path d="' + line + '" fill="none" stroke="#3fd88a" stroke-width="1.6" stroke-linejoin="round"/>' +
+      '<circle cx="' + ex + '" cy="' + ey + '" r="4" fill="#3fd88a"/><circle cx="' + ex + '" cy="' + ey + '" r="8" fill="#3fd88a" fill-opacity=".2"/></svg>' +
+      (net ? '<div class="bx-spark-tp"><span>Total profit</span><b class="' + tone(f.net_profit_usd) + '">' + esc(net) + '</b></div>' : '') + mark;
+    el.classList.toggle('has-cs', !!isSoonCard);
+    var tp = $('.bx-spark-tp', el);
+    if (tp) placeTotal(el.querySelectorAll('svg path')[1], tp);
   }
+  // how many of 400 points along the line fall within 3px of a box
+  function crossings(ln, r) {
+    var m = ln.getScreenCTM(), L = ln.getTotalLength(), c = 0;
+    for (var i = 0; i <= 400; i++) {
+      var q = ln.getPointAtLength(L * i / 400), x = m.a * q.x + m.c * q.y + m.e, y = m.b * q.x + m.d * q.y + m.f;
+      if (x > r.left - 3 && x < r.right + 3 && y > r.top - 3 && y < r.bottom + 3) c++;
+    }
+    return c;
+  }
+  function placeTotal(ln, tp) {
+    if (!ln || !ln.getScreenCTM()) return;
+    var ways = ['', 'is-top', 'is-sm', 'is-sm is-top'], best = null;
+    for (var i = 0; i < ways.length; i++) {
+      tp.className = 'bx-spark-tp' + (ways[i] ? ' ' + ways[i] : '');
+      var c = crossings(ln, tp.getBoundingClientRect());
+      if (!c) return;
+      if (!best || c < best[1]) best = [ways[i], c];
+    }
+    tp.className = 'bx-spark-tp' + (best[0] ? ' ' + best[0] : '');
+  }
+  var cardWatch = window.ResizeObserver ? new ResizeObserver(function (es) {
+    es.forEach(function (e) { var el = e.target, slug = el.getAttribute('data-spark'); if (docs[slug]) spark(el, docs[slug], !!soon[slug]); });
+  }) : null;
 
   // Redraw the chart whenever its box changes size (window, rotation, the bar taking a second row).
   function redraw() {
@@ -741,39 +897,20 @@
     resizeTimer = setTimeout(redraw, 120);
   });
 
-  /* ---------- coming soon (row E736): a name, the market line and the chart, nothing else ---------- */
-  // The Library's block (#soon, under the table) is one small card per item; the bots page's strip (#soon-strip, after
-  // the tier cards) gives the names and markets and links to that block. A name is lettered plain.
-  var soonItems = SOON.filter(function (s) { return /^[a-z0-9-]+$/.test(String(s.slug)) && s.name && s.market_line; });
-  function soonBlock(el, full) {
-    if (!el || !soonItems.length) return;
-    var h = full ? 'h2' : 'h3';
-    el.innerHTML = '<' + h + ' class="bx-soon-h" id="' + el.id + '-h">Coming soon</' + h + '>' +
-      '<p class="bx-soon-n">Not released yet. Figures, tier and price are published with each release.</p>' +
-      '<ul class="bx-soon-list">' + soonItems.map(function (s) {
-        return '<li class="bx-soon-i"><p class="bx-soon-name">' + esc(s.name) + '</p><p class="bx-soon-m">' + esc(s.market_line) + '</p>' +
-          (full ? '<p class="bx-soon-tag">Coming soon</p>' : '') + '</li>';
-      }).join('') + '</ul>' +
-      (full ? '' : '<p class="bx-soon-more"><a href="strategies/#soon">See them in the Strategy Library</a></p>');
-    el.setAttribute('aria-labelledby', el.id + '-h');
-    el.hidden = false;
-    // A page loaded onto #soon: the block is drawn after the browser looked for it, so it is brought into view once all is drawn.
-    if (full && location.hash === '#soon') window.addEventListener('load', function () { el.scrollIntoView({ block: 'start' }); });
-  }
-  soonBlock($('#soon'), true);
-  soonBlock($('#soon-strip'), false);
 
   /* ---------- start ---------- */
-  window.AFT_BOTS = { named: named, listed: listed, plans: plans, ladder: ladder, nameSpan: nameSpan, grade: grade, finish: finish, esc: esc,
+  window.AFT_BOTS = { named: named, listed: listed, isSoon: isSoon, soonTag: soonTag, plans: plans, ladder: ladder, nameSpan: nameSpan, grade: grade, finish: finish, esc: esc,
     usd: usd, day: day, tone: tone, dollars: dollars, priceWords: priceWords, dayWords: dayWords, monthItem: monthItem, dailyCals: dailyCals,
     calcLink: calcLink };
   load();
   render();
   if (stratGrid) slugs.forEach(function (slug) {
+    if (soon[slug] && !hasFigs(soon[slug])) { var sp0 = $('[data-spark="' + slug + '"]'); if (sp0) spark(sp0, { status: 'none' }, true); return; }
     getDoc(slug).then(function (d) {
-      var sp = $('[data-spark="' + slug + '"]'), hl = $('[data-hl="' + slug + '"]');
+      var sp = $('[data-spark="' + slug + '"]'), hl = $('[data-hl="' + slug + '"]'), rk = $('[data-risk="' + slug + '"]');
       if (hl) hl.innerHTML = highlights(d);
-      if (sp) spark(sp, d);
+      if (rk) rk.innerHTML = risk(d);
+      if (sp) { spark(sp, d, !!soon[slug]); if (cardWatch) cardWatch.observe(sp); }
     }, function () { /* the cards still read without their data */ });
   });
   route();

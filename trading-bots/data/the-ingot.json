@@ -2,7 +2,7 @@
  "schema": "aft.strategy-performance/2",
  "slug": "the-ingot",
  "name": "The Ingot",
- "tier": "select",
+ "tier": "base",
  "what": {
   "market_line": "MGC · Micro Gold",
   "timeframe": "1-minute chart"

@@ -95,7 +95,9 @@
     var fin = nameFinish(s), g = s.lettering, st = ['--n:' + String(s.name).length];
     if (g && g.length === 3 && g.every(colour)) st.push('--c0:' + g[0], '--c1:' + g[1], '--c2:' + g[2]);
     var sh = (fin === 'sheen' || fin === 'polished') ? '<span class="bx-sh" aria-hidden="true" data-t="' + esc(s.name) + '"></span>' : '';
-    return '<span class="bx-sname bx-wm" data-lvl="' + fin + '" style="' + st.join(';') + '">' + esc(s.name) + sh + '</span>';
+    var n = '<span class="bx-sname bx-wm" data-lvl="' + fin + '" style="' + st.join(';') + '">' + esc(s.name) + sh + '</span>';
+    // Row E754: a coming-soon strategy carries the tag "Coming soon" right after its name, read with it.
+    return s.coming_soon === true ? '<span class="bx-nt">' + n + '<span class="bx-cs"><span class="bx-vh">, </span>Coming soon</span></span>' : n;
   }
 
   /* ---------- the replay, in whole cents ---------- */
@@ -709,7 +711,7 @@
   /* ---------- start ---------- */
   function build() {
     F = { pick: $('#pick'), target: $('#target'), limit: $('#limit'), lock: $('#lock'), dlOn: $('#dl-on'), dl: $('#dl'), cpOn: $('#cp-on'), cp: $('#cp'), md: $('#md'), scale: null };
-    F.pick.innerHTML = order.map(function (slug) { return '<option value="' + esc(slug) + '">' + esc(recs[slug].s.name) + '</option>'; }).join('');
+    F.pick.innerHTML = order.map(function (slug) { return '<option value="' + esc(slug) + '">' + esc(recs[slug].s.name) + (recs[slug].s.coming_soon === true ? ' (Coming soon)' : '') + '</option>'; }).join('');
     $('#kinds').innerHTML = KINDS.map(function (kd) {
       return '<label class="cx-radio"><input type="radio" name="kind" value="' + kd.id + '"><span><b>' + esc(kd.name) + '</b><small>' + esc(kd.note) + '</small></span></label>';
     }).join('');
@@ -804,7 +806,11 @@
   }
 
   window.AFT_CALC = { replay: replay, summary: summary, version: 2 };
-  var list = (CAT.strategies || []).filter(function (s) { return s && s.named === true && s.coming_soon !== true && /^[a-z0-9-]+$/.test(String(s.slug)) && s.name; });
+  // Row E754: a coming-soon strategy is listed like the others once it has figures (its data file); without them none is fetched.
+  var FIGS = CAT.figures || {};
+  var list = (CAT.strategies || []).filter(function (s) {
+    return s && (s.coming_soon === true ? Object.prototype.hasOwnProperty.call(FIGS, s.slug) : s.named === true) && /^[a-z0-9-]+$/.test(String(s.slug)) && s.name;
+  });
   Promise.all(list.map(function (s) {
     return fetch(DATA + s.slug + '.json', { credentials: 'same-origin' }).then(function (r) { return r.ok ? r.json() : null; }, function () { return null; })
       .then(function (d) { return { s: s, d: d }; }, function () { return { s: s, d: null }; });
