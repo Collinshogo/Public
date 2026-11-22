@@ -286,7 +286,7 @@
 .cx-more summary{display:flex;align-items:baseline;gap:8px;min-height:44px;padding:12px 2px 6px;cursor:pointer;list-style:none;color:var(--bright);font-size:15px;font-weight:600}
 .cx-more summary::-webkit-details-marker{display:none}
 .cx-more summary::after{content:"";width:8px;height:8px;margin-left:auto;align-self:center;border-right:2px solid var(--dim);border-bottom:2px solid var(--dim);transform:rotate(45deg);transition:transform .15s}
-.cx-more[open] summary::after{transform:rotate(-135deg)}
+.cx-more[open] summary::after{content:"";transform:rotate(-135deg)}
 .cx-more summary small{color:var(--dim);font-size:13px;font-weight:500}
 .cx-more summary:focus-visible{outline:2px solid #8ea0ff;outline-offset:2px;border-radius:6px}
 .cx-more>.cx-sw{margin-top:6px}
