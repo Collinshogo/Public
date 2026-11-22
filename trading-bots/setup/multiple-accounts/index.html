@@ -10,31 +10,32 @@
 <script>location.replace("/trading-bots/setup/copy-trading/" + location.search + location.hash);</script>
 <meta http-equiv="refresh" content="0; url=/trading-bots/setup/copy-trading/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 html{background:#0e0f16}
-body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box;background:#0e0f16;color:#d8dbe6;font:18px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;text-align:center}
-p{margin:0;max-width:34em}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:#0e0f16;color:#d8dbe6;font:18px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;text-align:center}
+p{margin:auto;padding:24px;max-width:34em}
 a{display:inline-block;padding:10px 2px;color:#fff;font-weight:600;text-underline-offset:4px}
-/* the site's top bar (row E734), as on the guide pages */
-.nav{position:fixed;top:0;left:0;right:0;z-index:20;background:rgba(14,15,22,.9);border-bottom:1px solid #23263a;text-align:left}
-.nav-in{max-width:1160px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
-.nav-brand{display:flex;align-items:center;min-height:44px;padding:0}
-.nav-brand img{height:34px;width:auto;display:block}
-.nav-links{display:flex;gap:26px;font-size:15px;font-weight:500;line-height:1.4}
-.nav-links a{color:#9a9fb3;padding:10px 0;font-weight:500;text-decoration:none;white-space:nowrap}
-.nav-links a:hover,.nav-links a[aria-current]{color:#fff}
-@media(max-width:859.98px){.nav-links a.nav-lib{display:none}.nav-links{gap:20px}}
-@media(max-width:420px){.nav-brand img{height:28px}}
 </style>
+<link rel="stylesheet" href="/trading-bots/nav.css">
+<script src="/trading-bots/nav.js" defer></script>
+<link rel="stylesheet" href="/trading-bots/cart.css">
+<script src="/trading-bots/cart.js" defer></script>
 </head>
 <body>
-<header class="nav">
-  <div class="nav-in">
-    <a class="nav-brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
-    <nav class="nav-links" aria-label="AFT Trading Bots">
-      <a href="/trading-bots/">Trading Bots</a>
-      <a class="nav-lib" href="/trading-bots/strategies/">Strategy Library</a>
+<header class="tbn">
+  <div class="tbn-in">
+    <a class="tbn-brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
+    <button class="tbn-btn" type="button" aria-expanded="false" aria-controls="tbn-menu"><span class="tbn-ico" aria-hidden="true"></span>Menu</button>
+    <nav class="tbn-links" id="tbn-menu" aria-label="AFT Trading Bots">
+      <a href="/trading-bots/#plans">Plans</a>
+      <a href="/trading-bots/strategies/">Strategy Library</a>
+      <a href="/trading-bots/#method">How results are shown</a>
+      <a href="/trading-bots/#how">How it works</a>
       <a href="/trading-bots/setup/" aria-current="true">Setup</a>
+      <a href="/trading-bots/calculator/">Calculator</a>
     </nav>
   </div>
 </header>

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>You're in: AFT Trading Bots | All Fluence Trading</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0e0f16">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/style.css">
+<style>
+/* row E806: where Whop's checkout returns a buyer from the bots cart (cart.js returnUrl). Whop adds status=succeeded,
+   failed or canceled; anything but failed or canceled reads as the thank-you, except a Lifetime order (bank wire, row E811 R1). */
+.tx{max-width:720px;margin:0 auto;padding:48px 20px 64px}
+.tx h1{margin:0 0 12px;font-family:var(--display);font-size:40px;line-height:1.1;color:var(--bright)}
+.tx .tx-lead{margin:0 0 28px;font-size:19px;color:var(--text)}
+.tx-box{margin:0 0 20px;padding:18px 20px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+.tx-box h2{margin:0 0 8px;font-family:var(--display);font-size:20px;color:var(--bright)}
+.tx-box p,.tx-box li{margin:0;color:var(--dim);font-size:16px}
+.tx-box ol{margin:8px 0 0;padding-left:22px}
+.tx-box li{margin:6px 0}
+.tx-cta{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0 0}
+/* row E832: the trial's terms under the steps, for a buyer whose 14 days just started */
+.tx-terms{margin:0 0 20px;color:var(--dim);font-size:15px;line-height:1.5}
+.tx-fine{margin:28px 0 0;color:var(--faint);font-size:14px}
+.tx [hidden]{display:none}
+@media(max-width:480px){.tx{padding-top:32px}.tx h1{font-size:32px}}
+/* Row E816: on phones the support link gets a 30 px tap height from padding (the type is unchanged) */
+@media(max-width:559.98px){.tx-box p a{padding-top:6px;padding-bottom:6px}}
+</style>
+<script src="/config.js"></script>
+<script src="/tracking.js" defer></script>
+<link rel="stylesheet" href="/trading-bots/nav.css">
+<script src="/trading-bots/nav.js" defer></script>
+<link rel="stylesheet" href="/trading-bots/cart.css">
+<script src="/trading-bots/cart.js" defer></script>
+</head>
+<body>
+
+<header class="tbn">
+  <div class="tbn-in">
+    <a class="tbn-brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
+    <button class="tbn-btn" type="button" aria-expanded="false" aria-controls="tbn-menu"><span class="tbn-ico" aria-hidden="true"></span>Menu</button>
+    <nav class="tbn-links" id="tbn-menu" aria-label="AFT Trading Bots">
+      <a href="/trading-bots/#plans">Plans</a>
+      <a href="/trading-bots/strategies/">Strategy Library</a>
+      <a href="/trading-bots/#method">How results are shown</a>
+      <a href="/trading-bots/#how">How it works</a>
+      <a href="/trading-bots/setup/">Setup</a>
+      <a href="/trading-bots/calculator/">Calculator</a>
+    </nav>
+  </div>
+</header>
+
+<main class="tx">
+  <div id="tx-ok">
+    <h1>You're in.</h1>
+    <p class="tx-lead">What you chose is in your Whop account. You claim TradingView access there, by entering your TradingView username in each strategy's TradingView app.</p>
+    <!-- row E827: the heading names what the steps do; the set-up guide is the button under them -->
+    <div class="tx-box">
+      <h2>Claim access to strategies through Whop</h2>
+      <ol>
+        <li>Open Whop and go to what you chose.</li>
+        <li>For each strategy, enter your TradingView username in its TradingView app. Each strategy is an invite-only script on TradingView, and its access goes to that username.</li>
+      </ol>
+      <p class="tx-cta"><a class="btn btn-primary" data-dest="whopHub" data-ev="content" data-name="bots-thanks-whop" href="https://whop.com/hub/" rel="noopener" target="_blank">Open Whop</a><a class="btn btn-ghost" href="/trading-bots/setup/" data-ev="content" data-name="bots-thanks-setup">Read the set-up guide</a></p>
+    </div>
+    <p class="tx-terms"><span data-trial-days>14</span>-day free trial. Cancel inside the <span data-trial-days>14</span> days and you're never charged. After that, the plan's or strategy's price a month until you cancel. No refunds once charged. The trial is once per plan or strategy: if you had used it before, Whop charged the first month today.</p>
+  </div>
+  <!-- row E811 R1: Lifetime is paid by bank wire on Whop, so nothing is paid when the order is placed -->
+  <div id="tx-wire" hidden>
+    <h1>Your order is placed.</h1>
+    <p class="tx-lead">It is paid by bank transfer or wire through Whop, so nothing has been paid yet. The transfer goes to the bank details Whop shows at checkout; AFT never sends bank details by email or Discord.</p>
+    <div class="tx-box">
+      <h2>What happens next</h2>
+      <ol>
+        <li>Send the transfer or wire with the details Whop shows you.</li>
+        <li>Access starts when Whop confirms the transfer (a bank transfer can take a few business days). Once it does, enter your TradingView username for each strategy in Whop.</li>
+        <li>Then follow the set-up guide to put the strategy on your chart.</li>
+        <li>The one-on-one is booked by email after purchase.</li>
+      </ol>
+      <p class="tx-cta"><a class="btn btn-primary" data-dest="whopHub" data-ev="content" data-name="bots-thanks-wire-whop" href="https://whop.com/hub/" rel="noopener" target="_blank">Open Whop</a><a class="btn btn-ghost" href="/trading-bots/setup/" data-ev="content" data-name="bots-thanks-wire-setup">Read the set-up guide</a></p>
+    </div>
+  </div>
+  <div id="tx-no" hidden>
+    <h1>The checkout did not go through.</h1>
+    <p class="tx-lead">Whop did not complete the checkout. Your cart is still here, so you can try again.</p>
+    <p class="tx-cta"><a class="btn btn-primary" href="/trading-bots/#cart">Back to your cart</a></p>
+  </div>
+  <div class="tx-box">
+    <h2>Need a hand?</h2>
+    <p>Email <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a> and say what you chose. Billing, receipts and cancelling are in your Whop account.</p>
+  </div>
+  <p class="tx-fine">For education only. Trading futures involves substantial risk of loss and is not suitable for every investor. Strategy Tester results are hypothetical, have inherent limitations and do not represent actual trading. Nothing here is financial advice.</p>
+</main>
+
+<script>
+(function(){
+// row E827: every status on the address. Whop adds its own status (succeeded, failed, canceled) and the payment id
+// (payment=pay_...) to the return address and keeps the address's other parameters (docs.whop.com, embedded checkout).
+var K='aft-bots-cart',q=null,sts=[],placed=0,c=null,items=[];
+try{q=new URLSearchParams(location.search);sts=q.getAll('status');}catch(e){}
+// the note cart.js leaves when a Lifetime order is placed: read once, then gone
+try{placed=+localStorage.getItem('aft-bots-placed')||0;localStorage.removeItem('aft-bots-placed');}catch(e){}
+if(sts.indexOf('failed')>=0||sts.indexOf('canceled')>=0){document.getElementById('tx-ok').hidden=true;document.getElementById('tx-no').hidden=false;document.title='Checkout not completed | All Fluence Trading';return;}
+// row E811 R1: a Lifetime order (bank wire on Whop) is not paid on return: say so. Row E827: it is read from this return
+// alone, never from an old cart: the note above (within the hour), a Lifetime still in the cart on a return from Whop
+// (the address carries Whop's payment id; Lifetime checks out on its own), or an address that says pending, bank or wire
+// (the payment id aside). The placed order then leaves the cart, so it is not an unpaid item on a later visit.
+try{c=JSON.parse(localStorage.getItem(K)||'null');if(c&&Array.isArray(c.items))items=c.items;}catch(e){}
+var lifeIn=items.some(function(x){return x&&x.t==='life';}),rest='';
+try{var r=new URLSearchParams(location.search);r.delete('payment');r.delete('setup');rest=decodeURIComponent(r.toString());}catch(e){}
+var wire=(placed>0&&Date.now()-placed<3600000)||sts.indexOf('pending')>=0||/bank|wire|pending/i.test(rest)||(lifeIn&&!!(q&&q.get('payment')));
+if(wire){
+if(lifeIn){try{c.items=items.filter(function(x){return !(x&&x.t==='life');});localStorage.setItem(K,JSON.stringify(c));}catch(e){}}
+document.getElementById('tx-ok').hidden=true;document.getElementById('tx-wire').hidden=false;document.title='Order placed, to pay by bank transfer or wire | All Fluence Trading';return;}
+// a finished checkout empties the cart (cart.js reads it after this runs): Whop's status=succeeded on the return address,
+// so a paid monthly cart is empty here even when Whop leaves the page before cart.js's onComplete has emptied it.
+// Row E832 (addendum A): so does any return that carries a Whop id (payment=pay_..., or setup=sint_... for a checkout that
+// saved a payment method and charged nothing) and no failed or canceled status (those returned above): a buyer whose
+// 14-day trial has just started comes back to an empty cart. Whop's docs name no trial case. The setup id, like the
+// payment id, is left out of the bank or wire test above.
+var wid=!!(q&&(/^pay_/.test(q.get('payment')||'')||/^sint_/.test(q.get('setup')||'')));
+if(sts.indexOf('succeeded')>=0||wid){try{localStorage.removeItem(K);}catch(e){}}
+})();
+</script>
+</body>
+</html>

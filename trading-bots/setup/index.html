@@ -11,21 +11,25 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="All Fluence Trading">
 <meta property="og:title" content="All Fluence Trading — Set up your AFT trading bot">
 <meta property="og:description" content="Eight steps, in writing and on video: a CrossTrade account, your Tradovate connection, the strategy on your TradingView chart and the one alert that sends its orders.">
 <meta property="og:url" content="https://allfluencetrading.com/trading-bots/setup/">
-<meta property="og:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-21.png">
+<meta property="og:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-22.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="All Fluence Trading — Set up your AFT trading bot">
 <meta name="twitter:description" content="Eight steps, in writing and on video: a CrossTrade account, your Tradovate connection, the strategy on your TradingView chart and the one alert that sends its orders.">
-<meta name="twitter:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-21.png">
+<meta name="twitter:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-22.png">
 <script src="/config.js"></script>
 <script src="/tracking.js" defer></script>
+<link rel="stylesheet" href="/trading-bots/nav.css">
+<script src="/trading-bots/nav.js" defer></script>
+<link rel="stylesheet" href="/trading-bots/cart.css">
+<script src="/trading-bots/cart.js" defer></script>
 <meta name="description" content="Setup guide for an AFT trading bot in eight steps: get a CrossTrade account, connect Tradovate, copy your webhook URL and secret key, add the strategy in TradingView, fill in its settings, create the alert and check the connection.">
 <style>
   :root{
@@ -44,6 +48,7 @@
   .wrap{max-width:760px;margin:0 auto;padding:28px 20px 56px}
   a{color:var(--bright);text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:3px}
   a:hover{text-decoration-color:var(--bright)}
+  :where(.wrap a:not([class])){padding:6px 0}   /* row E817: every text link at least 30 px tall to tap; padding on an inline link moves no line */
   strong{color:var(--bright)}
   .brand{display:block;width:max-content;margin-bottom:20px}
   .brand img{height:34px;width:auto;display:block}
@@ -58,16 +63,7 @@
   code{font-family:var(--mono);font-size:.88em;background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--bright);overflow-wrap:anywhere}
   .fine{font-size:13.5px;color:var(--faint);margin:10px 0 0}
 
-  /* the site's top bar (style.css's .nav and .nav-links; these pages do not load style.css) and the section menu (row E734) */
-  .nav{position:sticky;top:0;z-index:20;background:rgba(14,15,22,.9);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-  .nav-in{max-width:1160px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
-  .nav-brand{display:flex;align-items:center;min-height:44px}
-  .nav-brand img{height:34px;width:auto;display:block}
-  .nav-links{display:flex;gap:26px;font-size:15px;font-weight:500;line-height:1.4}
-  .nav-links a{color:var(--dim);display:inline-block;padding:10px 0;text-decoration:none;white-space:nowrap}
-  .nav-links a:hover,.nav-links a[aria-current]{color:var(--bright)}
-  @media(max-width:859.98px){.nav-links a.nav-lib{display:none}.nav-links{gap:20px}}
-  @media(max-width:420px){.nav-brand img{height:28px}}
+  /* the section menu (row E734); the top bar is /trading-bots/nav.css (row E804) */
   [id]{scroll-margin-top:82px}
   .su-sec{display:flex;gap:4px;margin:0 0 22px;border-bottom:1px solid var(--line)}
   .su-sec a{display:inline-block;padding:11px 12px 10px;min-height:44px;color:var(--dim);font-size:15.5px;font-weight:500;text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px}
@@ -81,7 +77,7 @@
   .insec li:first-child{border-top:0}
   .insec li b{color:var(--bright);font-weight:600;padding:3px 0}
   .insec li span{display:flex;flex-wrap:wrap;gap:0 16px}
-  .insec li a{display:inline-block;padding:3px 0}
+  .insec li a{display:inline-block;padding:4px 0}
   @media(max-width:479.98px){.insec li{grid-template-columns:minmax(0,1fr)}}
 
   /* the first screen: what you get, what you need, the steps, help */
@@ -221,21 +217,51 @@
     .row{grid-template-columns:1fr}
     .months{grid-template-columns:repeat(6,1fr)}
   }
+  /* Phones below 700 px (row E828): before step 1 only the checklist, the two phone videos (open, side by side) and the
+     eight steps show; everything else before step 1 folds behind one button, closed by default. The button is made by
+     the script at the end of the page, so without JavaScript nothing folds. From 700 px up nothing moves. */
+  @media (max-width:699.98px){
+    .su-pre{display:flex;flex-direction:column}
+    .su-pre>*,.su-pre .vfold>*,.su-pre .phonevids>*{order:9}
+    .su-pre .vfold,.su-pre .phonevids{display:contents}
+    .su-pre>#get-these{order:1}
+    .su-pre .phonevids>.su-ph{order:2}
+    .su-pre .phonevids>.su-phi{order:2}  /* opened, the intro line of the phone videos reads directly above them */
+    .su-pre>#su-steps{order:3}
+    .su-pre>.su-more{order:4;align-self:flex-start;margin:12px 0 0}
+    .su-pre .phonevids>p.su-ph{margin:16px 0 0}
+    .pp-row{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;margin:0 0 12px}
+    .pp-row .player.pp{margin:8px 0 0}
+    .pp-row .player.pp video{max-width:none}
+    .pp-row .player.pp .chl{margin:8px 0 0}
+    .su-pre>h1{order:0}
+    .su-pre>.badge{align-self:flex-start}
+    .su-pre.pre-shut #su-steps>hr,.su-pre.pre-shut #su-steps>.help{display:none}
+    .su-pre.pre-shut>:not(h1):not(#get-these):not(#su-steps):not(.su-more):not(.vfold),
+    .su-pre.pre-shut .vfold>:not(.phonevids),
+    .su-pre.pre-shut .phonevids>:not(.su-ph),
+    .su-pre.pre-shut .pp .chapters{display:none}
+  }
 </style>
 </head>
 <body>
-<header class="nav">
-  <div class="nav-in">
-    <a class="nav-brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
-    <nav class="nav-links" aria-label="AFT Trading Bots">
-      <a href="/trading-bots/">Trading Bots</a>
-      <a class="nav-lib" href="/trading-bots/strategies/">Strategy Library</a>
-      <a href="/trading-bots/setup/" aria-current="true">Setup</a>
+<header class="tbn">
+  <div class="tbn-in">
+    <a class="tbn-brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
+    <button class="tbn-btn" type="button" aria-expanded="false" aria-controls="tbn-menu"><span class="tbn-ico" aria-hidden="true"></span>Menu</button>
+    <nav class="tbn-links" id="tbn-menu" aria-label="AFT Trading Bots">
+      <a href="/trading-bots/#plans">Plans</a>
+      <a href="/trading-bots/strategies/">Strategy Library</a>
+      <a href="/trading-bots/#method">How results are shown</a>
+      <a href="/trading-bots/#how">How it works</a>
+      <a href="/trading-bots/setup/" aria-current="page">Setup</a>
+      <a href="/trading-bots/calculator/">Calculator</a>
     </nav>
   </div>
 </header>
 <div class="wrap">
   <nav class="su-sec" aria-label="Setup guides"><a href="/trading-bots/setup/" aria-current="page">Bot setup</a><a href="/trading-bots/setup/copy-trading/">Copy trading</a></nav>
+  <div class="su-pre" id="su-pre">
   <p class="badge">Setup guide</p>
   <h1>Set up your AFT trading bot</h1>
   <p class="tagline">Eight steps. When you finish, your bot runs on your own TradingView chart and sends its orders to your own Tradovate account.</p>
@@ -259,7 +285,7 @@
     </ul>
   </nav>
 
-  <div class="start">
+  <div class="start" id="su-steps">
     <h2>The eight steps</h2>
     <ol>
       <li><a href="#step-1">Sign in to CrossTrade</a></li>
@@ -277,7 +303,7 @@
 
   <div class="choose">
     <a href="#before">Read<small>Every step in writing, one action per line</small></a>
-    <a href="#watch">Watch<small>One video with captions, 6:46. The same eight steps.</small></a>
+    <a href="#watch">Watch<small>On a phone: two short videos, 1:03 and 2:11. On a computer: one video, 6:46.</small></a>
   </div>
 
   <!-- ============================== WATCH ============================== -->
@@ -286,8 +312,9 @@
   <h2>The whole setup on video</h2>
   <p>Every screen in it is a real TradingView, CrossTrade or Tradovate screen, with private details covered. The buttons under it jump to a step.</p>
   <div class="phonevids">
-  <p class="chl">On a phone</p>
-  <p>Two short videos show the same steps on a phone: steps 1 and 2, then steps 3 to 7. Steps 1 to 3 are on CrossTrade's website in your phone's browser; steps 4 to 7 are in the TradingView app. <a href="#player">Watch the computer version (6:46)</a>.</p>
+  <p class="chl su-ph">On a phone</p>
+  <p class="su-phi">Two short videos show the same steps on a phone: steps 1 and 2, then steps 3 to 7. Steps 1 to 3 are on CrossTrade's website in your phone's browser; steps 4 to 7 are in the TradingView app. <a href="#player">Watch the computer version (6:46)</a>.</p>
+  <div class="pp-row su-ph">
   <div class="player pp" id="player-p1">
     <video controls preload="none" playsinline poster="/trading-bots/setup/media/aft-phone-crosstrade-poster.jpg" aria-label="Set up CrossTrade on your phone"><source src="/trading-bots/setup/media/aft-phone-crosstrade.mp4" type="video/mp4"></video>
     <p class="chl">Steps 1 and 2 (1:03)</p>
@@ -308,6 +335,7 @@
       <li><button type="button" data-t="73.6"><span><b>6</b>Create the alert</span><span class="t">1:13</span></button></li>
       <li><button type="button" data-t="118.8"><span><b>7</b>Check the alert says Active</span><span class="t">1:58</span></button></li>
     </ol>
+  </div>
   </div>
   <p class="chl">On a computer</p>
   </div>
@@ -345,7 +373,7 @@
   <!-- ============================== BEFORE YOU START ============================== -->
   <section id="before" class="fold">
   <p class="kicker">Before you start</p>
-  <h2>Get these three things ready</h2>
+  <h2>How to get each one ready</h2>
   <p>The bot is a strategy that runs on your TradingView chart. A service called CrossTrade carries its orders to your Tradovate account. Every account is your own, and All Fluence Trading never has access to any of them.</p>
   <p>You can do the setup on a phone or a computer, in a web browser. TradingView, CrossTrade and Tradovate all open as websites. On a computer, you can read along on your phone. The steps and the video show the websites on a computer screen; on a phone, some buttons sit in other places.</p>
   <details id="words">
@@ -390,6 +418,7 @@
   <h3 id="need-bot">Claim access to strategies through Whop</h3>
   <p class="act">All strategy access is claimed through Whop. Type your TradingView username in your Whop membership and claim your access there.</p>
   </section>
+  </div>
 
   <!-- ============================== STEP 1 ============================== -->
   <section id="step-1" class="fold">
@@ -432,7 +461,7 @@
     <li>Under <span class="ui">Webhook URL</span>, click <span class="ui">Copy</span>. Paste it somewhere private, such as a password manager or a note only you can open.<small>This is the address TradingView sends the bot's orders to. You need it in step 6.</small></li>
     <li>Under <span class="ui">Secret Key</span>, click <span class="ui">Copy</span>. Keep it in the same private place.<small>It proves a message really comes from you. You need it in step 5.</small></li>
   </ul>
-  <p class="see"><b>You should now have three things saved:</b> your account name (from step 2), your webhook URL and your secret key.</p>
+  <p class="see"><b>You should now have these three saved:</b> your account name (from step 2), your webhook URL and your secret key.</p>
   <div class="callout warn" id="key-safety">
     <p class="label">Your key stays with you</p>
     <p>Your <strong>secret key</strong> and <strong>webhook URL</strong> can place orders on your account. Treat them like a password.</p>
@@ -450,14 +479,16 @@
   <p class="kicker">Step 4 of 8</p>
   <h2>Add the strategy to your chart</h2>
   <p><a class="wl" href="#watch" data-ch="4" data-pp="player-p2" data-pc="2" data-pt="0:18">Watch this part (2:42)</a></p>
-  <p>This guide covers two bots. Each runs on one symbol, and only on the 1-minute chart. Not sure which one is yours? Open either chart below, click <span class="ui">Indicators</span>, <span class="ui">Invite-only</span>, <span class="ui">Strategies</span>, and read the name in the list without clicking it. Then open that bot's chart.</p>
+  <p>Each strategy runs on one market and one timeframe, and its TradingView page states both. The <a href="../strategies/">Strategy Library</a> links to every strategy's TradingView page.</p>
   <ul class="do">
-    <li>Sign in to TradingView on your phone or computer, and open the chart for your bot:
+    <li>Sign in to TradingView on your phone or computer. Open your strategy's TradingView page: find your strategy in the <a href="/trading-bots/strategies/">Strategy Library</a>, open it, and follow its TradingView link. Note the market and the timeframe the page states. Then open the chart for that market:
       <div class="panel">
-        <div class="row"><div class="name">Slipstream (AFT)</div><div class="what">Micro Nasdaq, <code>MNQ1!</code>, 1 minute<br><a href="https://www.tradingview.com/chart/?symbol=CME_MINI%3AMNQ1%21&amp;interval=1" rel="noopener" target="_blank">Open the MNQ chart</a></div></div>
-        <div class="row"><div class="name">Midas (AFT)</div><div class="what">Micro Gold, <code>MGC1!</code>, 1 minute<br><a href="https://www.tradingview.com/chart/?symbol=COMEX_MINI%3AMGC1%21&amp;interval=1" rel="noopener" target="_blank">Open the MGC chart</a></div></div>
+        <div class="row"><div class="name">MNQ</div><div class="what">Micro Nasdaq, <code>MNQ1!</code><br><a href="https://www.tradingview.com/chart/?symbol=CME_MINI%3AMNQ1%21&amp;interval=1" rel="noopener" target="_blank">Open the MNQ chart</a></div></div>
+        <div class="row"><div class="name">MES</div><div class="what">Micro S&amp;P 500, <code>MES1!</code><br><a href="https://www.tradingview.com/chart/?symbol=CME_MINI%3AMES1%21&amp;interval=1" rel="noopener" target="_blank">Open the MES chart</a></div></div>
+        <div class="row"><div class="name">MGC</div><div class="what">Micro Gold, <code>MGC1!</code><br><a href="https://www.tradingview.com/chart/?symbol=COMEX_MINI%3AMGC1%21&amp;interval=1" rel="noopener" target="_blank">Open the MGC chart</a></div></div>
       </div>
     </li>
+    <li>Set the chart to the timeframe your strategy's page states. Each link above opens the chart at 1 minute.<small>To change it, click the timeframe button in the toolbar at the top of the chart (it shows the chart's current timeframe), and choose the one your strategy's page states.</small></li>
     <li>Check the chart shows regular candles, not Heikin Ashi, Renko or another special chart type (those draw the price in other ways, and the bot is not built for them).<small>To change it, click the chart-type button in the toolbar at the top of the chart, just left of <span class="ui">Indicators</span>, and choose <span class="ui">Candles</span>.</small></li>
     <li>Check extended trading hours are on: the session button in the toolbar at the bottom of the chart, on the right beside the clock, reads <span class="ui">ETH</span>.<small>If it reads RTH, click it and choose the extended hours session.</small></li>
     <li>Check no other strategy is on this chart. Give the bot a chart layout of its own.<small>Everything on a chart is listed by name at its top left. A new layout starts with nothing on it.</small><small>To make one: click <span class="ui">Manage layouts</span> in the top toolbar, then <span class="ui">Create new layout</span>, and give it a name. Then open your bot's chart link above again.</small></li>
@@ -475,35 +506,31 @@
   <p class="kicker">Step 5 of 8</p>
   <h2>Fill in the strategy's settings</h2>
   <p><a class="wl" href="#watch" data-ch="5" data-pp="player-p2" data-pc="3" data-pt="0:41">Watch this part (3:21)</a></p>
-  <p>Fill the boxes first. Tick <span class="ui">Send live orders to CrossTrade</span> last: it is the first box of the group. The bot sends nothing until the key, the account and the contract are all filled in and that box is ticked.</p>
+  <p>Fill the boxes first. The bot sends nothing until the key, the account and the contract are all filled in.</p>
   <ul class="do">
     <li>Hover over the strategy's name at the top left of the chart, and click the gear icon (<span class="ui">Settings</span>).</li>
     <li>You are on the <span class="ui">Inputs</span> tab. Under <span class="ui">★ SIZING ★</span>, leave <span class="ui">Multiplier (× the strategy's contracts)</span> at <code>1</code> for your first run.<small>What it does is under <a href="#multiplier">Changing the size</a>, further down this page.</small></li>
     <li>Scroll down to the group called <span class="ui">★ CROSSTRADE ★</span>.</li>
     <li>In <span class="ui">CrossTrade secret key</span>, paste your secret key from step 3.</li>
-    <li>In <span class="ui">Tradovate account</span>, paste your account name from step 2, exactly as CrossTrade shows it. For the first run, this is your demo account.<small>In Midas (AFT) the label reads <span class="ui">Tradovate account (exact name, case-sensitive)</span>.</small></li>
+    <li>In <span class="ui">Tradovate account</span>, paste your account name from step 2, exactly as CrossTrade shows it. For the first run, this is your demo account.<small>In some strategies the label is longer, for example <span class="ui">Tradovate account (exact name, case-sensitive)</span>.</small></li>
     <li>Find the code of the current contract. <a href="#contract">How to work out your contract code</a>, just below this list, takes four short lines. <strong>Do not copy a code from this page: the right one changes every few months.</strong></li>
-    <li>Type that code into the contract box. The box has a different name in each bot:
-      <div class="panel">
-        <div class="row"><div class="name">Slipstream (AFT)</div><div class="what">The box is <span class="ui">Contract symbol sent to CrossTrade</span>.</div></div>
-        <div class="row"><div class="name">Midas (AFT)</div><div class="what">The box is <span class="ui">Contract sent to CrossTrade (the dated contract, e.g. MGCG7)</span>. The code inside that label is only an example. Do not leave the box blank: nothing is sent while it is empty.</div></div>
-      </div>
-    </li>
-    <li>Last, scroll back up to the top of the <span class="ui">★ CROSSTRADE ★</span> group and tick <span class="ui">Send live orders to CrossTrade</span>.<small>In Slipstream (AFT) the label reads <span class="ui">Send live orders to CrossTrade (off = log only)</span>. With it off, nothing is sent to CrossTrade. "Live" here means "send the orders for real". It has nothing to do with Link Live in step 2: tick it for a demo account too.</small></li>
+    <li>Type that code into the contract box. The box and its label differ from strategy to strategy: use the one in the <span class="ui">★ CROSSTRADE ★</span> group whose label names the contract.<small>A code shown inside the label is only an example. Do not leave the box blank: nothing is sent while it is empty.</small></li>
+    <li>Last, scroll back up to the top of the <span class="ui">★ CROSSTRADE ★</span> group. If the settings show a box named <span class="ui">Send live orders to CrossTrade</span>, tick it. Newer versions have no such box: they send orders as soon as the alert is on.<small>The box's label can be longer, for example <span class="ui">Send live orders to CrossTrade (off = log only)</span>. With it off, nothing is sent to CrossTrade. "Live" here means "send the orders for real". It has nothing to do with Link Live in step 2: tick it for a demo account too.</small></li>
     <li>Leave every other input as it came, and click <span class="ui">OK</span>.</li>
   </ul>
   <p class="see"><b>You should now see:</b> the settings window is closed and the strategy is on the chart with no error message.</p>
   <p><strong>The contract code goes out of date every few months.</strong> What to do then is under <a href="#roll">When the contract month changes</a>, further down this page.</p>
 
   <h3 id="contract">How to work out your contract code</h3>
-  <p>The chart uses a symbol that never expires (<code>MNQ1!</code>, <code>MGC1!</code>). An order has to name one dated contract. The code is the root, then a month letter, then the last digit of the year:</p>
+  <p>The chart uses a symbol that never expires (<code>MNQ1!</code>, <code>MES1!</code>, <code>MGC1!</code>). An order has to name one dated contract. The code is the root, then a month letter, then the last digit of the year:</p>
   <div class="panel">
     <div class="row"><div class="name"><code>MNQZ6</code> (example)</div><div class="what">MNQ · Z = December · 6 = 2026</div></div>
+    <div class="row"><div class="name"><code>MESH7</code> (example)</div><div class="what">MES · H = March · 7 = 2027</div></div>
     <div class="row"><div class="name"><code>MGCG7</code> (example)</div><div class="what">MGC · G = February · 7 = 2027</div></div>
   </div>
   <ul class="do">
     <li>Sign in to Tradovate's web app at <a href="https://trader.tradovate.com/" rel="noopener" target="_blank">trader.tradovate.com</a>, with the login you linked in step 2.<small>If your prop firm gave you its own address for the Tradovate platform, sign in there instead.</small></li>
-    <li>In the Search Bar at the top of the app, type the root: <code>MNQ</code> or <code>MGC</code>.</li>
+    <li>In the Search Bar at the top of the app, type the root: <code>MNQ</code>, <code>MES</code> or <code>MGC</code>.</li>
     <li>Click a result. A Quote Info window opens. Its <span class="ui">Front Month</span> line says whether this is the front-month contract, which is the current one. If it is not, click the next result and look again.</li>
     <li>Type the code of the front-month contract into the contract box, written in exactly the format above.</li>
   </ul>
@@ -512,7 +539,7 @@
     <div>
       <div class="months" role="list" aria-label="Futures month letters"><div role="listitem"><span>Jan</span><b>F</b></div><div role="listitem"><span>Feb</span><b>G</b></div><div role="listitem"><span>Mar</span><b>H</b></div><div role="listitem"><span>Apr</span><b>J</b></div><div role="listitem"><span>May</span><b>K</b></div><div role="listitem"><span>Jun</span><b>M</b></div><div role="listitem"><span>Jul</span><b>N</b></div><div role="listitem"><span>Aug</span><b>Q</b></div><div role="listitem"><span>Sep</span><b>U</b></div><div role="listitem"><span>Oct</span><b>V</b></div><div role="listitem"><span>Nov</span><b>X</b></div><div role="listitem"><span>Dec</span><b>Z</b></div></div>
       <ul>
-        <li>MNQ has four contracts a year: March (H), June (M), September (U) and December (Z).</li>
+        <li>MNQ and MES have four contracts a year: March (H), June (M), September (U) and December (Z).</li>
         <li>MGC trades mainly in February (G), April (J), June (M), August (Q) and December (Z).</li>
         <li>TradingView's symbol search lists the same contracts with a four-digit year, for example MNQZ2026. Keep only the last digit of the year.</li>
       </ul>
@@ -638,8 +665,9 @@
     <div>
       <p><span class="ui">Multiplier (× the strategy's contracts)</span>, in the group <span class="ui">★ SIZING ★</span>, multiplies every order the strategy places. At 1 the strategy uses its own sizing. At 2 every order doubles, and risk and profit both double. Drawdown grows by the same factor.</p>
       <ul>
+        <li><strong>Every strategy:</strong> with the Multiplier at 1, the List of Trades in TradingView's Strategy Tester shows the contracts each order uses.</li>
         <li><strong>Slipstream:</strong> order size is <span class="ui">Contracts per trade</span>, in the same group, times the Multiplier.</li>
-        <li><strong>Midas:</strong> each of its models has its own fixed contract count, and the Multiplier multiplies all of them. With the Multiplier at 1, the List of Trades in TradingView's Strategy Tester shows the contracts each order uses.</li>
+        <li><strong>Midas:</strong> each of its models has its own fixed contract count, and the Multiplier multiplies all of them.</li>
       </ul>
       <p>Choose the size by the drawdown your account can carry, not by the profit you hope for. Because the alert keeps its settings, a new Multiplier needs a new alert.</p>
     </div>
@@ -649,7 +677,7 @@
     <div>
       <ul>
         <li><strong>Market closed all day:</strong> nothing to do.</li>
-        <li><strong>Early-close days</strong> (the exchange shuts before its usual time, for example around US Thanksgiving and Christmas): the two bots differ.
+        <li><strong>Early-close days</strong> (the exchange shuts before its usual time, for example around US Thanksgiving and Christmas): unless your strategy's TradingView page says it handles early closes, switch its alert off for that day, as in the last line of this list. Two of the strategies in detail:
           <ul>
             <li><strong>Slipstream</strong> has the exchange's 2026 early-close days written into it and closes ahead of them. It does not know early closes after 2026 or other exchange holidays. On such a day, a position open at the early close is carried to the reopen and closed there.</li>
             <li><strong>Midas</strong> does not know about early closes. A position still open at an early close is carried through the break and managed as usual after the reopen.</li>
@@ -688,7 +716,7 @@
     <summary>Nothing arrives in CrossTrade</summary>
     <div>
       <ul>
-        <li><span class="ui">Send live orders to CrossTrade</span> is not ticked, or the key, the account or the contract box is empty. Fix the setting (step 5), then delete the alert and create it again (step 6).</li>
+        <li>The key, the account or the contract box is empty, or, in a version that has a <span class="ui">Send live orders to CrossTrade</span> box, that box is not ticked. Fix the setting (step 5), then delete the alert and create it again (step 6).</li>
         <li>The alert has no webhook URL, or two-factor authentication is off in TradingView. Open the alert log in TradingView: click the clock icon on the right edge, then the <span class="ui">Log</span> tab beside <span class="ui">Alerts</span>. Its <span class="ui">Webhook status</span> column shows delivery problems.</li>
         <li>The alert's condition is not <span class="ui">alert() function calls only</span>.</li>
         <li>The market is closed. With no new price bars, no messages are sent.</li>
@@ -726,7 +754,7 @@
   <details id="ts-chart">
     <summary>The script shows an error: wrong timeframe or symbol</summary>
     <div>
-      <p>Slipstream runs only on MNQ and Midas only on MGC, each on the 1-minute chart. Anywhere else the script stops with a message. Put the chart back on the right symbol and 1 minute (the chart links are in <a href="#step-4">step 4</a>).</p>
+      <p>Each strategy runs only on its own market and timeframe, the ones its TradingView page states. Slipstream runs only on MNQ and Midas only on MGC, each on the 1-minute chart; anywhere else they stop with a message. Put the chart back on the right symbol and timeframe (the chart links are in <a href="#step-4">step 4</a>).</p>
       <p>An alert keeps the symbol and timeframe of the chart it was created on. An alert created on the wrong chart has to be deleted and created again on the right one.</p>
     </div>
   </details>
@@ -756,7 +784,7 @@
   <footer>
     <p class="line">All Fluence Trading · AFT Trading Bots · Setup guide</p>
     <p><a href="/">Front page</a> · <a href="/trading-bots/">Trading Bots</a> · <a href="/challenge/">AFT Challenge</a> · <a data-dest="discordInvite" data-name="setup-footer-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a> · <a href="/legal/">Disclaimer</a> · <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a></p>
-    <p>Screen names were checked against TradingView's and CrossTrade's own help pages and live screens in November 2026. Those services change their screens; where a label differs, follow the linked help page. TradingView, CrossTrade and Tradovate are trademarks of their owners. All Fluence Trading is in CrossTrade's referral program and is not otherwise affiliated with or endorsed by these companies.</p>
+    <p>Screen names were checked against TradingView's and CrossTrade's own help pages and live screens in November 2026. Those services change their screens; where a label differs, follow the linked help page. TradingView, CrossTrade and Tradovate are trademarks of their owners. The companies named here do not sponsor or endorse All Fluence Trading.</p>
     <p>For education only. Trading futures involves substantial risk of loss and is not suitable for every investor. You can lose more than your initial investment. Automated strategies can lose money, and an order routed to a broker can fail, be delayed or fill at a different price. If you connect a strategy to an account, that choice and the size you trade are yours, and you are responsible for every order it sends. Strategy Tester results are hypothetical, have inherent limitations and do not represent actual trading. All Fluence Trading provides educational software and training only and is not a registered investment adviser, broker-dealer or commodity trading advisor. Nothing here is financial advice.</p>
   </footer>
 </div>
@@ -794,7 +822,9 @@
 /* Phones (below 768 px, in the CSS): each .fold shows its heading and its action lines, and one button opens the rest.
    Closed by default; the button is made here, so without JavaScript nothing folds (row E786). */
 (function(){
+  var narrow=window.matchMedia&&window.matchMedia('(max-width:699.98px)').matches;
   Array.prototype.forEach.call(document.querySelectorAll('.fold'),function(f){
+    if(narrow&&f.classList.contains('vfold')) return;   /* row E828: below 700 px the phone videos stay open */
     var h=null;
     for(var c=f.firstElementChild; c; c=c.nextElementSibling){ if(c.tagName==='H2'){ h=c; break; } }
     if(!h) return;
@@ -806,6 +836,18 @@
     h.parentNode.insertBefore(b,h.nextSibling);
     set(false);
   });
+})();
+/* Phones below 700 px (row E828; the CSS says what shows): one button after the eight steps opens the rest of what
+   comes before step 1. Closed by default; the button is made here, so without JavaScript nothing folds. */
+(function(){
+  var pre=document.getElementById('su-pre'), steps=document.getElementById('su-steps');
+  if(!pre||!steps||!(window.matchMedia&&window.matchMedia('(max-width:699.98px)').matches)) return;
+  var b=document.createElement('button'); b.type='button'; b.className='more su-more';
+  function set(open){ pre.classList.toggle('pre-shut',!open); b.setAttribute('aria-expanded',open?'true':'false'); b.textContent=open?'Show less before step 1':'Show more before step 1'; }
+  b.addEventListener('click',function(){ set(pre.classList.contains('pre-shut')); });
+  pre.aftOpen=function(){ set(true); };
+  steps.parentNode.insertBefore(b,steps.nextSibling);
+  set(false);
 })();
 /* A link to a fold-out opens it: on a click, and on a load or change of the address with a fragment. A link into a
    part folded on a phone opens that part; a link to the video opens the video. */

@@ -2,7 +2,7 @@
    No tracking of its own, no library and no network call beyond this site's own data files (../data/<slug>.json).
    - It replays one strategy's published hypothetical results through the rules a visitor types: from every day of the
      test with a closed trade an account starts at 0, takes the days in order and ends when it reaches the profit target
-     or hits the loss limit; a start the test ended first did not finish and is left out of the success rate.
+     or hits the loss limit; a start the test ended first did not finish and is left out of the percentage passed.
    - A daily loss limit and a consistency rule never end an account: each stops the day it reaches (row E745 ruling 1).
    - The data: each record's "days" ([date, total]) and "day_paths" (for the same days, each day's running result from
      its start as its turning points, ending at the day's total; row E746), written by aft_strategy_export.py. A record
@@ -17,8 +17,10 @@
      drawdown against the loss limit typed; the compare view shows each max drawdown at the multiple. The form is shorter:
      example accounts first, target and loss limit side by side, the kind as one switch, the other rules under "More
      rules". Every input, its meaning and its default are as before.
-   - Strategy names are lettered by the site's rule (bots.js, rows E728 and E704): a grade sets the tier, and a name wears
-     its tier's finish only in the upper half of the tiers. */
+   - Strategy names are lettered by the site's rule (bots.js, rows E728, E704 and E802): a grade sets the tier, and a name
+     wears its tier's lettering as on the bots page (row E833, the owner's scheme by plan): Base's names plain, Select's
+     bold in one solid colour, Supreme's bold with the sheen, Ultimate's bold with the sheen and the lightning through
+     the letters; each name in its market's colours, as on the bots page (bots.js palette(), row E802). */
 (function () {
   'use strict';
 
@@ -35,7 +37,7 @@
     { id: 'intraday', name: 'Trailing drawdown', note: 'Moves up with the highest point the account reaches, open trades included.' },
     { id: 'eod', name: 'End-of-day drawdown', note: 'Moves up only at each day’s close.' }
   ];
-  var EXAMPLES = [   // inputs only, in whole cents; they never set the kind of loss limit or the switch
+  var EXAMPLES = [   // inputs only, in whole cents; they never set the kind of loss limit
     { label: '50K account', t: 300000, l: 200000 },
     { label: '100K account', t: 600000, l: 300000 },
     { label: '150K account', t: 900000, l: 450000 }
@@ -75,42 +77,122 @@
       'Average time to the target: about ' + plural(t.avgC, 'day', 'days') + ' (' + tenths(t.avgT) + ' days with trades)';
   }
   // Row E748 rulings 2 and 3: the same replay on the harsher order's paths (best point first in every trade). It shows
-  // always under Trailing drawdown, and under the other kinds only when its success rate or its hit count differs.
+  // always under Trailing drawdown, and under the other kinds only when its percentage passed or its hit count differs.
   var HARSH = 'If each trade’s best point came before its worst: ';
   function harshShows(t, h, kind) { return kind === 'intraday' || h.rate !== t.rate || h.limit !== t.limit; }
   function harshLine(t, h) {
     return HARSH + (h.target === t.target && h.limit === t.limit && h.open === t.open ? 'the same result.' :
       rateText(h) + ' (' + num(h.target) + ' passed, ' + num(h.limit) + ' blown, ' + num(h.open) + ' in progress).');
   }
-  function harshShort(h) { return 'other order ' + rateText(h); }   // row E749 ruling 1: named neutrally
+  function harshShort(h) { return 'if each trade’s best point came first: ' + rateText(h); }   // row E749 ruling 1: named neutrally; row E828: in words
   function notCounted(t) {
     return t.open ? num(t.open) + ' in progress when the test ended, left out of the rate.' : '';
   }
   // Row E783: the ring shows every start; its words give the three counts and why in-progress starts are not in the rate.
-  var LEFT_OUT = 'The success rate counts passed and blown accounts; accounts still in progress when the test ended are left out.';
+  var LEFT_OUT = 'The percentage passed counts passed and blown accounts; accounts still in progress when the test ended are left out.';
   function ringWords(t) {
-    return (t.fin ? 'Success rate ' + t.rate + '%.' : 'No start finished under these rules in the tested range.') + ' Of all ' + plural(t.n, 'start', 'starts') + ': ' +
+    return (t.fin ? t.rate + '% passed.' : 'No start finished under these rules in the tested range.') + ' Of all ' + plural(t.n, 'start', 'starts') + ': ' +
       num(t.target) + ' passed, ' + num(t.limit) + ' blown, ' + num(t.open) + ' in progress.' + (t.open ? ' ' + LEFT_OUT : '');
   }
   function oc(c, n, w) { return '<span class="cx-oc"><i style="background:' + c + '" aria-hidden="true"></i>' + num(n) + ' ' + w + '</span>'; }
 
   /* ---------- the lettering of a name (the site's rule, as in bots.js) ---------- */
   var LAD = (CAT.tiers || []).slice().sort(function (a, b) { return a.rank - b.rank; });
-  function finishAt(i) { var n = LAD.length; return i === 0 ? 'plain' : (i === n - 1 ? 'sheen' : (n >= 4 && i === n - 2 ? 'polished' : 'gradient')); }
   function tierOf(s) { return ([1, 2, 3, 4].indexOf(s.grade) >= 0 && LAD[LAD.length - s.grade]) ? LAD[LAD.length - s.grade].id : s.tier; }
+  function rungOf(s) { var t = tierOf(s), i = -1; LAD.forEach(function (x, k) { if (x.id === t) i = k; }); return i; }
+  // Row E833: the bots page's lettering by plan (bots.js LET and BOLT, row E802): the lowest plan plain, the top plan and
+  // the one under it the sheen, every plan between solid colour, and the top plan's names the lightning; no plan, plain.
   function nameFinish(s) {
-    var t = tierOf(s), i = -1;
-    LAD.forEach(function (x, k) { if (x.id === t) i = k; });
-    return i >= 0 && i >= LAD.length / 2 ? finishAt(i) : 'plain';
+    var i = rungOf(s), n = LAD.length;
+    return i <= 0 ? 'plain' : (i === n - 1 || (n >= 3 && i === n - 2) ? 'sheen' : 'solid');
   }
+  function nameBolt(s) { var i = rungOf(s); return i >= 0 && i === LAD.length - 1; }
   function colour(c) { return /^#[0-9a-f]{3,8}$/i.test(String(c)); }
+  // Row E833 (the director's follow-up, 2026-11-22): a name's colours are its market's, as bots.js palette() has them
+  // (row E802; bots.css: --mnq, --mgc, --mes, each with its light and end stops, on .bots); only a strategy on another
+  // market keeps its own three colours from the catalog. marketCode() is bots.js's as it is.
+  var MKT = { MNQ: 'mnq', MGC: 'mgc', MES: 'mes' };
+  function marketCode(s) { return s.chip || String(s.market_line || '').split(' \u00b7 ')[0]; }
+  function palette(s) {
+    var g = s.lettering, out = ['--n:' + String(s.name).length], m = MKT[String(marketCode(s)).toUpperCase()];
+    if (m) out.push('--c0:var(--' + m + '-0)', '--c1:var(--' + m + ')', '--c2:var(--' + m + '-2)');
+    else if (g && g.length === 3 && g.every(colour)) out.push('--c0:' + g[0], '--c1:' + g[1], '--c2:' + g[2]);
+    return out;
+  }
+  // Row E833: bots.js's boltSpan() as it is (the calculator does not load bots.js), so a name gets the same bolt here.
+  // The lightning (row E810; bots.css): one bolt that strikes down through the name, drawn once in a box 64 by 96 units
+  // (1.6em by 2.4em, so it is never stretched) centred on the letters at a point along the name. The main channel walks
+  // down in steps of uneven length, each turned off its course by a random angle, toward a foot a little to one side, so
+  // its path is crisp and irregular rather than an even zigzag; one or two shorter, fainter forks leave it among the
+  // letters. Everything is seeded by the name, so a name always gets the same bolt and no two names share one.
+  function boltSpan(text) {
+    var t = String(text), h = 2166136261, k, W = 120, H = 96;
+    for (k = 0; k < t.length; k++) h = Math.imul(h ^ t.charCodeAt(k), 16777619) >>> 0;
+    function rnd() { h = (Math.imul(h, 1103515245) + 12345) >>> 0; return (h >>> 8) / 16777216; }
+    function jit() { return rnd() + rnd() + rnd() - 1.5; }               // -1.5 to 1.5, most often near 0
+    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+    function walk(x, y, a0, steps, l0, l1, turn, aim) {   // a channel of segments from (x, y), heading a0 (radians, down = pi/2)
+      var p = [[x, y]];
+      for (var i = 0; i < steps && y < H; i++) {
+        var a = clamp((aim ? Math.atan2(H - y, aim - x) : a0) + jit() * turn, 0.42, Math.PI - 0.42), l = l0 + rnd() * (l1 - l0);
+        x = clamp(x + Math.cos(a) * l, 3, W - 3); y = Math.min(H, y + Math.sin(a) * l); p.push([x, y]);
+      }
+      return p;
+    }
+    function fine(p, amp) {                               // a smaller kink in each longer step, off to one side of it
+      var o = [p[0]];
+      for (var i = 1; i < p.length; i++) {
+        var a = p[i - 1], b = p[i], dx = b[0] - a[0], dy = b[1] - a[1], l = Math.sqrt(dx * dx + dy * dy);
+        if (l > 8) { var f = 0.3 + rnd() * 0.4, s = jit() * amp / 1.5; o.push([clamp(a[0] + dx * f - dy / l * s, 3, W - 3), a[1] + dy * f + dx / l * s]); }
+        o.push(b);
+      }
+      return o;
+    }
+    function d(p) { return p.map(function (q, i) { return (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1); }).join(''); }
+    var side = rnd() < 0.5 ? -1 : 1, x0 = W / 2 - side * (26 + rnd() * 10);
+    var main = fine(walk(x0, 0, 0, 40, 7, 16, 0.7, W / 2 + side * (24 + rnd() * 14)), 4), forks = [];
+    var nf = rnd() < 0.55 ? 2 : 1, used = {};
+    for (k = 0; k < nf; k++) {
+      var cand = [];
+      main.forEach(function (q, i) { if (q[1] > 26 && q[1] < 60 && !used[i] && !used[i - 1] && !used[i + 1]) cand.push(i); });
+      if (!cand.length) break;
+      var at = cand[Math.floor(rnd() * cand.length)], q = main[at], nx = main[Math.min(at + 1, main.length - 1)];
+      var dir = Math.atan2(nx[1] - q[1], nx[0] - q[0]) + (k ? -1 : 1) * side * (0.5 + rnd() * 0.35);
+      used[at] = 1;
+      forks.push(fine(walk(q[0], q[1], dir, k ? 2 + Math.floor(rnd() * 2) : 3 + Math.floor(rnd() * 2), 6, 12, 0.45), 2));
+    }
+    var fd = forks.map(d).join(''), md = d(main);
+    return '<span class="bx-bolt" aria-hidden="true" data-t="' + esc(t) + '" style="--bd:-' + (rnd() * 7.8).toFixed(2) + 's"><svg viewBox="0 0 ' + W + ' ' + H + '" focusable="false" style="left:' + (30 + rnd() * 40).toFixed(1) + '%">'
+      + (fd ? '<path class="g fg" d="' + fd + '"/><path class="c fc" d="' + fd + '"/>' : '') + '<path class="g" d="' + md + '"/><path class="c" d="' + md + '"/></svg></span>';
+  }
   function nameSpan(s) {
-    var fin = nameFinish(s), g = s.lettering, st = ['--n:' + String(s.name).length];
-    if (g && g.length === 3 && g.every(colour)) st.push('--c0:' + g[0], '--c1:' + g[1], '--c2:' + g[2]);
+    var fin = nameFinish(s), st = palette(s);
     var sh = (fin === 'sheen' || fin === 'polished') ? '<span class="bx-sh" aria-hidden="true" data-t="' + esc(s.name) + '"></span>' : '';
-    var n = '<span class="bx-sname bx-wm" data-lvl="' + fin + '" style="' + st.join(';') + '">' + esc(s.name) + sh + '</span>';
+    var bo = nameBolt(s) ? boltSpan(s.name) : '';
+    var n = '<span class="bx-sname bx-wm" data-lvl="' + fin + '"' + (bo ? ' data-bolt=""' : '') + ' style="' + st.join(';') + '">' + esc(s.name) + sh + bo + '</span>';
     // Row E754: a coming-soon strategy carries the tag "Coming soon" right after its name, read with it.
     return s.coming_soon === true ? '<span class="bx-nt">' + n + '<span class="bx-cs"><span class="bx-vh">, </span>Coming soon</span></span>' : n;
+  }
+  // Row E833, as on the bots page (bots.js, rows E802 and E810): a name's lightning runs only while the name is on
+  // screen, and each lit name that comes on screen takes the least-used of thirteen moments 0.6 s apart in the 7.8 s
+  // strike loop (bots.css), so no two names on screen strike together. A name the page has drawn again is let go.
+  if ('IntersectionObserver' in window && 'MutationObserver' in window) {
+    var BOLT_AT = [0, 5, 10, 2, 7, 12, 4, 9, 1, 6, 11, 3, 8], boltUse = {};
+    var boltIO = new IntersectionObserver(function (es) { es.forEach(function (e) {
+      var b = e.target, s = b.getAttribute('data-s');
+      if (e.isIntersecting && s === null) {
+        s = BOLT_AT[0]; BOLT_AT.forEach(function (m) { if ((boltUse[m] || 0) < (boltUse[s] || 0)) s = m; });
+        boltUse[s] = (boltUse[s] || 0) + 1; b.setAttribute('data-s', s);
+        b.style.setProperty('--bd', (((s * 0.6 - performance.now() / 1000) % 7.8 + 7.8) % 7.8 - 7.8).toFixed(3) + 's');
+      } else if (!e.isIntersecting && s !== null) { boltUse[s]--; b.removeAttribute('data-s'); }
+      b.classList.toggle('is-off', !e.isIntersecting);
+      if (!b.isConnected) boltIO.unobserve(b);
+    }); });
+    var watchBolts = function () {
+      Array.prototype.forEach.call(document.querySelectorAll('.bx-bolt:not([data-w])'), function (b) { b.setAttribute('data-w', ''); b.classList.add('is-off'); boltIO.observe(b); });
+    };
+    watchBolts();
+    new MutationObserver(watchBolts).observe(document.body, { childList: true, subtree: true });
   }
 
   /* ---------- the replay, in whole cents ---------- */
@@ -132,11 +214,11 @@
     for (var i = 0; i < dp.length; i++) stop[i] = walkDay(dp[i], D, C);
     return { stop: stop };
   }
-  // R: kind, t (target), l (limit), lock, dl (daily limit or null), cp (consistency per cent or null), md (minimum days).
+  // R: kind, t (target), l (limit), lock (false from the page since row E828), dl (daily limit or null), cp (consistency per cent or null), md (minimum days).
   // dp: each day's path of turning points (cents, already scaled), ending at the day's total. Row E746: within a day the
   // running result x moves in straight steps from 0 through each point; the balance is b + x. The floor: Static -l;
   // End-of-day drawdown the highest end-of-day balance so far minus l, fixed during the day; Trailing drawdown the highest
-  // balance reached so far minus l; with the switch, the two trailing floors never above 0. On a step down the account
+  // balance reached so far minus l; with lock, the two trailing floors never above 0. On a step down the account
   // ends where b + x meets the floor, and the day stops where x meets -dl: the level met first applies, the account at a
   // tie. On a step up the day stops where x meets the cap. A stopped day ends at its level; then the target is checked.
   // Returns {code: Int8Array (0 target, 1 limit, 2 open), len: the days traded to that end, days: the days stopped by each
@@ -181,7 +263,7 @@
   // Row E782: the calendar days a start ran, its start day and its end day both counted (len: its trading days).
   function calDays(dates, i, len) { return dayNo(dates[i + len - 1]) - dayNo(dates[i]) + 1; }
   function dayNo(iso) { return Math.round(Date.UTC(Number(iso.slice(0, 4)), Number(iso.slice(5, 7)) - 1, Number(iso.slice(8, 10))) / DAY_MS); }
-  // What a view shows: counts, the success rate of the finished starts, the averages, the days stopped by each rule.
+  // What a view shows: counts, the percentage of the finished starts that passed, the averages, the days stopped by each rule.
   function tally(res, dates) {
     var c = [0, 0, 0], reach = [], reachC = [], sumT = 0, sumC = 0, sd = 0, sc = 0, i, cd;
     for (i = 0; i < res.code.length; i++) {
@@ -243,9 +325,10 @@
   function runHarsh(rec, k, R) { return tally(replayC(scaled(rec, k).dp2, R, false), rec.dates); }
 
   /* ---------- the rules: inputs, checks and the address ---------- */
-  // Row E745 ruling 10 had the switch off by default. Row E793 (the owner, 2026-11-21: "keep trailing on by default for
-  // trailing and end of day drawdown and intraday"): on by default; a link that carries lock=0 or lock=1 keeps its value.
-  var DEF = { s: '', k: 'eod', t: 300000, l: 200000, lock: true, dlOn: false, dl: null, cpOn: false, cp: null, md: 0, x: 1, v: 'one' };
+  // Row E745 ruling 10 had the starting-balance switch off by default and row E793 turned it on. Row E828 (the owner,
+  // 2026-11-21, of that option: "No one's ever going to use that." and "It's always going to trail"): the switch is
+  // gone and the loss limit always trails as its kind says; a link that still carries lock= reads as without it.
+  var DEF = { s: '', k: 'eod', t: 300000, l: 200000, dlOn: false, dl: null, cpOn: false, cp: null, md: 0, x: 1, v: 'one' };
   var st = {};
   Object.keys(DEF).forEach(function (k) { st[k] = DEF[k]; });
   // Row E780: the Live account mode keeps its own state (lv), so the Prop firm account mode and its address are exactly as
@@ -305,10 +388,10 @@
     return bad;
   }
   function rulesC() {
-    return { kind: st.k, t: st.t, l: st.l, lock: st.lock, dl: st.dlOn ? st.dl : null, cp: st.cpOn ? st.cp : null, md: st.md };
+    return { kind: st.k, t: st.t, l: st.l, lock: false, dl: st.dlOn ? st.dl : null, cp: st.cpOn ? st.cp : null, md: st.md };
   }
   function writeHash() {
-    var p = ['s=' + encodeURIComponent(st.s), 'k=' + st.k, 't=' + plain(st.t), 'l=' + plain(st.l), 'lock=' + (st.lock ? 1 : 0)];
+    var p = ['s=' + encodeURIComponent(st.s), 'k=' + st.k, 't=' + plain(st.t), 'l=' + plain(st.l)];
     if (st.dlOn && st.dl) p.push('dl=' + plain(st.dl));
     if (st.cpOn && st.cp) p.push('c=' + st.cp);
     if (st.md) p.push('md=' + st.md);
@@ -333,7 +416,6 @@
       var r = readMoney(q[a[0]]);
       if (r.err) reset.push(a[2]); else st[a[1]] = r.c;
     });
-    if ('lock' in q) { if (q.lock === '1' || q.lock === '0') st.lock = q.lock === '1'; else reset.push('the starting-balance switch'); }
     if ('dl' in q) { var d = readMoney(q.dl); if (d.err) reset.push('daily loss limit'); else { st.dlOn = true; st.dl = d.c; } }
     if ('c' in q) { var c = readWhole(q.c, 1, 100, ''); if (c.err) reset.push('consistency rule'); else { st.cpOn = true; st.cp = c.c; } }
     if ('md' in q) { var m = readWhole(q.md, 0, 999, ''); if (m.err) reset.push('required days to pass'); else st.md = m.c; }
@@ -346,7 +428,6 @@
     F.target.value = plain(st.t);
     F.limit.value = plain(st.l);
     document.querySelectorAll('input[name="kind"]').forEach(function (r) { r.checked = r.value === st.k; });
-    F.lock.checked = st.lock;
     F.dlOn.checked = st.dlOn;
     F.dl.value = st.dl ? plain(st.dl) : '';
     F.cpOn.checked = st.cpOn;
@@ -358,10 +439,6 @@
   function syncSwitches() {
     $('#dl-box').hidden = !st.dlOn;
     $('#cp-box').hidden = !st.cpOn;
-    var moving = st.k !== 'fixed';
-    F.lock.disabled = !moving;
-    $('#lock-row').classList.toggle('is-off', !moving);
-    $('#lock-hint').textContent = moving ? 'When ticked, once the trailing limit has risen to the starting balance, it stays there. Untick it if your firm\u2019s limit keeps rising.' : 'Only for the two drawdown kinds. A static limit never moves.';
     var kd = KINDS.filter(function (x) { return x.id === st.k; })[0];
     $('#kind-note').textContent = kd ? kd.name + ': ' + kd.note.charAt(0).toLowerCase() + kd.note.slice(1) : '';
     moreCount();
@@ -369,7 +446,6 @@
   // Row E768: the rules under "More rules" that are on, named on the closed control.
   function moreCount() {
     var on = [];
-    if (st.lock && st.k !== 'fixed') on.push('starting balance');
     if (st.dlOn) on.push('daily loss limit');
     if (st.cpOn) on.push('consistency');
     if (st.md) on.push('required days to pass');
@@ -416,7 +492,7 @@
   var cur = null;   // the last result drawn: {rec, res, tal, rules, k}
   function legendItem(c, text, cls) { return '<li' + (cls ? ' class="' + cls + '"' : '') + '><i style="background:' + c + '" aria-hidden="true"></i>' + text + '</li>'; }
   function rateWords(t) {
-    return t.fin ? 'Success rate ' + t.rate + '%: of ' + plural(t.fin, 'start that finished', 'starts that finished') + ', ' + num(t.target) + ' passed and ' +
+    return t.fin ? t.rate + '% passed: of ' + plural(t.fin, 'start that finished', 'starts that finished') + ', ' + num(t.target) + ' passed and ' +
       num(t.limit) + (t.limit === 1 ? ' was' : ' were') + ' blown.' : 'No start finished under these rules in the tested range.';
   }
 
@@ -428,7 +504,7 @@
       '<div class="cx-dial"><svg viewBox="0 0 240 240" role="img" aria-label="' + esc(alt) + '"><defs><filter id="cx-glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="5"/></filter></defs>' +
       '<g class="cx-glow" filter="url(#cx-glow)">' + ring(240, 92, 14, segs, tal.n, false) + '</g>' +
       ring(240, 92, 14, segs, tal.n, true) + '</svg>' +
-      '<div class="cx-dial-mid" aria-hidden="true"><b class="cx-big" id="big">' + rateText(tal) + '</b><span>success rate</span></div></div>' +
+      '<div class="cx-dial-mid" aria-hidden="true"><b class="cx-big" id="big">' + rateText(tal) + '</b><span>passed</span></div></div>' +
       '<ul class="cx-legend cx-dial-leg cx-out-leg" id="dial-leg" aria-hidden="true">' +
         legendItem(COL.target, 'Passed <b data-n="target">' + num(tal.target) + '</b>') +
         legendItem(COL.limit, 'Blown <b data-n="limit">' + num(tal.limit) + '</b>') +
@@ -450,7 +526,7 @@
         '<svg viewBox="0 0 120 120" aria-hidden="true">' + ring(120, 44, 9, [{ v: t.target, c: COL.target }, { v: t.limit, c: COL.limit }, { v: t.open, c: COL.open }], t.n, false) +
         '<text x="60" y="66" text-anchor="middle" class="cx-mini-p">' + rateText(t) + '</text></svg>' +
         '<span class="cx-mini-k">' + esc(kd.name) + '</span>' +
-        '<span class="cx-mini-n">' + (t.fin ? num(t.target) + ' of ' + num(t.fin) + ' finished' : 'none finished') + '</span>' +
+        '<span class="cx-mini-n">' + (t.fin ? num(t.target) + ' passed of ' + num(t.fin) + ' finished' : 'none finished') + '</span>' +
         '<span class="cx-mini-n">' + (t.avgC === null ? 'Average ' + DASH : 'Average ' + plural(t.avgC, 'day', 'days')) + '</span>' +
         (hs ? '<span class="cx-mini-n cx-harsh-s">' + esc(harshShort(h)) + '</span>' : '') + '</button>';
     }).join('');
@@ -668,23 +744,30 @@
   }
 
   /* ---------- row E768: the record as tested and at the chosen multiple ---------- */
-  function recFig(rec) {   // the record's own figures in whole cents; return on drawdown as the record writes it
-    var f = (rec.d && rec.d.figures) || {}, d = f.display || {};
+  // Row E817: half() and retPct() are copied verbatim from bots.js (row E815), which this page does not load, so the return
+  // on drawdown here is the same whole percentage the plan cards and the Strategy Library show ("5,319%"). Change both together.
+  function half(n, d) { var k = Math.pow(10, d); return (Math.round((n + Number.EPSILON * Math.abs(n)) * k) / k).toFixed(d); }
+  function retPct(net, cap) {
+    if (typeof net !== 'number' || typeof cap !== 'number' || !(cap > 0)) return null;
+    var v = net / cap * 100, r = Number(half(Math.abs(v), 0));
+    return { v: v, t: (v < 0 && r > 0 ? '-' : '') + r.toLocaleString('en-US') + '%' };
+  }
+  function recFig(rec) {   // the record's own figures in whole cents; return on drawdown as the site's whole percentage
+    var f = (rec.d && rec.d.figures) || {}, r = retPct(f.net_profit_usd, f.max_drawdown_usd);
     function c(v) { return typeof v === 'number' && isFinite(v) ? cents(v) : null; }
-    return { net: c(f.net_profit_usd), dd: c(f.max_drawdown_usd), mon: c(f.monthly_profit_usd),
-      rod: d.return_on_drawdown ? String(d.return_on_drawdown) : (typeof f.return_on_drawdown === 'number' ? f.return_on_drawdown.toFixed(2) : null) };
+    return { net: c(f.net_profit_usd), dd: c(f.max_drawdown_usd), mon: c(f.monthly_profit_usd), rod: r ? r.t : null };
   }
   function times(c, k) { return c === null ? null : c * k; }
   function amt(c, signed) { return c === null ? DASH : moneyFull(c, signed); }
   function tone(c) { return c === null || c === 0 ? '' : (c > 0 ? 'bx-pos' : 'bx-neg'); }
   function atWords(k) { return 'At ' + k + '\u00d7'; }
   // Row E781 (after E776): the closed picker shows the strategy's name only (and its Coming soon mark) as the select's own
-  // text; the open list keeps name, RoDD and max drawdown (optText). E776 laid a label over the select and hid the select's
+  // text; the open list keeps name, return on drawdown and max drawdown (optText). E776 laid a label over the select and hid the select's
   // text with -webkit-text-fill-color, which draws two offset copies wherever that is not honoured (forced colours, some
   // engines). Row E791 (review E789 C1): E781 lengthened every option when the list opened and shortened the chosen one on
   // change or blur; a list closed without a choice (Escape, a tap on the chosen option, a tap outside) fired neither, so the
   // closed box kept the long text, cut. Now the chosen option's own text is always the name, open or closed, and every other
-  // option keeps name, RoDD and max drawdown; nothing depends on knowing when the list opens or closes. The chosen
+  // option keeps name, return on drawdown and max drawdown; nothing depends on knowing when the list opens or closes. The chosen
   // strategy's figures are in the record panel under the picker.
   function pickName(rec) { return rec.s.name + (rec.s.coming_soon === true ? ' (Coming soon)' : ''); }
   function selTexts(sel) {
@@ -699,7 +782,7 @@
   function pickTexts() { selTexts(F.pick); }
   function optText(rec) {
     var g = recFig(rec), s = rec.s;
-    return s.name + (s.coming_soon === true ? ' (Coming soon)' : '') + (g.rod ? ' \u00b7 RoDD ' + g.rod : '') + (g.dd !== null ? ' \u00b7 Max DD ' + moneyFull(g.dd) : '');
+    return s.name + (s.coming_soon === true ? ' (Coming soon)' : '') + (g.rod ? ' \u00b7 Return on drawdown ' + g.rod : '') + (g.dd !== null ? ' \u00b7 Max drawdown ' + moneyFull(g.dd) : '');
   }
   // Row E776 (review E774 C1): the two amounts only. The record's max drawdown is not measured the way the replay applies
   // the chosen kind of loss limit, so no verdict is drawn from it; the replay, which applies the kind, says how many accounts were blown.
@@ -715,7 +798,7 @@
       ['Total profit', 'net', amt(g.net, true), amt(times(g.net, k), true), tone(g.net)],
       ['Max drawdown', 'dd', amt(g.dd), amt(times(g.dd, k)), ''],
       ['Avg per month', 'mon', amt(g.mon, true), amt(times(g.mon, k), true), tone(g.mon)],
-      ['RoDD', 'rod', g.rod || DASH, g.rod || DASH, '']
+      ['Return on drawdown', 'rod', g.rod || DASH, g.rod || DASH, '']
     ];
     $('#mx').innerHTML = '<h3 class="cx-mx-h" id="mx-h">Its tested record</h3>' +
       '<table class="cx-mxt"><thead><tr><td></td><th scope="col">As tested</th><th scope="col">' + atWords(k) + '</th></tr></thead><tbody>' +
@@ -723,19 +806,21 @@
         return '<tr data-row="' + r[1] + '"><th scope="row">' + r[0] + '</th><td class="' + r[4] + '">' + r[2] + '</td><td class="' + r[4] + '">' + r[3] + '</td></tr>';
       }).join('') + '</tbody></table>' +
       '<p class="cx-mxn" id="mx-n">Hypothetical backtest results. ' + atWords(k) + ': every day times ' + k +
-        '. RoDD, return on drawdown (total profit \u00f7 max drawdown), is the same at any multiplier.</p>' +
+        '. Return on drawdown is the total profit as a percentage of the max drawdown, and it is the same at any multiplier.</p>' +
       (ll ? '<p class="cx-mxl" id="mx-l">' + esc(ll) + '</p>' : '');
   }
-  function mxShort(rec, k) {   // the same in one line, repeated by the result line on a phone
-    var g = recFig(rec);
-    return (k === 1 ? 'As tested' : atWords(k)) + ': total profit ' + amt(times(g.net, k), true) + ' \u00b7 max drawdown ' + amt(times(g.dd, k)) + ' \u00b7 RoDD ' + (g.rod || DASH);
+  function mxShort(rec, k) {   // the same in one line, repeated by the result line on a phone; HTML, each figure kept whole
+    var g = recFig(rec);   // row E817: each label stays with its figure (cx-nw), so a narrow line breaks only at a dot
+    function nw(t) { return '<span class="cx-nw">' + esc(t) + '</span>'; }
+    return nw((k === 1 ? 'As tested' : atWords(k)) + ': total profit ' + amt(times(g.net, k), true)) + ' \u00b7 ' + nw('max drawdown ' + amt(times(g.dd, k))) +
+      ' \u00b7 ' + nw('return on drawdown ' + (g.rod || DASH));
   }
 
   /* ---------- the compare view ---------- */
-  // Row E745 ruling 7: success rate (of finished starts), accounts blown (row E778's words), did not finish, average days.
+  // Row E745 ruling 7: the percentage passed (of finished starts; row E828 heads it Passed), accounts blown (row E778's words), did not finish, average days.
   var sortBy = { key: 'rate', dir: -1 };
   var COLS = [
-    { key: 'rate', label: 'Success rate' },
+    { key: 'rate', label: 'Passed' },
     { key: 'limit', label: 'Blown' },
     { key: 'open', label: 'In progress' },
     { key: 'avg', label: 'Average days' },
@@ -766,7 +851,7 @@
       return '<tbody data-slug="' + esc(r.slug) + '"><tr class="cx-cn"><th scope="rowgroup" colspan="5"><button type="button" class="cx-open" data-open="' + esc(r.slug) + '">' + nameSpan(r.rec.s) +
         '<span class="cx-cn-m">' + esc(r.rec.s.market_line || '') + ' · ' + plural(t.n, 'start day', 'start days') + '</span><span class="bx-vh">, open it in the one-strategy view</span></button></th></tr>' +
         '<tr class="cx-cv">' +
-        '<td class="is-t"><b>' + rateText(t) + '</b><small>' + (t.fin ? num(t.target) + ' of ' + num(t.fin) + ' finished' : 'none finished') + '</small>' + bar(t.target, t.fin, COL.target) +
+        '<td class="is-t"><b>' + rateText(t) + '</b><small>' + (t.fin ? num(t.target) + ' passed of ' + num(t.fin) + ' finished' : 'none finished') + '</small>' + bar(t.target, t.fin, COL.target) +
           (hs ? '<small class="cx-harsh-s">' + esc(harshShort(r.h)) + '</small>' : '') + '</td>' +
         '<td class="is-l"><b>' + num(t.limit) + '</b><small>' + (t.fin ? pct(t.limit, t.fin) + '% of finished' : 'none finished') + '</small>' + bar(t.limit, t.fin, COL.limit) + '</td>' +
         '<td class="is-o"><b>' + num(t.open) + '</b><small>not counted</small></td>' +
@@ -940,7 +1025,7 @@
     sp.from = from;
     return sp;
   }
-  // As the prop picker (row E791): the chosen strategy's own text is its name; the others show name, RoDD and max drawdown.
+  // As the prop picker (row E791): the chosen strategy's own text is its name; the others show name, return on drawdown and max drawdown.
   function lpTexts(sel) { selTexts(sel); }
   function fillLive() {
     var grid = $('.cx-grid'), lead = $('.cx-head .bx-s-lead');
@@ -1195,7 +1280,7 @@
       drawWL(rec, k);
       $('#how-rules').textContent = howRules(R);
       var t = cur.tal;
-      $('#msum').innerHTML = '<span class="cx-msum-mx">' + esc(mxShort(rec, k)) + '</span><b>' + rateText(t) + '</b> success rate · ' + oc(COL.target, t.target, 'passed') + ' · ' + oc(COL.limit, t.limit, 'blown') + ' · ' +
+      $('#msum').innerHTML = '<span class="cx-msum-mx">' + mxShort(rec, k) + '</span><b>' + rateText(t) + '</b> passed · ' + oc(COL.target, t.target, 'passed') + ' · ' + oc(COL.limit, t.limit, 'blown') + ' · ' +
         oc(COL.open, t.open, 'in progress') + ' · ' + (t.avgC === null ? 'no average time' : 'average ' + plural(t.avgC, 'day', 'days')) +
         (harshShows(t, cur.tal2, R.kind) ? ' · <span class="cx-harsh-s">' + esc(harshShort(cur.tal2)) + '</span>' : '') + '. <button type="button" class="cx-jump">See full results <span aria-hidden="true">\u2193</span></button>' +
         '<span class="cx-must cx-must-s">' + MUST + '</span>';
@@ -1219,7 +1304,7 @@
 
   /* ---------- start ---------- */
   function build() {
-    F = { pick: $('#pick'), target: $('#target'), limit: $('#limit'), lock: $('#lock'), dlOn: $('#dl-on'), dl: $('#dl'), cpOn: $('#cp-on'), cp: $('#cp'), md: $('#md'), scale: null };
+    F = { pick: $('#pick'), target: $('#target'), limit: $('#limit'), dlOn: $('#dl-on'), dl: $('#dl'), cpOn: $('#cp-on'), cp: $('#cp'), md: $('#md'), scale: null };
     F.pick.innerHTML = order.map(function (slug) { return '<option value="' + esc(slug) + '">' + esc(optText(recs[slug])) + '</option>'; }).join('');
     pickTexts();   // row E791: the chosen option's text is the name; it follows every change
     F.pick.addEventListener('change', function () { pickTexts(); });
@@ -1265,7 +1350,6 @@
       var el = e.target;
       if (el === F.pick) { st.s = el.value; render(true); return; }
       if (el.name === 'kind') { st.k = el.value; syncSwitches(); render(false); return; }
-      if (el === F.lock) { st.lock = el.checked; render(false); return; }
       if (el === F.dlOn) { st.dlOn = el.checked; syncSwitches(); render(false); if (el.checked) F.dl.focus(); return; }
       if (el === F.cpOn) { st.cpOn = el.checked; syncSwitches(); render(false); if (el.checked) F.cp.focus(); return; }
       if (el === F.scale) { st.x = Number(el.value); render(true); }

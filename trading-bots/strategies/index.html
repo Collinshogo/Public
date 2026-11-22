@@ -20,29 +20,34 @@
 <meta property="og:title" content="All Fluence Trading — AFT Strategy Library">
 <meta property="og:description" content="Search and filter the AFT Trading Bots strategies: the ones published on TradingView, each also sold on its own, and the ones coming soon.">
 <meta property="og:url" content="https://allfluencetrading.com/trading-bots/strategies/">
-<meta property="og:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-21.png">
+<meta property="og:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-22.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="All Fluence Trading — AFT Strategy Library">
 <meta name="twitter:description" content="Search and filter the AFT Trading Bots strategies: the ones published on TradingView, each also sold on its own, and the ones coming soon.">
-<meta name="twitter:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-21.png">
+<meta name="twitter:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-22.png">
 <script src="/config.js"></script>
 <script src="/tracking.js" defer></script>
+<link rel="stylesheet" href="/trading-bots/nav.css">
+<script src="/trading-bots/nav.js" defer></script>
+<link rel="stylesheet" href="/trading-bots/cart.css">
+<script src="/trading-bots/cart.js" defer></script>
 <meta name="description" content="Search and filter the AFT Trading Bots strategies: the ones published on TradingView, each also sold on its own, and the ones coming soon.">
 </head>
 <body class="bots" data-page="strategies" data-data-base="../data/">
 
-<header class="nav">
-  <div class="wrap">
-    <a class="brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
-    <nav class="nav-links" aria-label="AFT Trading Bots">
-      <a href="#plans">Tiers</a>
-      <a href="#list" aria-current="page">Strategy Library</a>
-      <a href="../#method">How results are shown</a>
-      <a href="../#how">How it works</a>
-      <a class="nav-setup" href="../setup/">Setup</a>
-      <a class="nav-calc" href="../calculator/">Calculator</a>
+<header class="tbn">
+  <div class="tbn-in">
+    <a class="tbn-brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
+    <button class="tbn-btn" type="button" aria-expanded="false" aria-controls="tbn-menu"><span class="tbn-ico" aria-hidden="true"></span>Menu</button>
+    <nav class="tbn-links" id="tbn-menu" aria-label="AFT Trading Bots">
+      <a href="/trading-bots/#plans">Plans</a>
+      <a href="/trading-bots/strategies/" aria-current="page">Strategy Library</a>
+      <a href="/trading-bots/#method">How results are shown</a>
+      <a href="/trading-bots/#how">How it works</a>
+      <a href="/trading-bots/setup/">Setup</a>
+      <a href="/trading-bots/calculator/">Calculator</a>
     </nav>
   </div>
 </header>
@@ -53,7 +58,7 @@
   <div class="wrap">
     <p class="bx-kicker"><a href="../">AFT Trading Bots</a></p>
     <h1>Strategy Library</h1>
-    <p class="bx-s-lead">Search and filter the strategies published on TradingView and the ones coming soon. Each one's price and figures appear here once they are set. Buy a published one on its own, or take a tier that bundles them.</p>
+    <p class="bx-s-lead">Search and filter the strategies published on TradingView and the ones coming soon. Buy a published one on its own, or take a plan that bundles them.</p>
     <p class="bx-s-note">Every figure here is a hypothetical backtest from TradingView's Strategy Tester. A backtest does not represent actual trading.</p>
   </div>
 </section>
@@ -80,7 +85,8 @@
     </div>
 
     <p class="bx-swipe" id="swipe">Scroll the table sideways to see every column.</p>
-    <p class="bx-asof" id="as-of">All figures cover 01 Jan 2026 to the current day.<span id="as-of-upd"></span></p>
+    <!-- row E827: strategies.js writes the test dates and the last run date from the catalog's figures into the spans -->
+    <p class="bx-asof" id="as-of">Hypothetical backtests<span id="as-of-win"></span>. Each strategy's own dates are on its card.<span id="as-of-upd"></span></p>
     <div class="bx-tw" id="table-frame" role="region" aria-label="The strategies. The table scrolls sideways." tabindex="0">
       <table class="bx-table">
         <caption class="bx-vh">The published strategies and the ones coming soon. Choose a heading to sort; choose a strategy to open its card.</caption>
@@ -104,16 +110,14 @@
 <section id="plans" class="bx-plans">
   <div class="wrap">
     <div class="bx-head">
-      <h2>Or take a tier</h2>
-      <p class="bx-sub">A tier bundles its strategies, and each higher tier includes the ones below it. Your choice stays in the bar at the bottom.</p>
+      <h2>Or take a plan</h2>
+      <p class="bx-sub">A plan bundles its strategies, and each higher plan includes the ones below it. Your choice stays in the bar at the bottom.</p>
     </div>
     <div class="bx-plan-grid" id="plan-grid"></div>
-    <div class="bx-open-note">
-      <p class="bx-open-h">Checkout is not open yet</p>
-      <p>You can pick a tier now and it stays in the bar. When checkout opens, it is announced in the free Discord first.</p>
-      <p class="bx-open-cta"><a class="btn btn-primary" data-dest="discordInvite" data-ev="lead" data-name="bots-strategies-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Join the free Discord</a></p>
-    </div>
-    <p class="bx-fine">What each tier gives you, and how billing and cancelling work, is on the <a href="../#plans">AFT Trading Bots page</a>.</p>
+    <!-- row E806: the plans' own Whop checkouts, the same links as bots-config.js, for a browser without JavaScript;
+         row E811: data-kind="purchase" keeps them out of the trial events (tracking.js) -->
+    <noscript><p class="bx-fine">Without JavaScript the cart does not open. Check out one plan on Whop: <a href="https://whop.com/checkout/plan_VFbm88vz1SjKE" data-ev="checkout" data-kind="purchase" data-name="bots-noscript-base">Base</a> · <a href="https://whop.com/checkout/plan_kPldynvOihuRy" data-ev="checkout" data-kind="purchase" data-name="bots-noscript-select">Select</a> · <a href="https://whop.com/checkout/plan_YE62Ksh1O6DTV" data-ev="checkout" data-kind="purchase" data-name="bots-noscript-supreme">Supreme</a> · <a href="https://whop.com/checkout/plan_5R6oGBr425hQF" data-ev="checkout" data-kind="purchase" data-name="bots-noscript-ultimate">Ultimate</a> · <a href="https://whop.com/checkout/plan_XqIUXNHPBERdw" data-ev="checkout" data-kind="purchase" data-name="bots-noscript-lifetime">Lifetime</a>.</p></noscript>
+    <p class="bx-fine">What each plan gives you, and how billing and cancelling work, is on the <a href="../#plans">AFT Trading Bots page</a>.</p>
   </div>
 </section>
 
@@ -130,23 +134,23 @@
 <div class="bx-bar" id="bar" role="region" aria-label="Your selection">
   <div class="bx-bar-in">
     <div class="bx-bar-sel" aria-live="polite">
-      <p class="bx-bar-plan" id="bar-plan">No tier chosen yet</p>
+      <p class="bx-bar-plan" id="bar-plan">No plan chosen yet</p>
       <p class="bx-bar-detail" id="bar-detail">Pick one below</p>
     </div>
     <p class="bx-bar-price" id="bar-price" hidden></p>
     <div class="bx-bar-acts">
       <button class="btn btn-ghost bx-bar-btn bx-bar-alt" type="button" id="bar-alt" hidden></button>
-      <a class="btn bx-btn-red bx-bar-btn" role="button" href="#plans" id="bar-btn">See tiers</a>
+      <a class="btn bx-btn-red bx-bar-btn" role="button" href="#plans" id="bar-btn">See plans</a>
     </div>
   </div>
 </div>
 
 <div class="bx-backdrop" id="backdrop" hidden></div>
-<aside class="bx-sheet" id="sheet" role="dialog" aria-labelledby="sheet-title" hidden>
+<!-- row E827: a modal view; its heading (#sheet-title) is added by bots.js while it is open, and named as its label then -->
+<aside class="bx-sheet" id="sheet" role="dialog" aria-modal="true" hidden>
   <div class="bx-sheet-head">
     <div class="bx-sheet-id">
       <p class="bx-sheet-k" id="sheet-k"></p>
-      <h2 class="bx-wm" id="sheet-title" tabindex="-1"></h2>
     </div>
     <button class="bx-x" type="button" id="sheet-close" aria-label="Close and go back to the strategies"><span class="bx-x-t" aria-hidden="true">Back to strategies</span><span class="bx-x-i" aria-hidden="true">&times;</span></button>
   </div>

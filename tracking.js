@@ -151,9 +151,12 @@
     var name = a.getAttribute("data-name") || a.textContent.trim();
     var dest = a.getAttribute("data-dest") || "";
     if (kind === "checkout") {
-      try { localStorage.setItem(TRIAL_INTENT_KEY, String(Date.now())); } catch (e) {}
+      // row E811: a purchase checkout (data-kind="purchase": the Trading Bots cart) is not a trial: it sends
+      // InitiateCheckout only, and leaves the trial-intent key alone
+      var buy = a.getAttribute("data-kind") === "purchase";
+      if (!buy) { try { localStorage.setItem(TRIAL_INTENT_KEY, String(Date.now())); } catch (e) {} }
       track("InitiateCheckout", { content_name: name, content_category: "membership", value: priceFor(a), currency: (C.plan || {}).currency || "USD" });
-      trackCustom("StartTrialClick", { placement: name });
+      if (!buy) trackCustom("StartTrialClick", { placement: name });
     } else if (kind === "lead") {
       var isDiscord = dest === "discordInvite";
       track("Lead", { content_name: name, content_category: isDiscord ? "discord" : "other" });

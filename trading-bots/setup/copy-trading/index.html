@@ -11,21 +11,25 @@
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="All Fluence Trading">
 <meta property="og:title" content="All Fluence Trading — Copy trading for your AFT trading bot">
 <meta property="og:description" content="Copy trading for your AFT trading bot: your other Tradovate accounts copy the account your bot trades, through CrossTrade's trade copier. Optional: fixed rules on an account with a monitor.">
 <meta property="og:url" content="https://allfluencetrading.com/trading-bots/setup/copy-trading/">
-<meta property="og:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-21.png">
+<meta property="og:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-22.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="All Fluence Trading — Copy trading for your AFT trading bot">
 <meta name="twitter:description" content="Copy trading for your AFT trading bot: your other Tradovate accounts copy the account your bot trades, through CrossTrade's trade copier. Optional: fixed rules on an account with a monitor.">
-<meta name="twitter:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-21.png">
+<meta name="twitter:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-22.png">
 <script src="/config.js"></script>
 <script src="/tracking.js" defer></script>
+<link rel="stylesheet" href="/trading-bots/nav.css">
+<script src="/trading-bots/nav.js" defer></script>
+<link rel="stylesheet" href="/trading-bots/cart.css">
+<script src="/trading-bots/cart.js" defer></script>
 <meta name="description" content="Copy trading for your AFT trading bot: your other Tradovate accounts copy the account your bot trades, through CrossTrade's trade copier, in three steps, in writing and on video. Optional: put fixed rules on an account with CrossTrade's account monitor.">
 <style>
   :root{
@@ -44,6 +48,7 @@
   .wrap{max-width:760px;margin:0 auto;padding:28px 20px 56px}
   a{color:var(--bright);text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:3px}
   a:hover{text-decoration-color:var(--bright)}
+  :where(.wrap a:not([class])){padding:6px 0}   /* row E817: every text link at least 30 px tall to tap; padding on an inline link moves no line */
   strong{color:var(--bright)}
   .brand{display:block;width:max-content;margin-bottom:20px}
   .brand img{height:34px;width:auto;display:block}
@@ -58,16 +63,7 @@
   code{font-family:var(--mono);font-size:.88em;background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--bright);overflow-wrap:anywhere}
   .fine{font-size:13.5px;color:var(--faint);margin:10px 0 0}
 
-  /* the site's top bar (style.css's .nav and .nav-links; these pages do not load style.css) and the section menu (row E734) */
-  .nav{position:sticky;top:0;z-index:20;background:rgba(14,15,22,.9);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-  .nav-in{max-width:1160px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
-  .nav-brand{display:flex;align-items:center;min-height:44px}
-  .nav-brand img{height:34px;width:auto;display:block}
-  .nav-links{display:flex;gap:26px;font-size:15px;font-weight:500;line-height:1.4}
-  .nav-links a{color:var(--dim);display:inline-block;padding:10px 0;text-decoration:none;white-space:nowrap}
-  .nav-links a:hover,.nav-links a[aria-current]{color:var(--bright)}
-  @media(max-width:859.98px){.nav-links a.nav-lib{display:none}.nav-links{gap:20px}}
-  @media(max-width:420px){.nav-brand img{height:28px}}
+  /* the section menu (row E734); the top bar is /trading-bots/nav.css (row E804) */
   [id]{scroll-margin-top:82px}
   .su-sec{display:flex;gap:4px;margin:0 0 22px;border-bottom:1px solid var(--line)}
   .su-sec a{display:inline-block;padding:11px 12px 10px;min-height:44px;color:var(--dim);font-size:15.5px;font-weight:500;text-decoration:none;border-bottom:2px solid transparent;margin-bottom:-1px}
@@ -192,13 +188,17 @@
 </style>
 </head>
 <body>
-<header class="nav">
-  <div class="nav-in">
-    <a class="nav-brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
-    <nav class="nav-links" aria-label="AFT Trading Bots">
-      <a href="/trading-bots/">Trading Bots</a>
-      <a class="nav-lib" href="/trading-bots/strategies/">Strategy Library</a>
+<header class="tbn">
+  <div class="tbn-in">
+    <a class="tbn-brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
+    <button class="tbn-btn" type="button" aria-expanded="false" aria-controls="tbn-menu"><span class="tbn-ico" aria-hidden="true"></span>Menu</button>
+    <nav class="tbn-links" id="tbn-menu" aria-label="AFT Trading Bots">
+      <a href="/trading-bots/#plans">Plans</a>
+      <a href="/trading-bots/strategies/">Strategy Library</a>
+      <a href="/trading-bots/#method">How results are shown</a>
+      <a href="/trading-bots/#how">How it works</a>
       <a href="/trading-bots/setup/" aria-current="true">Setup</a>
+      <a href="/trading-bots/calculator/">Calculator</a>
     </nav>
   </div>
 </header>
@@ -262,7 +262,7 @@
   <!-- ============================== BEFORE YOU START ============================== -->
   <section id="before">
   <p class="kicker">Before you start</p>
-  <h2>What you need, and two words to know</h2>
+  <h2>What you need, and four terms to know</h2>
   <p>This guide adds one CrossTrade feature to a bot that is already running: the <strong>trade copier</strong>. It runs on CrossTrade's servers, so your computer can be off.</p>
   <div class="panel">
     <div class="row"><div class="name">Leader</div><div class="what">The account your bot trades: the one named in the strategy's <span class="ui">Tradovate account</span> setting. The bot's alert sends its orders here, and only here.</div></div>
@@ -272,7 +272,7 @@
   </div>
   <ul class="do">
     <li>Finish the <a href="/trading-bots/setup/">bot setup guide</a> first, and watch the bot take at least one full trade on a single demo account.<small>A copier repeats whatever the first account does, mistakes included.</small></li>
-    <li>Do this guide on a computer, in a web browser, like the first one.</li>
+    <li>You can do this guide on a phone or a computer, in a web browser, like the first one.</li>
     <li>Check your CrossTrade plan. The trade copier and the account monitor are part of the Pro plan and higher, not the entry plan.<small>The button under this list opens CrossTrade's plans page, with each plan and its price.</small></li>
     <li>Check every account is in your own name, and that no two accounts share a name.<small>CrossTrade refuses an account name that appears twice across your linked logins.</small></li>
     <li><strong>Check your own prop firm's rules first.</strong> Some firms limit or forbid copying trades between accounts, and automated trading.</li>
@@ -311,7 +311,7 @@
     <li>Under <span class="ui">Trade Execution</span>, <strong>change the mode from <span class="ui">Signal</span> to <span class="ui">Execution</span>.</strong> It starts on Signal, so do not skip this line.<small>In Execution mode, every fill on the leader is repeated on the followers as a market order. Step 2 explains what that means for you. Signal, the mode it starts on, repeats the messages sent to the leader instead of its fills. This guide does not use it.</small><small>The form also offers a third mode, Order. This guide does not use it.</small></li>
     <li>Under <span class="ui">Sizing</span>, leave the ratio at <code>1x</code> to copy the leader's size.<small>The ratio is how many contracts the follower trades for each one the leader trades. <code>2</code> doubles it and <code>0.5</code> halves it. If a follower is a prop firm account, keep its size inside that account's contract limit.</small></li>
     <li>Leave <span class="ui">Max Position Size</span> at <code>0</code>, which means no limit.<small>It is an optional ceiling on the follower's position, counted in contracts. If you do set one, make it at least the largest position your bot takes on the leader. A lower number trims or skips the follower's entries.</small></li>
-    <li>Under <span class="ui">Instrument Filtering</span>, pick the instrument your bot trades: <code>MNQ</code> for Slipstream, <code>MGC</code> for Midas.<small>Anything else on the leader is then not copied. This is the instrument's root, not a dated contract code, so it stays the same when the contract month changes.</small></li>
+    <li>Under <span class="ui">Instrument Filtering</span>, pick the market your strategy trades (<code>MNQ</code>, <code>MES</code> or <code>MGC</code>; its card names it).<small>Anything else on the leader is then not copied. This is the instrument's root, not a dated contract code, so it stays the same when the contract month changes.</small></li>
     <li>Scroll down to <span class="ui">Account Settings</span>. Leave <span class="ui">Account Management Tandem Mode</span> off for now.<small>It only matters if you add the <a href="#monitor">optional monitor</a> later. Monitor step 2 tells you when to switch it on. Leave <span class="ui">Stealth Mode</span>, in the same block, as it is: it only changes the label on copied orders.</small></li>
     <li>Under <span class="ui">Safety Features</span>, leave <span class="ui">Auto-Sync</span> enabled.<small>After each copy it checks that the follower matches the leader.</small></li>
     <li>Leave every other setting as it comes.</li>
@@ -523,7 +523,7 @@
   <footer>
     <p class="line">All Fluence Trading · AFT Trading Bots · Copy trading</p>
     <p><a href="/">Front page</a> · <a href="/trading-bots/">Trading Bots</a> · <a href="/trading-bots/setup/">Setup guide</a> · <a href="/challenge/">AFT Challenge</a> · <a data-dest="discordInvite" data-name="multi-footer-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a> · <a href="/legal/">Disclaimer</a> · <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a></p>
-    <p>Screen names and behaviour were checked against CrossTrade's own help pages and live CrossTrade screens in November 2026. CrossTrade changes its screens and features; where a label differs, follow the linked help page. The trade copier and the Account Manager are CrossTrade's products, run by CrossTrade, and All Fluence Trading does not operate or control them. TradingView, CrossTrade and Tradovate are trademarks of their owners. All Fluence Trading is in CrossTrade's referral program and is not otherwise affiliated with or endorsed by these companies.</p>
+    <p>Screen names and behaviour were checked against CrossTrade's own help pages and live CrossTrade screens in November 2026. CrossTrade changes its screens and features; where a label differs, follow the linked help page. The trade copier and the Account Manager are CrossTrade's products, run by CrossTrade, and All Fluence Trading does not operate or control them. TradingView, CrossTrade and Tradovate are trademarks of their owners. The companies named here do not sponsor or endorse All Fluence Trading.</p>
     <p>For education only. Trading futures involves substantial risk of loss and is not suitable for every investor. You can lose more than your initial investment. Automated strategies can lose money, and an order routed or copied to a broker account can fail, be delayed or fill at a different price. A monitor does not guarantee a maximum loss. If you connect a strategy to an account or copy it to others, that choice and the size you trade are yours, and you are responsible for every order on every account. Strategy Tester results are hypothetical, have inherent limitations and do not represent actual trading. All Fluence Trading provides educational software and training only and is not a registered investment adviser, broker-dealer or commodity trading advisor. Nothing here is financial advice.</p>
   </footer>
 </div>

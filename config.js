@@ -32,7 +32,6 @@ window.AFT_CONFIG = {
     name: "All Fluence Trading membership",
     priceMonthly: 100,
     currency: "USD",
-    trialDays: 14,
-    moneyBackDays: 7
+    trialDays: 14
   }
 };

@@ -15,55 +15,132 @@
 <link rel="stylesheet" href="/style.css">
 <link rel="stylesheet" href="bots.css">
 <style>
-/* row E795: the hero. Phone: title, video, words, buttons. Wide: words and buttons left, the video right. */
-.bx-hero-in{display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:"t" "v" "l" "c"}
+/* row E795: the hero. Row E801: the video is the original vertical recording (720x1280) and plays like a background.
+   Under 900 px it fills the hero edge to edge behind the title, lead and buttons, pinned to its top so the caption of
+   each trade (the strategy and its step, at the top of the video) always shows; the words sit on a dark scrim (the
+   scrim is the grid's ::before, spanning the text rows, so it grows with the words and the text always reads at AA).
+   Row E822 version B: from 900 px the same recording fills the whole hero behind the words (the block for 900 px and
+   up below). Row E831: neither file has the recording's opening card; each starts on the chart at the first trade, and
+   the wide file (1388x662) carries the caption of each trade in a strip over the chart. The buttons start at the top
+   of their row, so a tall hero never stretches them. */
+.bx-hero{position:relative;overflow:hidden}
+.bx-hero-in{display:grid;grid-template-columns:minmax(0,1fr);grid-template-areas:"t" "v" "l" "c" "h"}
 .bx-hero-in h1{grid-area:t;margin-bottom:18px}
-.bx-hero-fig{grid-area:v;margin:0 0 22px}
-.bx-hero-vid{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#000;aspect-ratio:900/616}
-/* row E799 (review E798 R1, WCAG 2.2.2): a visible, labelled pause/play button under the video, right-aligned */
-.bx-hero-pp{display:flex;justify-content:flex-end;margin:8px 0 0}
-.bx-hero-pp button{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--text);font:500 14px/1 var(--sans);cursor:pointer}
-.bx-hero-pp button[hidden]{display:none}
-.bx-hero-pp button:hover{border-color:var(--text)}
-.bx-hero-pp button:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
-.bx-hero-pp button::before{content:"";width:10px;height:12px;background:currentColor;clip-path:polygon(0 0,100% 50%,0 100%)}
-.bx-hero-pp button[data-state="playing"]::before{clip-path:polygon(0 0,35% 0,35% 100%,0 100%,0 0,65% 0,100% 0,100% 100%,65% 100%,65% 0)}
-.bx-hero-vid video{display:block;width:100%;height:100%;object-fit:cover}
+.bx-hero-fig{grid-area:v;margin:0}
+.bx-hero-vid{position:relative;overflow:hidden;background:#000}
+.bx-hero-vid video{display:block;width:100%;height:100%;object-fit:cover;cursor:pointer}
+.bx-hero-vid video:focus-visible{outline:2px solid var(--blue);outline-offset:-4px}
+/* row E801: "Tap for sound" on the video, and a play button on it while it is paused (on a phone both sit at the top,
+   clear of the scrim; the scrim lets taps through to the video) */
+.bx-hero-snd{position:absolute;display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:8px 14px;border:1px solid rgba(255,255,255,.35);border-radius:999px;background:rgba(10,12,20,.78);color:#fff;font:600 14px/1 var(--sans);cursor:pointer}
+.bx-hero-snd::before{content:"";width:14px;height:14px;background:currentColor;clip-path:polygon(0 30%,35% 30%,75% 0,75% 100%,35% 70%,0 70%)}
+.bx-hero-play{position:absolute;border:1px solid rgba(255,255,255,.5);border-radius:50%;background:rgba(10,12,20,.78);cursor:pointer}
+.bx-hero-play::before{content:"";position:absolute;left:50%;top:50%;width:22px;height:26px;margin:-13px 0 0 -9px;background:#fff;clip-path:polygon(0 0,100% 50%,0 100%)}
+.bx-hero-snd[hidden],.bx-hero-play[hidden]{display:none}
+.bx-hero-snd:hover,.bx-hero-play:hover{border-color:#fff}
+.bx-hero-snd:focus-visible,.bx-hero-play:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 .bx-hero-in .bx-lead{grid-area:l}
-.bx-hero-in .bx-cta{grid-area:c;margin:0}
+.bx-hero-in .bx-cta{grid-area:c;margin:0;align-self:start}
+/* row E822 addendum (04:46Z): the hypothetical line, at every width (under 900 px the last line under the buttons);
+   it takes no clicks, so a tap on it reaches the video */
+.bx-hero-in .bx-hyp{grid-area:h;margin:14px 0 0;font-size:12.5px;line-height:1.4;color:var(--dim);pointer-events:none}
+@media(max-width:899.98px){
+  .bx-hero{padding:0 0 44px;min-height:max(540px,calc(100svh - 150px));display:flex;flex-direction:column;justify-content:flex-end}
+  .bx-hero-fig{position:absolute;inset:0;z-index:0}
+  .bx-hero-vid{height:100%}
+  .bx-hero-vid video{object-position:50% 0}
+  .bx-hero-in::before{content:"";grid-row:1/-1;grid-column:1;position:relative;z-index:1;pointer-events:none;margin:-140px calc(50% - 50vw) -44px;
+    background:linear-gradient(180deg,rgba(9,10,16,0) 0,rgba(9,10,16,.72) 70px,rgba(9,10,16,.9) 140px,rgba(9,10,16,.94) 100%)}
+  .bx-hero-in h1,.bx-hero-in .bx-lead,.bx-hero-in .bx-cta,.bx-hero-in .bx-hyp{position:relative;z-index:2}
+  .bx-hero-in h1{color:#fff}
+  .bx-hero-snd{top:14px;right:14px}
+  .bx-hero-play{top:14px;left:14px;width:56px;height:56px}
+}
 @media(min-width:900px){
-  .bx-hero-in{grid-template-columns:minmax(0,5fr) minmax(0,6fr);grid-template-rows:auto auto 1fr;grid-template-areas:"t v" "l v" "c v";column-gap:48px}
-  .bx-hero-fig{margin:0;align-self:center}
+  /* row E822 version B, row E831: the recording fills the hero edge to edge and top to bottom, behind the words, as
+     the front page's .half-vid: the box at inset 0, the video object-fit cover, pinned to its top (object-position
+     85% 0), so the caption strip at the top of the file always shows whole. The file (1388x662) is a 128-row strip with
+     each trade's caption at its right over the recap's chart at its own size (no tables, widget, price or time axis,
+     branding or mouse pointer in any frame). The hero is as tall as the file at the hero's width (--bx-h), held to the
+     window's height less 160 px and to 520 px at least: from about 1090 px wide the whole width shows (1.04 x at 1440,
+     1.38 x at 1920), and only a short window cuts the chart's foot, never the caption. Under 1090 px the 520 px hero is
+     taller than that, and 85 % of the side cut comes off the file's left (the oldest bars, under the words), 15 % off
+     its right. The words keep A's column (--bx-col, its right edge --bx-wr) on this height, but its right edge is held
+     to 200 px short of the caption's first word (file x 865, at the file's scale --bx-s and its 85 % offset), so where
+     a short window holds the hero low (2560x1080) the scrim never dims the caption. The scrim, in the page's own dark
+     (9,10,16, no red), is strongest under the words and fades out within 200 px past them, so the chart right of the
+     words stays bright; it takes no clicks. "Tap for sound" sits at the right just under the caption
+     strip (its top is the strip's height at the file's scale plus 16 px), where a chart label, box or candle passes in
+     under 1 % of frames at 900 px and in none from 1024 px (the zone scan), and the play button over the chart's
+     bright part. The hypothetical line is the last line under the buttons, as on a phone: over the scrim (at least
+     .86 there), so no chart label shows through it. */
+  .bx-hero{padding:0;container-type:inline-size}
+  .bx-hero-in{--bx-h:max(520px,min(100vh - 160px,100cqw * 662 / 1388));
+    --bx-s:max(100cqw / 1388,var(--bx-h) / 662);
+    --bx-wr:min(100cqw - 1.02625 * var(--bx-h) - 40px,100cqw * .85 - var(--bx-s) * 314.8 - 200px);
+    --bx-col:calc(var(--bx-wr) - 20px - max(0px,(100cqw - 1160px) / 2));
+    min-height:var(--bx-h);padding-top:32px;padding-bottom:32px;grid-template-columns:minmax(0,var(--bx-col));grid-template-areas:"t" "l" "c" "h";align-content:center}
+  .bx-hero-in::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:linear-gradient(90deg,rgba(9,10,16,.9) 0,rgba(9,10,16,.86) calc(var(--bx-wr) + 24px),rgba(9,10,16,.14) calc(var(--bx-wr) + 200px),rgba(9,10,16,.06) 100%)}
+  .bx-hero-in h1,.bx-hero-in .bx-lead,.bx-hero-in .bx-cta,.bx-hero-in .bx-hyp{position:relative;z-index:2}
+  .bx-hero-in h1{font-size:clamp(36px,calc(var(--bx-col) / 6.8),64px)}
+  .bx-hero-fig{position:absolute;inset:0;z-index:0;grid-area:auto}
+  .bx-hero-vid{height:100%;background:#000209}
+  .bx-hero-vid video{object-fit:cover;object-position:85% 0}
+  .bx-hero-snd,.bx-hero-play{z-index:2}
+  .bx-hero-snd{left:auto;right:16px;top:calc(var(--bx-s) * 128 + 16px);min-height:44px}
+  .bx-hero-play{left:72%;top:50%;width:72px;height:72px;margin:-36px 0 0 -36px}
+}
+@media(min-width:1800px){
+  .bx-hero-in{--bx-col:calc(var(--bx-wr) - 20px - max(0px,(100cqw - 1320px) / 2))}
+}
+/* row E822, row E831: from 2300 px the page is zoomed 1.3, from 3200 px 1.9 (bots.css), and 100vh is zoomed with it,
+   so the window's height is divided back out; the hero is still as tall as the file at its width, up to the window's
+   height less 160 px (at 2560x1080 the chart's foot is cut, the caption never). At 1.9 "Tap for sound" is zoomed back
+   to about 1.3 (still over 44 px on screen), and its top is divided by the same .7, which its own zoom multiplies back,
+   so it still sits 16 px under the caption strip; the hypothetical line is set at .7 of its size, as in A. */
+@media(min-width:2300px){
+  .bx-hero-in{--bx-h:max(520px,min(100vh / 1.3 - 160px,100cqw * 662 / 1388))}
+}
+@media(min-width:3200px){
+  .bx-hero-in{--bx-h:max(300px,min(100vh / 1.9 - 160px,100cqw * 662 / 1388))}
+  .bx-hero-snd{zoom:.7;top:calc((var(--bx-s) * 128 + 16px) / .7)}
+  .bx-hero-in .bx-hyp{font-size:8.75px}
 }
 </style>
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="All Fluence Trading">
 <meta property="og:title" content="All Fluence Trading — AFT Trading Bots">
-<meta property="og:description" content="Automated futures strategies for TradingView, built on the All Fluence method. Sold in four tiers.">
+<meta property="og:description" content="Automated futures strategies for TradingView, built on the All Fluence method. Sold in four monthly plans.">
 <meta property="og:url" content="https://allfluencetrading.com/trading-bots/">
-<meta property="og:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-21.png">
+<meta property="og:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-22.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="All Fluence Trading — AFT Trading Bots">
-<meta name="twitter:description" content="Automated futures strategies for TradingView, built on the All Fluence method. Sold in four tiers.">
-<meta name="twitter:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-21.png">
+<meta name="twitter:description" content="Automated futures strategies for TradingView, built on the All Fluence method. Sold in four monthly plans.">
+<meta name="twitter:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-22.png">
 <script src="/config.js"></script>
 <script src="/tracking.js" defer></script>
-<meta name="description" content="AFT Trading Bots: automated MNQ, MGC and MES futures strategies for TradingView, built on the All Fluence method and sold in four tiers.">
+<link rel="stylesheet" href="/trading-bots/nav.css">
+<script src="/trading-bots/nav.js" defer></script>
+<link rel="stylesheet" href="/trading-bots/cart.css">
+<script src="/trading-bots/cart.js" defer></script>
+<meta name="description" content="AFT Trading Bots: automated MNQ, MGC and MES futures strategies for TradingView, built on the All Fluence method and sold in four monthly plans.">
 </head>
 <body class="bots">
 
-<header class="nav">
-  <div class="wrap">
-    <a class="brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
-    <nav class="nav-links" aria-label="On this page">
-      <a href="#plans">Tiers</a>
-      <a href="strategies/">Strategy Library</a>
-      <a href="#method">How results are shown</a>
-      <a href="#how">How it works</a>
-      <a class="nav-setup" href="setup/">Setup</a>
-      <a class="nav-calc" href="calculator/">Calculator</a>
+<header class="tbn">
+  <div class="tbn-in">
+    <a class="tbn-brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
+    <button class="tbn-btn" type="button" aria-expanded="false" aria-controls="tbn-menu"><span class="tbn-ico" aria-hidden="true"></span>Menu</button>
+    <nav class="tbn-links" id="tbn-menu" aria-label="AFT Trading Bots">
+      <a href="/trading-bots/#plans">Plans</a>
+      <a href="/trading-bots/strategies/">Strategy Library</a>
+      <a href="/trading-bots/#method">How results are shown</a>
+      <a href="/trading-bots/#how">How it works</a>
+      <a href="/trading-bots/setup/">Setup</a>
+      <a href="/trading-bots/calculator/">Calculator</a>
     </nav>
   </div>
 </header>
@@ -73,26 +150,35 @@
 <section class="bx-hero">
   <div class="wrap bx-hero-in">
     <h1>AFT Trading Bots</h1>
-    <!-- row E795: the homepage's bots video, large, muted and looping; its source is set after first paint (script below).
-         Row E799: its own cropped copy, zoomed to the chart (the homepage keeps its file), and a pause/play button. -->
-    <div class="bx-hero-fig"><div class="bx-hero-vid"><video id="hero-vid" muted loop playsinline preload="none" width="1166" height="798" disablepictureinpicture aria-label="A strategy's trade playing out on a TradingView chart"
-      poster="/assets/video/bots-hero-poster.jpg"
-      data-src="/assets/video/bots-hero.mp4"></video></div>
-    <p class="bx-hero-pp"><button type="button" id="hero-pp" aria-controls="hero-vid" data-state="paused" hidden>Play video</button></p></div>
-    <p class="bx-lead">Automated futures strategies for TradingView, built by All Fluence Trading on its own method and found nowhere else: each is invite-only, and access comes only through All Fluence Trading. Sold in four tiers; open any strategy to read what it trades, and its record shows once its test is posted.</p>
-    <p class="bx-cta"><a class="btn bx-btn-red btn-lg" href="#plans">See the tiers</a><a class="btn btn-ghost btn-lg" href="#strategies">See the strategies</a></p>
+    <!-- row E801, row E831: the promo recording without its opening card: AFT strategies taking trades on the chart in
+         a hypothetical backtest replay, each trade's step in the caption above the chart, with its sound (no figures
+         from the old test, no end card), muted and looping; its source is set after first paint. Row E822: the picker
+         after the video chooses the file and its poster once, at load: from 900 px the wide file (the caption strip
+         over the chart), under 900 px the vertical file; a resize does not switch them. The poster is not in the
+         markup, so a browser never fetches the other one. -->
+    <div class="bx-hero-fig"><div class="bx-hero-vid"><video id="hero-vid" muted loop playsinline preload="none" width="720" height="1280" tabindex="0" disablepictureinpicture aria-describedby="bx-hyp" aria-label="AFT strategies taking trades on a TradingView chart in a hypothetical backtest replay: each trade's step named above the chart, its entries, exits and labels as recorded. Select it to pause or play."
+      data-src="/assets/video/bots-hero-original.mp4" data-poster="/assets/video/bots-hero-original-poster.jpg"
+      data-src-wide="/assets/video/bots-hero-cover.mp4" data-poster-wide="/assets/video/bots-hero-cover-poster.jpg"></video>
+      <script>(function(){var v=document.getElementById('hero-vid');if(!v)return;var w=window.matchMedia&&window.matchMedia('(min-width:900px)').matches;if(w){v.setAttribute('data-src',v.getAttribute('data-src-wide'));v.width=1388;v.height=662;}v.poster=v.getAttribute(w?'data-poster-wide':'data-poster');})();</script>
+      <button type="button" class="bx-hero-play" id="hero-play" aria-controls="hero-vid" aria-label="Play video" hidden></button>
+      <button type="button" class="bx-hero-snd" id="hero-snd" aria-controls="hero-vid" hidden>Tap for sound</button></div></div>
+    <p class="bx-lead">Futures strategies built on the All Fluence Trading method. Found nowhere else. Over 20 strategies, each with its own edge. Try any strategy with a 14-day free trial.</p>
+    <p class="bx-cta"><a class="btn bx-btn-red btn-lg" href="#plans">See the product plans</a><a class="btn btn-ghost btn-lg" href="strategies/">Open the Strategy Library</a></p>
+    <p class="bx-hyp" id="bx-hyp">Hypothetical backtest replay. Not live trading.</p>
   </div>
 </section>
 
 <section id="plans" class="bx-plans">
   <div class="wrap">
     <div class="bx-head">
-      <h2>Choose a tier</h2>
-      <p class="bx-sub">Each higher tier includes the ones below it, and every strategy is also sold on its own. Tap any strategy to open it right here. Your choice stays in the bar at the bottom.</p>
+      <h2>Choose your plan</h2>
+      <p class="bx-sub">Each higher plan includes the ones below it, and every strategy is also sold on its own. Tap any strategy to open it right here. Your choice stays in the bar at the bottom.</p>
+      <!-- row E827: what a buyer needs from other companies, before a purchase with no refunds -->
+      <p class="bx-need">To trade your own account, a bot also needs a paid TradingView plan, CrossTrade and a Tradovate or prop firm account. <a href="#faq-need">What you need</a></p>
     </div>
 
-    <!-- One article per tier, lowest first. An article is the whole definition of its tier: data-name, data-rank
-         (the order the tiers nest in), data-price (left out while a price is not set), the line under the title,
+    <!-- One article per plan, lowest first. An article is the whole definition of its plan: data-name, data-rank
+         (the order the plans nest in), data-price (left out while a price is not set),
          the "Plus" line, the update line and, under "Support and access", the lines this tier
          adds beyond its strategies (its own lines only: the page script builds the table under the cards from
          the same lines). Its checkout link is the key of
@@ -103,16 +189,12 @@
       <article class="bx-plan" data-plan="base" data-name="Base" data-price="197" data-kind="monthly" data-rank="1" data-lvl="plain">
         <header>
           <h3 class="bx-wm bx-tname" data-lvl="plain">Base</h3>
-          <p class="bx-plan-for">All Tier 4 strategies.</p>
         </header>
         <p class="bx-price"><span class="bx-amt">$197</span><span class="bx-per">a month</span></p>
         <button class="btn btn-ghost bx-choose" type="button" data-choose="base">Choose Base</button>
         <div class="bx-strats">
-          <p class="bx-list-h">You get access to these strategies</p>
-          <ul data-tier-list="base">
-            <li class="bx-srow"><p class="bx-tba">Named here at release</p></li>
-          </ul>
-          <p class="bx-plus">Plus any strategy added to Tier 4</p>
+          <ul data-tier-list="base"></ul>
+          <p class="bx-plus">Plus any strategy added to Base</p>
         </div>
         <ul class="bx-inc">
           <li>Every update to these strategies, pushed to you automatically</li>
@@ -130,16 +212,12 @@
       <article class="bx-plan" data-plan="select" data-name="Select" data-price="397" data-kind="monthly" data-rank="2" data-lvl="gradient">
         <header>
           <h3 class="bx-wm bx-tname" data-lvl="gradient">Select</h3>
-          <p class="bx-plan-for">All Tier 3 and Tier 4 strategies.</p>
         </header>
         <p class="bx-price"><span class="bx-amt">$397</span><span class="bx-per">a month</span></p>
         <button class="btn btn-ghost bx-choose" type="button" data-choose="select">Choose Select</button>
         <div class="bx-strats">
-          <p class="bx-list-h">You get access to these strategies</p>
-          <ul data-tier-list="select">
-            <li class="bx-srow"><p class="bx-tba">More named here at release</p></li>
-          </ul>
-          <p class="bx-plus">Plus any strategy added to Tier 3 or 4</p>
+          <ul data-tier-list="select"></ul>
+          <p class="bx-plus">Plus any strategy added to Select or Base</p>
         </div>
         <ul class="bx-inc">
           <li>Every update to these strategies, pushed to you automatically</li>
@@ -156,16 +234,12 @@
       <article class="bx-plan" data-plan="supreme" data-name="Supreme" data-price="897" data-kind="monthly" data-rank="3" data-lvl="polished">
         <header>
           <h3 class="bx-wm bx-tname" data-lvl="polished">Supreme<span class="bx-sh" aria-hidden="true" data-t="Supreme"></span></h3>
-          <p class="bx-plan-for">All Tier 2, 3 and 4 strategies.</p>
         </header>
         <p class="bx-price"><span class="bx-amt">$897</span><span class="bx-per">a month</span></p>
         <button class="btn btn-ghost bx-choose" type="button" data-choose="supreme">Choose Supreme</button>
         <div class="bx-strats">
-          <p class="bx-list-h">You get access to these strategies</p>
-          <ul data-tier-list="supreme">
-            <li class="bx-srow"><p class="bx-tba">Named here at release</p></li>
-          </ul>
-          <p class="bx-plus">Plus any strategy added to Tier 2, 3 or 4</p>
+          <ul data-tier-list="supreme"></ul>
+          <p class="bx-plus">Plus any strategy added to Supreme, Select or Base</p>
         </div>
         <ul class="bx-inc">
           <li>Every update to these strategies, pushed to you automatically</li>
@@ -182,14 +256,12 @@
       <article class="bx-plan" data-plan="ultimate" data-name="Ultimate" data-price="1197" data-kind="monthly" data-rank="4" data-lvl="sheen">
         <header>
           <h3 class="bx-wm bx-tname" data-lvl="sheen">Ultimate<span class="bx-sh" aria-hidden="true" data-t="Ultimate"></span></h3>
-          <p class="bx-plan-for">All strategies, Tier 1 to 4.</p>
         </header>
         <p class="bx-price"><span class="bx-amt">$1,197</span><span class="bx-per">a month</span></p>
         <button class="btn btn-ghost bx-choose" type="button" data-choose="ultimate">Choose Ultimate</button>
         <div class="bx-strats">
-          <p class="bx-list-h">You get access to these strategies</p>
           <ul data-tier-list="ultimate"></ul>
-          <p class="bx-plus">Plus every strategy added to any tier</p>
+          <p class="bx-plus">Plus every strategy added to any plan</p>
         </div>
         <ul class="bx-inc">
           <li>Every update to these strategies, pushed to you automatically</li>
@@ -207,19 +279,16 @@
     </div>
 
     <p class="bx-one"><a href="strategies/">Or buy one strategy at a time</a></p>
+    <!-- row E806: the plans' own Whop checkouts, the same links as bots-config.js, for a browser without JavaScript;
+         row E811: data-kind="purchase" keeps them out of the trial events (tracking.js) -->
+    <noscript><p class="bx-fine">Without JavaScript the cart does not open. Check out one plan on Whop: <a href="https://whop.com/checkout/plan_VFbm88vz1SjKE" data-ev="checkout" data-kind="purchase" data-name="bots-noscript-base">Base</a> · <a href="https://whop.com/checkout/plan_kPldynvOihuRy" data-ev="checkout" data-kind="purchase" data-name="bots-noscript-select">Select</a> · <a href="https://whop.com/checkout/plan_YE62Ksh1O6DTV" data-ev="checkout" data-kind="purchase" data-name="bots-noscript-supreme">Supreme</a> · <a href="https://whop.com/checkout/plan_5R6oGBr425hQF" data-ev="checkout" data-kind="purchase" data-name="bots-noscript-ultimate">Ultimate</a> · <a href="https://whop.com/checkout/plan_XqIUXNHPBERdw" data-ev="checkout" data-kind="purchase" data-name="bots-noscript-lifetime">Lifetime</a>.</p></noscript>
 
     <div class="bx-rule">
-      <h3>What sets the tiers apart</h3>
-      <p>Each strategy is placed in Tier 1 to Tier 4 by All Fluence Trading, Tier 1 the top tier. Base holds the Tier 4 strategies, each tier above adds the next tier up, and Ultimate holds every strategy. Each strategy's own record, once its test is posted, is on this page to read before you choose. A tier is not a forecast, and no tier is a promise of any result.</p>
+      <h3>What sets the plans apart</h3>
+      <p>All Fluence Trading places each strategy in one of the four plans. Base holds its own strategies, each plan above adds its own, and Ultimate holds every strategy. Each strategy's own record is on this page to read before you choose. A plan is not a forecast, and no plan is a promise of any result.</p>
     </div>
 
-    <div class="bx-open-note">
-      <p class="bx-open-h">Checkout is not open yet</p>
-      <p>You can pick a tier now and it stays in the bar. When checkout opens, the button there takes you to it, and it is announced in the free Discord first.</p>
-      <p class="bx-open-cta"><a class="btn btn-primary" data-dest="discordInvite" data-ev="lead" data-name="bots-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Join the free Discord</a></p>
-    </div>
-
-    <p class="bx-fine">The bots are sold separately from the All Fluence membership. The four tiers are billed monthly, through Whop. You can cancel any time in your Whop account: cancelling stops the next charge, and you keep access until the end of the month you paid for. Lifetime is one payment of $10,000 through Whop, with no monthly charge, and it is yours for life. No refunds once charged.</p>
+    <p class="bx-fine">The bots are sold separately from the All Fluence membership. Base, Select, Supreme, Ultimate and every single strategy are billed monthly, through Whop, on these terms: <span data-trial-days>14</span>-day free trial. Cancel inside the <span data-trial-days>14</span> days and you're never charged. After that, the plan's or strategy's price a month until you cancel. No refunds once charged. You can cancel any time in your Whop account: cancelling stops the next charge, and you keep access until the end of the month you paid for. Lifetime has no free trial: it is one payment of $10,000 through Whop, with no monthly charge, and it is yours for life. No refunds once charged. Prices do not include sales tax. Whop adds any tax that applies and shows the final amount before you pay.</p>
   </div>
 </section>
 
@@ -227,7 +296,8 @@
   <div class="wrap">
     <div class="bx-head">
       <h2>The strategies</h2>
-      <p class="bx-sub">The strategies named so far, published and coming soon. Each is released once it has passed its own testing. No release dates are promised.</p>
+      <!-- row E827: bots.js writes the counts of live and coming-soon strategies in front of this from the catalog -->
+      <p class="bx-sub" id="strat-sub">No release dates are promised.</p>
     </div>
     <div class="bx-strat-grid" id="strat-grid"></div>
     <noscript><p class="bx-sub">Turn on JavaScript to list the strategies and open each one's record.</p></noscript>
@@ -255,9 +325,9 @@
       <p class="bx-sub">The same parts in the same order, so you can put any two side by side.</p>
     </div>
     <ol class="bx-six">
-      <li><h3>The strategy</h3><p>The market, the timeframe and the tier.</p></li>
+      <li><h3>The strategy</h3><p>The market, the timeframe and its plan.</p></li>
       <li><h3>The label</h3><p>Each strategy's full record carries the words Hypothetical backtest. A backtest is not a trading result.</p></li>
-      <li><h3>The four figures</h3><p>Net profit, win rate, profit factor and max drawdown, exactly as TradingView's Strategy Tester reports them.</p></li>
+      <li><h3>The figures</h3><p>On its card: return on drawdown, average monthly profit, win rate, total profit, max drawdown and profit factor. In its full record: net profit, win rate, profit factor and max drawdown, exactly as TradingView's Strategy Tester reports them.</p></li>
       <li><h3>The pictures</h3><p>The equity curve day by day and every month on a grid. Losing months show as plainly as winning ones.</p></li>
       <li><h3>The test</h3><p>The window, the starting balance, and the commission and slippage assumed.</p></li>
       <li><h3>The proof</h3><p>The date the test was run, so you can see how current the record is.</p></li>
@@ -278,21 +348,31 @@
     </ol>
     <p class="bx-guide" id="guide-line" hidden></p>
     <div class="bx-faq">
-      <details>
-        <summary>Can I buy one strategy on its own?</summary>
-        <p>Yes. Every strategy is also sold on its own; see the <a href="strategies/">Strategy Library</a>. A tier bundles its strategies, and each higher tier includes the ones below it.</p>
+      <!-- row E827: first, what a buyer needs from other companies (only what the set-up guide states) -->
+      <details id="faq-need">
+        <summary>What do I need to run a bot on my own account?</summary>
+        <p>Three things from other companies, separate from your plan and paid to those companies: a TradingView account on a paid plan with real-time futures data, a CrossTrade account, which carries the orders from TradingView to your account, and a Tradovate account or an account at a prop firm CrossTrade connects to (demo, prop or live). Some prop firms do not allow automated trading: check your firm's rules before you buy. The <a href="/trading-bots/setup/#get-these">set-up guide</a> lists each one with its link.</p>
       </details>
       <details>
-        <summary>When does checkout open?</summary>
-        <p>Checkout is not open yet. When it opens, the button in the bar at the bottom of this page takes you to it, and it is announced in the free Discord first. No date is promised.</p>
+        <summary>Can I buy one strategy on its own?</summary>
+        <p>Yes. Every strategy is also sold on its own; see the <a href="strategies/">Strategy Library</a>. A plan bundles its strategies, and each higher plan includes the ones below it.</p>
+      </details>
+      <!-- row E832: the trial, in BRAND-62's words -->
+      <details>
+        <summary>Is there a <span data-trial-days>14</span>-day free trial?</summary>
+        <p>Yes, on Base, Select, Supreme, Ultimate and every single strategy: <span data-trial-days>14</span>-day free trial. Cancel inside the <span data-trial-days>14</span> days and you're never charged. After that, the plan's or strategy's price a month until you cancel. No refunds once charged. The trial is once per plan or strategy: if you have used it before, Whop tells you at checkout and charges the first month that day. Lifetime has no free trial.</p>
+      </details>
+      <details>
+        <summary>How do I pay?</summary>
+        <p>Add a plan or strategies to the cart and check out on this page, through Whop. The monthly plans and strategies start with <span data-trial-days>14</span> days free, then renew each month until you cancel in your Whop account. Lifetime is one payment by bank transfer or wire through Whop (no card), has no free trial and checks out on its own.</p>
       </details>
       <details>
         <summary>Can I cancel? Is there a refund?</summary>
-        <p>The four tiers are billed monthly, through Whop. You can cancel any time in your Whop account: cancelling stops the next charge, and you keep access until the end of the month you paid for, then access to the strategies ends. Lifetime is one payment, with no monthly charge to cancel. No refunds once charged.</p>
+        <p>Base, Select, Supreme, Ultimate and every single strategy are billed monthly, through Whop, after a <span data-trial-days>14</span>-day free trial. Cancel inside the <span data-trial-days>14</span> days and you're never charged. You can cancel any time in your Whop account: cancelling stops the next charge, and you keep access until the end of the month you paid for, then access to the strategies ends. Lifetime is one payment, with no monthly charge to cancel and no free trial. No refunds once charged.</p>
       </details>
       <details>
         <summary>What does Lifetime include?</summary>
-        <p>Lifetime is one payment of $10,000 through Whop, with no monthly charge, and it is yours for life: every strategy in every tier, every new strategy and everything new the bots produce in future, every update pushed to you automatically, Ultimate's support and access, premium support, and a one-on-one with the founder of All Fluence Trading: help setting up your strategies and answers to your questions. No refunds once charged.</p>
+        <p>Lifetime is one payment of $10,000 through Whop, with no monthly charge and no free trial, and it is yours for life: every strategy in every plan, every new strategy and everything new the bots produce in future, every update pushed to you automatically, Ultimate's support and access, premium support, and a one-on-one with the founder of All Fluence Trading: help setting up your strategies and answers to your questions. "For life" means for as long as All Fluence Trading offers the bots. Access starts when Whop confirms the transfer (a bank transfer can take a few business days). The one-on-one is booked by email after purchase. The transfer goes to the bank details Whop shows at checkout; AFT never sends bank details by email or Discord. No refunds once charged.</p>
       </details>
       <details>
         <summary>Is this part of the All Fluence membership?</summary>
@@ -300,7 +380,7 @@
       </details>
       <details>
         <summary>Does a strategy place trades at my broker?</summary>
-        <p>Each strategy can run on its own as a TradingView strategy, and it can also send its orders to your own futures broker through a third-party automation service you set up and control.</p>
+        <p>Each strategy can run on its own as a TradingView strategy, and it can also send its orders to your Tradovate or prop firm account through CrossTrade, a third-party service you set up and control.</p>
       </details>
       <details>
         <summary>Are the figures on this page real results?</summary>
@@ -322,17 +402,17 @@
 </footer>
 
 <!-- The selection bar: the buyer's one "cart" line. It stays on screen, under the open strategy too,
-     where it also carries the button that chooses the open strategy's tier. -->
+     where it also carries the button that chooses the open strategy's plan. -->
 <div class="bx-bar" id="bar" role="region" aria-label="Your selection">
   <div class="bx-bar-in">
     <div class="bx-bar-sel" aria-live="polite">
-      <p class="bx-bar-plan" id="bar-plan">No tier chosen yet</p>
+      <p class="bx-bar-plan" id="bar-plan">No plan chosen yet</p>
       <p class="bx-bar-detail" id="bar-detail">Pick one above</p>
     </div>
     <p class="bx-bar-price" id="bar-price" hidden></p>
     <div class="bx-bar-acts">
       <button class="btn btn-ghost bx-bar-btn bx-bar-alt" type="button" id="bar-alt" hidden></button>
-      <a class="btn bx-btn-red bx-bar-btn" role="button" href="#plans" id="bar-btn">See tiers</a>
+      <a class="btn bx-btn-red bx-bar-btn" role="button" href="#plans" id="bar-btn">See plans</a>
     </div>
   </div>
 </div>
@@ -340,13 +420,13 @@
 <!-- The open strategy: a bottom sheet on phones, a full view on desktop. Filled from data/<slug>.json.
      First screen: the name, the chart, the four-figure bar and the monthly P&L. The rest scrolls below. -->
 <div class="bx-backdrop" id="backdrop" hidden></div>
-<aside class="bx-sheet" id="sheet" role="dialog" aria-labelledby="sheet-title" hidden>
+<!-- row E827: a modal view; its heading (#sheet-title) is added by bots.js while it is open, and named as its label then -->
+<aside class="bx-sheet" id="sheet" role="dialog" aria-modal="true" hidden>
   <div class="bx-sheet-head">
     <div class="bx-sheet-id">
       <p class="bx-sheet-k" id="sheet-k"></p>
-      <h2 class="bx-wm" id="sheet-title" tabindex="-1"></h2>
     </div>
-    <button class="bx-x" type="button" id="sheet-close" aria-label="Close and go back to the tiers"><span class="bx-x-t" aria-hidden="true">Back to tiers</span><span class="bx-x-i" aria-hidden="true">&times;</span></button>
+    <button class="bx-x" type="button" id="sheet-close" aria-label="Close and go back to the plans"><span class="bx-x-t" aria-hidden="true">Back to plans</span><span class="bx-x-i" aria-hidden="true">&times;</span></button>
   </div>
   <div class="bx-sheet-body" id="sheet-body"></div>
 </aside>
@@ -356,20 +436,26 @@
 <script src="bots.js"></script>
 <script>
 /* row E795: the hero video. Its source is set after first paint; it plays muted and looping while on screen. With reduced
-   motion or Save-Data it shows the poster and a play control instead (nothing downloads until play is pressed).
-   Row E799: the button under it pauses and plays it at every width and says which it will do; a pause by the button
-   holds, so scrolling away and back does not restart it until the button is pressed again. */
+   motion or Save-Data it shows the poster and a play button instead (nothing downloads until play is pressed).
+   Row E801: browsers allow autoplay only muted, so it starts muted and "Tap for sound" turns the sound on (then the
+   same control mutes it). A tap or click on the video, or Space or Enter while it has focus, pauses and plays it; while
+   paused, a play button shows on it. A pause by the viewer holds: scrolling away and back does not restart it. */
 (function(){
 var v=document.getElementById('hero-vid');if(!v)return;
 var still=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches,c=navigator.connection||{};
-var b=document.getElementById('hero-pp'),held=false;
+var snd=document.getElementById('hero-snd'),pb=document.getElementById('hero-play'),held=false;
 function src(){if(!v.getAttribute('src'))v.src=v.getAttribute('data-src');}
-function play(){var p=v.play();if(p&&p.catch)p.catch(function(){v.controls=true;});}
-function say(){if(!b)return;var p=v.paused;b.textContent=p?'Play video':'Pause video';b.setAttribute('data-state',p?'paused':'playing');}
-if(b){v.addEventListener('play',say);v.addEventListener('pause',say);
-  b.addEventListener('click',function(){if(v.paused){held=false;src();play();}else{held=true;v.pause();}});
-  say();b.hidden=false;}
-if(still||c.saveData){v.controls=true;src();return;}
+function play(){var p=v.play();if(p&&p.catch)p.catch(function(){show();});}
+function show(){if(pb)pb.hidden=!v.paused;if(snd)snd.textContent=v.muted?'Tap for sound':'Mute';}
+function go(){held=false;src();play();}
+function toggle(){if(v.paused)go();else{held=true;v.pause();}}
+v.addEventListener('play',show);v.addEventListener('pause',show);v.addEventListener('volumechange',show);
+v.addEventListener('click',toggle);
+v.addEventListener('keydown',function(e){if(e.key===' '||e.key==='Enter'||e.key==='Spacebar'){e.preventDefault();toggle();}});
+if(pb)pb.addEventListener('click',function(e){e.stopPropagation();go();});
+if(snd){snd.addEventListener('click',function(e){e.stopPropagation();if(v.muted){v.muted=false;if(v.paused)go();}else v.muted=true;});snd.hidden=false;}
+show();
+if(still||c.saveData){src();return;}
 var on=true;
 if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){on=e.isIntersecting;if(!v.getAttribute('src'))return;if(on&&!held)play();else if(!on)v.pause();});}).observe(v);}
 requestAnimationFrame(function(){setTimeout(function(){src();if(on&&!held)play();},0);});

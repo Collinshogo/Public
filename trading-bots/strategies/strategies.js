@@ -33,8 +33,8 @@
   var COLS = [
     { k: 'name', label: 'Strategy', first: 'asc' },
     { k: 'inst', label: 'Instrument', first: 'asc' },
-    { k: 'tier', label: 'Tier', first: 'asc' },
-    { k: 'rod', label: 'Return on drawdown', first: 'desc', f: 'return_on_drawdown', d: 'return_on_drawdown' },
+    { k: 'tier', label: 'Plan', first: 'asc' },
+    { k: 'rod', label: 'Return on drawdown', first: 'desc', f: 'rodd_pct', d: 'rodd_pct' },   // row E815: net profit / max drawdown, a percentage
     { k: 'np', label: 'Total profit', first: 'desc', f: 'net_profit_usd', d: 'net_profit' },
     { k: 'mp', label: 'Monthly profit', first: 'desc', f: 'monthly_profit_usd', d: 'monthly_profit', sub: 'average per month', note: 'hyp-note' },
     { k: 'pf', label: 'Profit factor', first: 'desc', f: 'profit_factor', d: 'profit_factor' },
@@ -47,15 +47,27 @@
     { k: 'pf', label: 'Profit factor', f: 'profit_factor' },
     { k: 'fq', label: FREQ.filter, f: 'trade_frequency' },
     { k: 'dd', label: 'Max drawdown ($)', f: 'max_drawdown_usd' },
-    { k: 'rod', label: 'Return on drawdown', f: 'return_on_drawdown' },
+    { k: 'rod', label: 'Return on drawdown (%)', f: 'rodd_pct' },
     { k: 'np', label: 'Total profit ($)', f: 'net_profit_usd' }
   ];
   function col(k) { return COLS.filter(function (c) { return c.k === k; })[0]; }
 
   /* ---------- the rows' data ---------- */
   // A strategy whose tier is not set has no grade (g: null).
+  // Row E815: each row's figures gain its return on drawdown as a percentage (rodd_pct, and its printed form), worked out
+  // from the record's own net profit and max drawdown; the catalog's figures themselves are not changed.
+  function withReturn(f) {
+    if (!f) return null;
+    var ret = A.retPct(f.net_profit_usd, f.max_drawdown_usd), g = {}, k;
+    for (k in f) if (Object.prototype.hasOwnProperty.call(f, k)) g[k] = f[k];
+    g.display = {};
+    for (k in (f.display || {})) if (Object.prototype.hasOwnProperty.call(f.display, k)) g.display[k] = f.display[k];
+    g.rodd_pct = ret ? ret.v : null;
+    if (ret) g.display.rodd_pct = ret.t;
+    return g;
+  }
   var all = A.listed.map(function (s) {
-    return { s: s, f: FIG[s.slug] || null, g: A.grade(s.tier), price: !A.isSoon(s) && num(s.price) !== null && s.price > 0 ? s.price : null };   // row E758: no price of its own for a coming-soon build
+    return { s: s, f: withReturn(FIG[s.slug]), g: A.grade(s.tier), price: !A.isSoon(s) && num(s.price) !== null && s.price > 0 ? s.price : null };   // row E758: no price of its own for a coming-soon build
   });
   var bySlug = {};
   all.forEach(function (r) { bySlug[r.s.slug] = r; });
@@ -104,12 +116,14 @@
   function options(list) {
     return list.map(function (o) { return '<option value="' + esc(o[0]) + '">' + esc(o[1]) + '</option>'; }).join('');
   }
+  // Row E811: a grade is shown as the plan it comes in (grade 1 the top plan), never as "Tier n"
+  function planOf(g) { var p = A.ladder[A.ladder.length - g]; return p ? p.name : 'Plan not set'; }
   function field(id, label, list) {
     return '<label class="bx-fld"><span>' + esc(label) + '</span><select id="' + id + '">' + options(list) + '</select></label>';
   }
   body.innerHTML =
     field('f-market', 'Instrument', [['', 'All instruments']].concat(markets.map(function (m) { return [m, m]; }))) +
-    field('f-grade', 'Tier', [['', 'All tiers']].concat(A.ladder.map(function (p, i) { return [String(i + 1), 'Tier ' + (i + 1)]; }), anyUnset ? [[NOT_SET, 'Not set']] : [])) +
+    field('f-grade', 'Plan', [['', 'All plans']].concat(A.ladder.map(function (p, i) { return [String(i + 1), planOf(i + 1)]; }), anyUnset ? [[NOT_SET, 'Not set']] : [])) +
     RANGES.map(function (c) {
       return '<fieldset class="bx-rng"><legend>' + esc(c.label) + '</legend>' +
         '<input type="number" step="any" inputmode="decimal" id="f-' + c.k + '_min" placeholder="Min" aria-label="' + esc(c.label) + ', minimum">' +
@@ -172,40 +186,57 @@
   }
   function byName(a, b) { return a.s.name.localeCompare(b.s.name); }
   // The default order: by tier, and inside a tier by return on drawdown, highest first; rows with no figures follow in name order.
+  // (Row E815: the order is unchanged; it reads the catalog's return_on_drawdown, the same order as the percentage shown.)
+  function rodOf(r) { return r.f ? num(r.f.return_on_drawdown) : null; }
   function order(a, b) {
-    if (st.sort === 'tier') return rank(a.g, b.g, st.dir) || rank(value(a, 'rod'), value(b, 'rod'), 'desc') || byName(a, b);
+    if (st.sort === 'tier') return rank(a.g, b.g, st.dir) || rank(rodOf(a), rodOf(b), 'desc') || byName(a, b);
     return rank(value(a, st.sort), value(b, st.sort), st.dir) || byName(a, b);
   }
 
   /* ---------- drawing the table ---------- */
   var NONE = '<span aria-hidden="true">–</span><span class="bx-vh">Not published yet</span>';
   function cell(r, c) {
-    var shown = r.f && r.f.display && r.f.display[c.d];
+    var shown = c.k === 'pf' ? A.pf2(r.f) : r.f && r.f.display && r.f.display[c.d];   // row E827: profit factor with two decimals
     return '<td class="bx-c-' + c.k + (shown && (c.k === 'np' || c.k === 'mp') ? ' ' + A.tone(r.f[c.f]) : '') + '">' + (shown ? esc(shown) : NONE) + '</td>';
   }
+  // Row E827: a line that cart.js gives an "Add to cart" button keeps the button's room from the start (cart.css .crt-slot),
+  // so the line does not grow when the button arrives. The test is cart.js's sellable(): a released, named strategy with a
+  // price and its own Whop checkout link.
+  function slot(r) {
+    return r.s.named === true && !A.isSoon(r.s) && r.price !== null &&
+      /^https:\/\/whop\.com\/checkout\/plan_[A-Za-z0-9]+\/?$/.test(String(LINKS[r.s.slug] || ''));
+  }
+  // Row E832: a released strategy's free trial, read before its price: "14 days free, then $97 a month" (bots-config.js trialDays)
+  function trialHead(r) { return A.trialDays && r.price !== null && !A.isSoon(r.s) ? '<span class="bx-r-trial">' + A.trialDays + ' days free, then</span> ' : ''; }
   function rowHtml(r) {
     var s = r.s;
     return '<tr class="bx-row" data-slug="' + esc(s.slug) + '">' +
-      '<th scope="row" class="bx-c-name"><button type="button" class="bx-r-open" aria-expanded="false">' + '<span class="bx-r-id">' + A.nameSpan(s) + '<span class="bx-r-sub">' + (s.chip ? esc(s.chip) + ' ' : '') + (r.g === null ? 'Tier not set' : '<span class="bx-tier" data-lvl="' + A.finish(s.tier) + '">Tier ' + r.g + '</span>') + '</span></span><span class="bx-r-chev" aria-hidden="true">›</span></button></th>' +
+      '<th scope="row" class="bx-c-name"><button type="button" class="bx-r-open" aria-expanded="false">' + '<span class="bx-r-id">' + A.nameSpan(s) + '<span class="bx-r-sub">' + (s.chip ? esc(s.chip) + ' ' : '') + (r.g === null ? 'Plan not set' : '<span class="bx-tier" data-lvl="' + A.finish(s.tier) + '">' + esc(planOf(r.g)) + '</span>') + '</span></span><span class="bx-r-chev" aria-hidden="true">›</span></button></th>' +
       '<td class="bx-c-inst">' + (s.chip ? esc(s.chip) : NONE) + '</td>' +
-      '<td class="bx-c-tier"><span class="bx-tier" data-lvl="' + A.finish(s.tier) + '">' + (r.g === null ? 'Tier not set' : 'Tier ' + r.g) + '</span></td>' +
+      '<td class="bx-c-tier"><span class="bx-tier" data-lvl="' + A.finish(s.tier) + '">' + (r.g === null ? 'Plan not set' : esc(planOf(r.g))) + '</span></td>' +
       COLS.filter(function (c) { return c.f; }).map(function (c) { return cell(r, c); }).join('') +
-      '<td class="bx-c-price">' + (r.price !== null ? '<b>' + esc(A.dollars(r.price)) + '</b> <small>a month</small>' : '<span class="is-none">' + (A.isSoon(s) ? 'Coming soon' : 'Price at release') + '</span>') + '</td>' +
+      '<td class="bx-c-price">' + (r.price !== null ? trialHead(r) + '<b>' + esc(A.dollars(r.price)) + '</b> <small>a month</small>' + (slot(r) ? '<span class="crt-slot" aria-hidden="true"></span>' : '') : '<span class="is-none">' + (A.isSoon(s) ? 'Coming soon' : 'Price at release') + '</span>') + '</td>' +
       '</tr>';
   }
   $('#t-head').innerHTML = '<tr>' + COLS.map(function (c) {
     return '<th scope="col" class="bx-h-' + c.k + '" data-k="' + c.k + '"><button type="button" data-sort="' + c.k + '"' + (c.note ? ' aria-describedby="' + c.note + '"' : '') + '>' +
       '<span class="bx-h-t">' + esc(c.label) + '<span class="bx-arrow" aria-hidden="true"></span></span>' + (c.sub ? '<small>' + esc(c.sub) + '</small>' : '') + '</button>' +
-      (c.k === 'name' ? '<span class="bx-h-more"><button type="button" data-sort="inst">Instrument<span class="bx-arrow" aria-hidden="true"></span></button><button type="button" data-sort="tier">Tier<span class="bx-arrow" aria-hidden="true"></span></button></span>' : '') + '</th>';
+      (c.k === 'name' ? '<span class="bx-h-more"><button type="button" data-sort="inst">Instrument<span class="bx-arrow" aria-hidden="true"></span></button><button type="button" data-sort="tier">Plan<span class="bx-arrow" aria-hidden="true"></span></button></span>' : '') + '</th>';
   }).join('') + '</tr>';
   $('#freq-note').textContent = FREQ.note;
-  // The date line above the table: the figures run to the earliest end date among the strategies that have figures.
-  var upTo = Object.keys(FIG).map(function (k) { return FIG[k] && FIG[k].window_to; })
-    .filter(function (d) { return typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d); }).sort()[0];
-  if (upTo) {
-    var ud = upTo.split('-');
-    $('#as-of-upd').textContent = ' Last updated ' + ud[2] + ' ' + MON[Number(ud[1]) - 1] + ' ' + ud[0] + '.';
+  // The date line above the table (row E827): the strategies' first days, their last days (a range where they differ) and
+  // the latest test run, all from the catalog's figures; the year is said once when every date shares it.
+  function isos(key) {
+    return Object.keys(FIG).map(function (k) { return FIG[k] && FIG[k][key]; })
+      .filter(function (d) { return typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d); });
   }
+  var froms = isos('window_from'), tos = isos('window_to'), runs = isos('run_date').sort();
+  if (froms.length && tos.length) {
+    var wFrom = A.span(froms), wTo = A.span(tos);
+    if (wFrom.slice(-6) === wTo.slice(-6) && wFrom.indexOf('–') < 0) wFrom = wFrom.slice(0, -6);
+    $('#as-of-win').textContent = ', ' + wFrom + ' to ' + wTo;
+  }
+  if (runs.length) $('#as-of-upd').textContent = ' Last test run ' + A.day(runs[runs.length - 1]) + '.';
   function headState() {
     $$('#t-head th').forEach(function (th) {
       var on = th.dataset.k === st.sort;
@@ -265,7 +296,8 @@
   function cardHtml(r) {
     return '<div class="bx-c-rec">' + (r.f ? '<p class="bx-note">Loading…</p>' : '<p class="bx-c-none">No figures published yet</p>') + '</div>' +
       '<p class="bx-c-hyp">' + esc(HYPOTHETICAL) + '</p>' +
-      (A.isSoon(r.s) ? '' : '<div class="bx-c-buy">' + buyHtml(r) + '</div>');
+      (A.isSoon(r.s) ? '' : (A.trialWords && A.trialWords(r.price) ? '<p class="bx-c-trial">' + esc(A.trialWords(r.price)) + '</p>' : '') +   // row E832: its trial, over its button
+        '<div class="bx-c-buy">' + buyHtml(r) + '</div>');
   }
   function kpi(label, val, cls) {
     return '<div class="bx-kpi"><dt>' + esc(label) + '</dt><dd class="' + (cls || '') + '">' + esc(val) + '</dd></div>';
@@ -294,7 +326,7 @@
       '<dl class="bx-kpis' + (kpiLen >= 15 ? ' is-long is-xlong' : (kpiLen >= 12 ? ' is-long' : '')) + '">' +
         kpi('Total profit', show.net_profit, A.tone(f.net_profit_usd)) +
         kpi('Win rate', show.win_rate) +
-        kpi('Profit factor', show.profit_factor) +
+        kpi('Profit factor', A.pf2(f)) +
         kpi('Max drawdown', show.max_drawdown_usd) +
       '</dl>' +
       '<p class="bx-cap">' + cap.map(esc).join(' · ') + '</p>' + basis +
@@ -497,7 +529,19 @@
   $('#f-done').addEventListener('click', closePanel);
   $('#f-x').addEventListener('click', closePanel);
   back.addEventListener('click', closePanel);
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePanel(); });
+  // Row E816: Escape closes the filter panel when it is open; otherwise it closes the open card and puts focus back on its
+  // row, unless the full-screen view is open over the table (bots.js closes that view, and only that, on the same key).
+  var viewOpen = false;
+  window.addEventListener('keydown', function (e) { if (e.key === 'Escape') viewOpen = !!sheetEl && !sheetEl.hidden; }, true);
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (panel.classList.contains('is-open')) { closePanel(); return; }
+    if (viewOpen || !st.open) return;
+    var b = $('#rows tr[data-slug="' + st.open + '"] .bx-r-open');
+    closeCard();
+    toAddress();
+    if (b) b.focus({ preventScroll: true });
+  });
   if (phone.addEventListener) phone.addEventListener('change', closePanel);
 
   /* ---------- the pinned bar belongs to the tier cards: it shows only while they are on screen ---------- */

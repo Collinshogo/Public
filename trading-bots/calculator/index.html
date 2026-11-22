@@ -17,20 +17,25 @@
 <link rel="stylesheet" href="calc.css">
 <script src="/config.js"></script>
 <script src="/tracking.js" defer></script>
+<link rel="stylesheet" href="/trading-bots/nav.css">
+<script src="/trading-bots/nav.js" defer></script>
+<link rel="stylesheet" href="/trading-bots/cart.css">
+<script src="/trading-bots/cart.js" defer></script>
 <meta name="description" content="Replay an AFT strategy's hypothetical test results through your own account's rules: profit target, loss limit and its kind, daily loss limit, consistency rule.">
 </head>
 <body class="bots bx-calcpage" data-page="calculator" data-data-base="../data/">
 
-<header class="nav">
-  <div class="wrap">
-    <a class="brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
-    <nav class="nav-links" aria-label="AFT Trading Bots">
-      <a href="../#plans">Tiers</a>
-      <a href="../strategies/">Strategy Library</a>
-      <a href="../#method">How results are shown</a>
-      <a href="../#how">How it works</a>
-      <a class="nav-setup" href="../setup/">Setup</a>
-      <a class="nav-calc" href="./" aria-current="page">Calculator</a>
+<header class="tbn">
+  <div class="tbn-in">
+    <a class="tbn-brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
+    <button class="tbn-btn" type="button" aria-expanded="false" aria-controls="tbn-menu"><span class="tbn-ico" aria-hidden="true"></span>Menu</button>
+    <nav class="tbn-links" id="tbn-menu" aria-label="AFT Trading Bots">
+      <a href="/trading-bots/#plans">Plans</a>
+      <a href="/trading-bots/strategies/">Strategy Library</a>
+      <a href="/trading-bots/#method">How results are shown</a>
+      <a href="/trading-bots/#how">How it works</a>
+      <a href="/trading-bots/setup/">Setup</a>
+      <a href="/trading-bots/calculator/" aria-current="page">Calculator</a>
     </nav>
   </div>
 </header>
@@ -44,7 +49,7 @@
     <h1>Trading bot risk calculator</h1>
     <div class="cx-notice" id="notice">
       <p>Results are based on hypothetical backtests on historical data. They are not a guarantee of future performance, but can be used as a reference to gauge potential risk.</p>
-      <p>This calculator does not constitute financial advice. All information here is strictly informational and for entertainment purposes only.</p>
+      <p>This calculator does not constitute financial advice. It is for information only.</p>
     </div>
     <p class="bx-s-lead">Type your account's rules and replay a strategy's tested days through them, starting from every day it traded.</p>
   </div>
@@ -133,11 +138,6 @@
       <details class="cx-more cx-prop" id="more">
         <summary><span>More rules</span> <small id="more-n"></small></summary>
 
-        <div class="cx-sw" id="lock-row">
-          <label class="cx-check"><input type="checkbox" id="lock" aria-describedby="lock-hint" checked><span>Stops rising at the starting balance</span></label>
-          <p class="cx-hint" id="lock-hint">When ticked, once the trailing limit has risen to the starting balance, it stays there. Untick it if your firm’s limit keeps rising.</p>
-        </div>
-
         <div class="cx-opt">
           <label class="cx-check"><input type="checkbox" id="dl-on" aria-controls="dl-box"><span>Daily loss limit</span></label>
           <div class="cx-fld cx-sub" id="dl-box" hidden>
@@ -209,7 +209,7 @@
           <h3 class="cx-h3">How this is worked out</h3>
           <p id="how-p">Every traded day is a start: the replay runs the strategy's tested days from each one, in order. Each day is replayed along its own ups and downs, from one turning point to the next. The test does not record whether a trade's best or worst point came first. The main result takes the worst point first in a trade that closed at a profit and the best point first in any other trade. The second result takes the best point first in every trade. Without a consistency rule, the second result is never the higher of the two. With a consistency rule on, it can be. Where trades overlap, they are taken one after another in the order they closed.</p>
           <p id="how-rules">The loss limit is Static, a Trailing drawdown or an End-of-day drawdown, as chosen above.</p>
-          <p>The success rate counts passed and blown accounts; accounts still in progress when the test ended are left out. The ring shows all three: green passed, red blown, grey in progress. Days to the target are calendar days, from the start day to the day the target was reached, both counted; the required-days rule and the lines chart count days with trades. The account's own fees are not counted; commission and slippage are as in the test. Rules differ from account to account, so type your own.</p>
+          <p>The percentage passed counts passed and blown accounts; accounts still in progress when the test ended are left out. The ring shows all three: green passed, red blown, grey in progress. Days to the target are calendar days, from the start day to the day the target was reached, both counted; the required-days rule and the lines chart count days with trades. The account's own fees are not counted; commission and slippage are as in the test. Rules differ from account to account, so type your own.</p>
           <p class="cx-must">A replay of hypothetical test results. Not a forecast, and not a chance of passing any account.</p>
         </div>
       </div>
@@ -217,10 +217,10 @@
       <div class="cx-view cx-prop" id="view-cmp" role="tabpanel" aria-labelledby="tab-cmp" tabindex="-1" hidden>
         <h2 class="cx-name">Every strategy under these rules</h2>
         <p class="cx-must cx-must-top">A replay of hypothetical test results. Not a forecast, and not a chance of passing any account.</p>
-        <p class="cx-sub-l">The success rate counts passed and blown accounts, not those in progress. Choose a heading to sort; choose a strategy to open it.</p>
+        <p class="cx-sub-l">The percentage passed counts passed and blown accounts, not those in progress. Choose a heading to sort; choose a strategy to open it.</p>
         <div class="cx-sort" id="cmp-sort"></div>
         <table class="cx-cmp" id="cmp">
-          <caption class="bx-vh">Every strategy with figures, replayed through the rules above. For each: the success rate (the share of the finished starts, passed or blown, that passed), the starts blown, the starts still in progress when the test ended, the average days to the target (calendar days), and the largest drawdown in its test at the chosen multiplier.</caption>
+          <caption class="bx-vh">Every strategy with figures, replayed through the rules above. For each: the percentage passed (the share of the finished starts, passed or blown, that passed), the starts blown, the starts still in progress when the test ended, the average days to the target (calendar days), and the largest drawdown in its test at the chosen multiplier.</caption>
           <thead><tr id="cmp-head"></tr></thead>
         </table>
         <p class="cx-must">A replay of hypothetical test results. Not a forecast, and not a chance of passing any account.</p>

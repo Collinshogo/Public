@@ -14,6 +14,13 @@
   --win:var(--green);
   --loss:var(--red);
   --bar-h:72px;
+  /* row E802: a strategy's name is coloured by its market, not by the strategy. Each market is one token with a light
+     stop before it and an end stop after it (the ladder's --c0, --c1, --c2). MNQ is the colour Continuum's name had,
+     MGC the gold of the MGC strategy the owner named, MES a teal chosen for the dark panels (row E815). Every stop is at least
+     5.5:1 on --bg, --bg2 and --panel. */
+  --mnq-0:#f2f6f3;--mnq:#8ea0ff;--mnq-2:#3ddc84;
+  --mgc-0:#fff6dc;--mgc:#f7c948;--mgc-2:#ff8a3d;
+  --mes-0:#e3fbf8;--mes:#2dd4c8;--mes-2:#19b9c4;
   padding-bottom:calc(var(--bar-h) + env(safe-area-inset-bottom,0px));
 }
 /* keep anything scrolled or tabbed into view clear of the fixed selection bar */
@@ -45,11 +52,11 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
   background-repeat:no-repeat;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 .bx-wm::selection{background:#3d5bd9;color:#fff;-webkit-text-fill-color:#fff}
 
+/* row E802: by tier, lowest first: Base plain (sentence case, one solid colour), Select solid (the upper-case letters in
+   one solid colour, no gradient, polish or light), Supreme the sheen, Ultimate the sheen and the lightning (data-bolt). */
 .bx-wm[data-lvl="plain"]{font-weight:600;letter-spacing:-.01em;text-transform:none;
-  background-image:linear-gradient(90deg,var(--c0,#f2f6f3),var(--c0,#f2f6f3))}
-@supports (color:color-mix(in srgb,red,blue)){
-  .bx-wm[data-lvl="plain"]{background-image:linear-gradient(90deg,var(--c0,#f2f6f3) 30%,color-mix(in srgb,var(--c0,#f2f6f3) 62%,var(--c1,#8ea0ff)))}
-}
+  background-image:linear-gradient(90deg,var(--c1,#8ea0ff),var(--c1,#8ea0ff))}
+.bx-wm[data-lvl="solid"]{background-image:linear-gradient(90deg,var(--c1,#8ea0ff),var(--c1,#8ea0ff))}
 
 /* The veil (gradient, the quiet step): one even layer of white over the product's gradient. It softens the colours
    to a matte pastel; no light falls on the letters. */
@@ -100,21 +107,67 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 /* reduced motion: the sheen stops and rests as one still highlight on the polished letters */
 @media(prefers-reduced-motion:reduce){.bx-wm[data-lvl]>.bx-sh,.bx-wm[data-lvl]>.bx-sh::before{animation:none}}
 
+/* The lightning (row E810; the top tier's names and title, data-bolt): now and then one bolt strikes down through the
+   letters. .bx-bolt is an empty element over the name, hidden from screen readers, holding one pre-drawn bolt (bots.js,
+   boltSpan()): a crisp, irregular channel with a fork or two, seeded by the name, a white core over a thin glow in the
+   name's own colour, both ends fading out just above and below the letters. A strike lasts about 0.4 s of a 7.8 s
+   loop: a flash, one flicker, gone, and the letters brighten with it (::after, a white copy of the name). Between
+   strikes the name wears its sheen only. Each name on screen takes its own moment in the loop (bots.js, at the start),
+   so no two strike together. Only opacity is animated. Off screen, and with reduced motion, nothing strikes. */
+.bx-bolt{display:none}
+.bx-wm[data-bolt],.bx-srow .bx-sname.bx-wm[data-bolt]{overflow:clip;overflow-clip-margin:.7em}
+/* row E815 (E814 F1): on a plan line and a Library line the name is a grid cell as wide as its column; the lit name takes only its
+   text's width there, so the bolt (placed in the name's box) strikes through the letters, not the space after them */
+.bx-srow>.bx-slink>.bx-sname.bx-wm[data-bolt],.bx-r-id>.bx-sname.bx-wm[data-bolt]{justify-self:start;width:max-content;max-width:100%}
+.bx-wm[data-bolt]>.bx-bolt{display:block;position:absolute;inset:0;pointer-events:none;-webkit-user-select:none;user-select:none}
+.bx-bolt>svg{position:absolute;top:50%;width:3em;height:2.4em;margin:-1.2em 0 0 -1.5em;overflow:visible;opacity:0;
+  -webkit-mask:linear-gradient(180deg,transparent 2%,#000 27%,#000 73%,transparent 98%);mask:linear-gradient(180deg,transparent 2%,#000 27%,#000 73%,transparent 98%);
+  filter:drop-shadow(0 0 .09em var(--c1,#8ea0ff))}
+.bx-bolt path{fill:none;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:3;vector-effect:non-scaling-stroke}
+.bx-bolt .g{stroke:var(--c1,#8ea0ff);stroke-width:2.4px;opacity:.5}
+.bx-bolt .c{stroke:#fff;stroke-width:1.1px}
+.bx-bolt .fg{stroke-width:1.6px;opacity:.35}
+.bx-bolt .fc{stroke-width:.7px;opacity:.85}
+.bx-bolt::after{content:attr(data-t);position:absolute;inset:0;overflow:hidden;text-overflow:ellipsis;color:#fff;-webkit-text-fill-color:#fff;
+  text-shadow:0 0 .35em var(--c1,#8ea0ff);opacity:0}
+.bx-bolt>svg,.bx-bolt::after{animation:bx-strike 7.8s linear var(--bd,0s) infinite}
+.bx-bolt::after{animation-name:bx-lit}
+.bx-bolt.is-off>svg,.bx-bolt.is-off::after,.bx-ult-holo .bx-bolt::after{animation:none}
+@keyframes bx-strike{0%{opacity:0}.3%{opacity:1}.9%{opacity:.95}1.5%{opacity:.08}2.1%{opacity:1}3%{opacity:.75}5.2%{opacity:0}100%{opacity:0}}
+@keyframes bx-lit{0%{opacity:0}.3%{opacity:.4}.9%{opacity:.36}1.5%{opacity:.04}2.1%{opacity:.34}3%{opacity:.2}5.2%{opacity:0}100%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.bx-bolt>svg,.bx-bolt::after{animation:none}}
+
+/* Option B (row E802), behind one switch, off: the class bx-ult-holo on the page root. The top tier's names and title
+   then wear a holographic foil instead of the lightning: the sheen's band turns prismatic and crosses slowly, and a
+   rainbow copy of the letters sits a pixel off them as a coloured edge, which shifts a little with the pointer on a
+   desktop (bots.js sets --hx and --hy). With reduced motion it is still. */
+.bx-ult-holo .bx-wm[data-bolt]>.bx-bolt>svg{display:none}
+.bx-ult-holo .bx-wm[data-bolt]>.bx-bolt::before{content:attr(data-t);position:absolute;inset:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  background-image:linear-gradient(100deg,#ff5f6d,#ffc371 18%,#47e891 36%,#3fc6ff 54%,#9d7bff 72%,#ff6ad5 90%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;
+  opacity:.55;mix-blend-mode:screen;transform:translate(calc(.7px + var(--hx,0) * 1.4px),calc(var(--hy,0) * .8px));transition:transform .3s ease-out}
+@supports (overflow:clip){
+  .bx-ult-holo .bx-wm[data-bolt]>.bx-sh{opacity:.9;-webkit-mask-size:4.4em 100%;mask-size:4.4em 100%;animation-duration:7s}
+  .bx-ult-holo .bx-wm[data-bolt]>.bx-sh::before{animation-duration:7s;color:transparent;-webkit-text-fill-color:transparent;
+    background-image:linear-gradient(100deg,#ff5f6d,#ffc371 18%,#47e891 36%,#3fc6ff 54%,#9d7bff 72%,#ff6ad5 90%);-webkit-background-clip:text;background-clip:text}
+}
+@media(prefers-reduced-motion:reduce){.bx-ult-holo .bx-wm[data-bolt]>.bx-bolt::before{transform:translate(.7px,0);transition:none}}
+
 @supports not ((-webkit-background-clip:text) or (background-clip:text)){
   .bx-wm,.bx-wm[data-lvl]{background-image:none;color:var(--bright);-webkit-text-fill-color:currentColor}
-  .bx-wm>.bx-sh{display:none}
+  .bx-wm>.bx-sh,.bx-wm>.bx-bolt{display:none}
 }
 @media(forced-colors:active){
   .bx-wm,.bx-wm[data-lvl]{background-image:none;color:CanvasText;-webkit-text-fill-color:CanvasText}
-  .bx-wm>.bx-sh{display:none}
+  .bx-wm>.bx-sh,.bx-wm>.bx-bolt{display:none}
 }
 
-/* the tier titles and their cards follow the same ladder; each finish has its own palette:
-   white, then a matte slate, then bright polished silver, and gold for the top tier alone */
-.bx-tname[data-lvl="plain"]{--c0:#ffffff;--c1:#ffffff;--c2:#ffffff}
-.bx-tname[data-lvl="gradient"]{--c0:#9ba7c3;--c1:#7687ad;--c2:#536799}
-.bx-tname[data-lvl="polished"]{--c0:#ffffff;--c1:#f2f5fa;--c2:#c9d3e4;filter:drop-shadow(0 0 .5em rgba(214,224,242,.2))}
-.bx-tname[data-lvl="sheen"]{--c0:#fff7df;--c1:#f7c948;--c2:#ffa24f;filter:drop-shadow(0 0 .5em rgba(247,201,72,.22))}
+/* the tier titles keep their tier's own colours, by the card's place on the ladder (the card's data-lvl):
+   white, then a slate, then bright polished silver, and gold for the top tier alone. The title's finish is its own
+   data-lvl (row E802: Base plain, Select solid, Supreme the sheen, Ultimate the sheen and the lightning). */
+.bx-plan[data-lvl="plain"] .bx-tname{--c0:#ffffff;--c1:#ffffff;--c2:#ffffff}
+.bx-plan[data-lvl="gradient"] .bx-tname{--c0:#9ba7c3;--c1:#7687ad;--c2:#536799}
+.bx-plan[data-lvl="polished"] .bx-tname{--c0:#ffffff;--c1:#f2f5fa;--c2:#c9d3e4;filter:drop-shadow(0 0 .5em rgba(214,224,242,.2))}
+.bx-plan[data-lvl="sheen"] .bx-tname{--c0:#fff7df;--c1:#f7c948;--c2:#ffa24f;filter:drop-shadow(0 0 .5em rgba(247,201,72,.22))}
 
 /* buttons */
 .bots .bx-btn-red{background:var(--red-btn);border-color:var(--red-edge);color:#fff}
@@ -131,12 +184,19 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bx-facts li{padding-left:22px;position:relative}
 .bx-facts li::before{content:"";position:absolute;left:2px;top:.62em;width:8px;height:8px;border-radius:2px;background:var(--red-brand)}
 @media(min-width:560px){.bx-cta{flex-direction:row;flex-wrap:wrap}}
+/* Row E816: on a phone the two hero buttons are 46px tall (the large buttons' padding made them taller); same words */
+@media(max-width:559.98px){.bx-hero .bx-cta .btn{min-height:46px;padding-top:10px;padding-bottom:10px;line-height:1.25}}
 @media(min-width:900px){.bx-hero{padding:84px 0 76px}.bx-facts{grid-template-columns:repeat(3,auto);justify-content:start;gap:10px 36px}}
 
 /* section heads */
 .bx-head{margin:0 0 28px;max-width:820px}
 .bx-head h2{margin-bottom:12px}
 .bx-sub{color:var(--dim);font-size:18px;margin:0}
+/* Row E827: under the plans' intro, what a bot also needs from other companies, with a link to the FAQ item */
+.bx-need{margin:10px 0 0;color:var(--text);font-size:15.5px}
+.bx-need a{color:var(--bright);font-weight:600;text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:3px}
+.bx-need a:hover{text-decoration-color:var(--bright)}
+.bx-faq details[id]{scroll-margin-top:76px}   /* clear of the sticky top bar, as style.css does for sections */
 .bx-strategies,.bx-how{background:var(--bg2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 
 /* plans */
@@ -176,7 +236,7 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bx-plan.is-chosen,.bx-plan[data-plan].is-chosen{border-color:var(--red-edge);box-shadow:0 0 0 1px var(--red-edge) inset,0 14px 44px -20px rgba(225,25,30,.6)}
 /* one line height for every title and for the price beside it, so the first line is level across the cards */
 .bx-plan h3{width:fit-content;max-width:100%;font-size:22px;line-height:30px;margin:0}
-.bx-plan h3.bx-tname[data-lvl="gradient"],.bx-plan h3.bx-tname[data-lvl="polished"],.bx-plan h3.bx-tname[data-lvl="sheen"]{font-size:20px}
+.bx-plan[data-lvl="gradient"] h3.bx-tname,.bx-plan[data-lvl="polished"] h3.bx-tname,.bx-plan[data-lvl="sheen"] h3.bx-tname{font-size:20px}
 .bx-plan-for{margin:0;color:var(--dim);font-size:15px;line-height:1.35}
 .bx-price{display:flex;align-items:baseline;gap:6px;margin:0;white-space:nowrap}
 .bx-amt{font-family:var(--display);font-size:28px;font-weight:700;color:var(--bright);letter-spacing:-.03em;line-height:30px}
@@ -197,16 +257,83 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
    the chips, the "Plus" line: the lower grades this tier also holds, and what is added later. */
 .bx-strats{border:1px solid var(--line);border-radius:10px;background:var(--bg2);overflow:hidden}
 .bx-list-h{margin:0;padding:9px 12px 0;font-size:13.5px;font-weight:600;line-height:1.3;color:var(--red-soft)}
-.bx-strats ul{list-style:none;margin:0;padding:8px 12px 10px;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.bx-strats ul{list-style:none;margin:0;padding:0 var(--ul-pad) 2px;display:grid;gap:0}
+/* Row E803: one strategy a line: the name, then its return on drawdown (row E815: a percentage, its column 50 px wide), profit factor and own price in columns that line
+   up down the card (fixed widths, tabular numerals), then the arrow; a column head over them and one line under them */
+.bx-strats{--fg-cols:minmax(0,1fr) 50px 38px 58px 10px;--fg-gap:8px;--ul-pad:14px}
+/* row E815: "Return on drawdown" is written out in full on one line: its head spans the empty name column and ends over
+   its own figures, so the figure columns keep their widths and no word is cut short */
+.bx-fh span{white-space:nowrap}
+.bx-fh .bx-fh-rod{grid-column:1/3}
+.bots .bx-srow>.bx-slink{display:grid;grid-template-columns:var(--fg-cols);column-gap:var(--fg-gap);flex:1 1 auto;width:100%}
+.bx-fg{justify-self:end;font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums;
+  letter-spacing:0;white-space:nowrap;text-align:right}
+.bx-fg-u{font-weight:500;color:var(--dim)}
+.bx-fh{display:grid;grid-template-columns:var(--fg-cols);column-gap:var(--fg-gap);margin:0;padding:8px var(--ul-pad) 0;font-size:11.5px;font-weight:600;
+  line-height:1.3;color:var(--dim);letter-spacing:.02em}
+.bx-fh span{justify-self:end}
+.bx-hypo{margin:0;padding:0 var(--ul-pad) 8px;font-size:12px;line-height:1.35;color:var(--dim)}
+.bx-strats{container-type:inline-size}
+/* Row E816 (the owner, 2026-11-22: every strategy on one line, so a phone scrolls less): a list narrower than 400px
+   (phones, two cards across at 768, four across from 1800px) keeps each name and its figures on one line. The figures
+   take 12px in narrower columns; the price column's head says "Price" (row E827: "$/mo" read as monthly profit), and the
+   lines leave their "/mo" out of sight (screen
+   readers still read it); upper-case names are spaced a little closer; and each name takes the size at which its card's
+   widest name fits (bots.js, fitRows: --pr-k; --fix is the room the rest of the line takes), never under 11px. Under
+   290px the figures take 11px and the arrow goes. */
+.bx-fh-pn{display:none}
+@container (max-width:399.98px){
+  .bx-strats>*{--fg-cols:minmax(0,1fr) 46px 34px 31px 7px;--fg-gap:6px;--ul-pad:10px;--fix:162px}
+  .bots .bx-strats .bx-slink{min-height:36px}
+  .bx-strats .bx-fg{font-size:12px}
+  .bx-strats .bx-fg-u{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .bx-fh-pw{display:none}
+  .bx-fh-pn{display:inline}
+  .bx-srow .bx-sname.bx-wm:not([data-lvl="plain"]){letter-spacing:.04em}
+  .bx-srow .bx-sname.bx-wm{font-size:clamp(11px,calc((100cqw - var(--fix)) * var(--pr-k,.066)),15px)}
+  .bx-srow .bx-sname.bx-wm[data-lvl="plain"]{font-size:clamp(11px,calc((100cqw - var(--fix)) * var(--pr-k,.066)),15.5px)}
+  .bx-strats .bx-arw{font-size:13px}
+}
+@container (max-width:289.98px){
+  .bx-strats>*{--fg-cols:minmax(0,1fr) 41px 30px 29px;--fg-gap:5px;--ul-pad:8px;--fix:131px}
+  .bx-strats .bx-fg,.bx-strats .bx-fh{font-size:11px}
+  .bx-strats .bx-arw,.bx-strats .bx-fh>span:last-child{display:none}
+}
+/* Row E832 (addendum D): a list narrower than 250px (a window under about 333px wide that keeps 15px of it for a desktop
+   scrollbar, or a phone under about 318px) is too narrow for the longest name at 11px beside its figures, so there the
+   11px floor gives way to 9px: every name takes the size at which its card's widest name fits (bots.js, fitRows), and
+   none is cut. The lettering and its colours are unchanged; from 250px nothing changes. */
+@container (max-width:249.98px){
+  .bx-srow .bx-sname.bx-wm{font-size:clamp(9px,calc((100cqw - var(--fix)) * var(--pr-k,.066)),15px)}
+  .bx-srow .bx-sname.bx-wm[data-lvl="plain"]{font-size:clamp(9px,calc((100cqw - var(--fix)) * var(--pr-k,.066)),15.5px)}
+}
+/* Row E816: the smallest phones give the cards 4px more room each side, so the lines' names stay at 11px or more */
+@media(max-width:379.98px){.bots .bx-plan{padding-left:12px;padding-right:12px}}
+/* Row E816: a plan's coming-soon strategies stand under its released ones, in a box of their own inside the list's frame,
+   headed by the "Coming soon" tag (the one mark: no line carries it). The box's inset (6px and its 1px edge) comes off its
+   lines' own, so their figures stand in the head's columns. */
+.bx-soon{margin:2px 6px 6px;border:1px dashed var(--line2);border-radius:8px}
+.bx-soon-h{margin:0;padding:6px calc(var(--ul-pad) - 7px) 0;line-height:1}
+.bx-soon-h .bx-cs{margin:0}
+.bx-strats .bx-soon ul{padding:0 calc(var(--ul-pad) - 7px) 1px}
 .bx-srow{display:flex;min-width:0;max-width:100%;margin:0}
-.bots .bx-slink{display:flex;align-items:center;gap:7px;min-width:0;min-height:44px;box-sizing:border-box;padding:0 10px 0 12px;border:1px solid var(--line2);border-radius:9px;background:var(--panel);color:var(--bright);font-weight:600;white-space:nowrap}
-.bots .bx-slink:hover{text-decoration:none;border-color:var(--dim);background:rgba(255,255,255,.045)}
+.bots .bx-slink{display:flex;align-items:center;gap:6px;min-width:0;min-height:40px;box-sizing:border-box;padding:0;border:0;border-radius:6px;background:none;color:var(--bright);font-weight:600;white-space:nowrap}
+.bots .bx-slink:hover{text-decoration:none}
+.bots .bx-slink:hover .bx-arw{color:#fff;transform:translateX(2px)}
+.bx-arw{transition:transform .15s ease-out}
 .bx-sname.bx-wm{font-size:15px;line-height:1.3}
 .bx-sname.bx-wm[data-lvl="plain"]{font-size:15.5px}
-/* a name too long for its card is cut with an ellipsis; nothing else in a chip gives way */
-.bx-srow .bx-sname{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
+/* Row E827: a plan line's name is never shortened with an ellipsis, nor are its lit copies: it is sized to fit its column
+   (bots.js, fitRows) */
+.bx-srow .bx-sname{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:clip}
+.bx-srow .bx-sname>.bx-sh::before,.bx-srow .bx-sname>.bx-bolt::after,.bx-ult-holo .bx-srow .bx-sname>.bx-bolt::before{text-overflow:clip}
+/* Row E816: a letter's ink can reach a little past the name's box at either end (a plain name's first letter was cut by
+   1px); the box takes 2px each side and gives them back, so nothing is cut and nothing moves. The lit copy over a sheen
+   name starts 2px in to stay on the letters; a name with the lightning clips with room to spare already (above). */
+.bx-srow .bx-sname.bx-wm:not([data-bolt]){padding:0 2px;margin:0 -2px}
+.bx-srow .bx-sname.bx-wm:not([data-bolt])>.bx-sh::before{padding:0 2px}
 .bx-arw{flex:none;color:var(--red-soft);font-size:15px;font-weight:500;line-height:1}
-.bx-tba{margin:0;padding:6px 10px;border:1px dashed var(--line2);border-radius:9px;color:var(--dim);font-size:13.5px;font-weight:500;line-height:1.35}
+.bx-tba{margin:0;padding:8px 0;border:0;color:var(--dim);font-size:13.5px;font-weight:500;line-height:1.35}
 .bx-tba small{font-size:13px;font-weight:400;color:var(--faint)}
 .bx-tba small::before{content:"\00a0\00b7\00a0"}
 .bx-plus{margin:0;padding:8px 12px;border-top:1px solid var(--line);font-size:13.5px;font-weight:500;line-height:1.4;color:var(--text);background:var(--red-tint)}
@@ -284,6 +411,36 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bx-fine{margin:18px 0 0;color:var(--faint);font-size:14px;max-width:760px}
 /* what a tier saves against its strategies bought one by one (only when every price is set), under the tier's line */
 .bx-save{order:3;flex:0 0 100%;margin:0;color:var(--green);font-size:14.5px;font-weight:600;line-height:1.35}
+/* Row E832: Base's line, how many strategies it holds as they release (bots.js), in the place of the other cards' savings line */
+.bx-base-line{order:3;flex:0 0 100%;margin:0;color:var(--text);font-size:14.5px;font-weight:600;line-height:1.35;text-wrap:balance}
+/* Row E832: a monthly plan's free trial with its price (bots.js), under the price and under the savings line where a card has one */
+.bx-trial{order:3;flex:0 0 100%;margin:-6px 0 0;color:var(--bright);font-size:14.5px;font-weight:600;line-height:1.35}
+/* Row E803: the line under each monthly tier's name is hidden (it stays in the page as data for the publish check);
+   the one-by-one total stands just over the price, read before it, with a red slash through it, so the name and the
+   price keep their one line at every width */
+.bx-plan[data-kind="monthly"] .bx-plan-for{display:none}
+.bx-plan>.bx-price{position:relative}
+.bx-was{position:absolute;left:0;top:0;margin:0;color:var(--dim);font-family:var(--display);font-size:17px;font-weight:600;line-height:1.2;
+  letter-spacing:-.02em;text-decoration:none;font-variant-numeric:tabular-nums}
+.bx-was::after{content:"";position:absolute;left:-3px;right:-3px;top:50%;border-top:2px solid #ff4d55;transform:rotate(-16deg);pointer-events:none}
+@media(forced-colors:active){.bx-was{text-decoration:line-through}.bx-was::after{display:none}}
+/* where the tier pill shares the name's line, the first line makes room over the price for the struck total, on every
+   card of the grid alike so the cards' first lines stay level; where the pill has its own line the total sits beside it.
+   Row E816: the total stands in that room, inside the card (it stood above the price's box, over the card's edge). */
+@container bxplan (max-width:469.98px){.bx-plan-grid:has(.bx-was) .bx-plan>.bx-price{padding-top:22px}}
+/* a card wide enough for all of it on one line has the struck total right before the price */
+@container bxplan (min-width:470px){.bx-was{position:relative;left:auto;top:auto;margin:0 4px 0 0}}
+@media(max-width:379.98px),(min-width:1800px){.bx-plan-grid .bx-was{font-size:15px}}
+/* Row E803: Lifetime's arithmetic against the top tier, under its price */
+.bx-life-sum{margin:-4px 0 0;color:var(--text);font-size:14px;line-height:1.4}
+@media(max-width:999.98px){.bx-life .bx-life-sum{order:3;flex:0 0 100%;margin-top:-2px}}
+/* Row E827 item 15: how Lifetime is paid, under its arithmetic and above its button */
+.bx-life-pay{margin:-4px 0 0;color:var(--text);font-size:14px;line-height:1.4}
+@media(max-width:999.98px){.bx-life .bx-life-pay{order:3;flex:0 0 100%;margin-top:-2px}}
+/* Row E832: Lifetime's four terms (BRAND-62), always shown: under its button below 1000px, under its words from 1000px */
+.bx-life-terms{margin:14px 0 0;padding:10px 0 0 18px;border-top:1px solid var(--line);display:grid;gap:5px;color:var(--dim);font-size:13.5px;line-height:1.4}
+.bx-life-terms li{margin:0}
+@media(max-width:999.98px){.bx-life .bx-life-terms{order:6;flex:0 0 100%;margin-top:-2px}}
 /* the way to the Strategies page, under the tiers */
 .bx-one{margin:18px 0 0;font-size:17px;font-weight:600}
 .bx-one a{color:var(--bright);text-decoration:underline;text-underline-offset:3px}
@@ -368,6 +525,8 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bx-spark-tp.is-sm span{font-size:10px}
 .bx-spark-tp.is-sm b{font-size:15px}
 .bx-spark>.bx-cs{position:absolute;top:8px;left:8px;margin:0}
+/* Row E827: the line under each card's chart: "Hypothetical backtest" and that strategy's dates, 12px, 6.6:1 on the card */
+.bx-strat-hypo{margin:6px 0 0;font-size:12px;line-height:1.35;color:var(--dim)}
 .bx-strat-go{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:10px 0 0;min-height:44px;font-size:14px}
 /* Row E760: bottom left, the max drawdown and the profit factor, one under the other, label then figure */
 .bx-risk{display:flex;flex-direction:column;gap:0;min-width:0;font-size:12.5px;line-height:1.45;color:var(--dim)}
@@ -553,7 +712,7 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
   .bx-bar-plan{font-size:15.5px}
 }
 
-/* checkout is not open yet: the note under the tiers, and the bar's button while a tier has no checkout link */
+/* the bar's button while a plan has no checkout link; .bx-open-note is the old note under the plans, unused since row E811 */
 .bx-open-note{margin:20px 0 0;padding:18px 20px;border:1px solid var(--line);border-radius:10px;background:var(--panel);max-width:860px}
 .bx-open-note p{margin:0;color:var(--dim);font-size:15.5px}
 .bx-open-note .bx-open-h{margin:0 0 6px;font-family:var(--display);font-size:19px;font-weight:600;color:var(--bright)}
@@ -604,13 +763,6 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 /* the open strategy's name takes focus when the view opens (for screen readers); it is not a control, so no ring */
 .bots .bx-sheet h2:focus-visible{outline:0}
 
-/* The top menu's Setup entry (row E734) and Calculator entry (row E737): the site hides the menu under 860 px, so on a
-   phone the bar shows these two entries beside the logo. */
-@media(max-width:859.98px){
-  .bots .nav-links{display:flex;gap:0}
-  .bots .nav-links a:not(.nav-setup):not(.nav-calc){display:none}
-  .bots .nav-links a.nav-setup,.bots .nav-links a.nav-calc{padding:12px 0 12px 14px}
-}
 /* Coming soon (row E754): the one mark, a small plain tag right after the name, never the name's lettering. In a chip it
    keeps its size and the name gives way; beside a lettered title it stays plain text. */
 .bx-nt{display:inline-flex;align-items:center;gap:8px;min-width:0;max-width:100%}
@@ -628,6 +780,11 @@ html{scrollbar-gutter:stable;scroll-padding-bottom:88px}
 .bots .bx-calc-l{margin:14px 0 0;font-size:15.5px;font-weight:600}
 .bots .bx-calc-l a{color:var(--bright);text-decoration:underline;text-decoration-color:var(--line2);text-underline-offset:3px}
 .bots .bx-calc-l a:hover{text-decoration-color:var(--bright)}
+/* Row E816: on a phone every text link is at least 30px tall to tap: padding over and under its words, which an inline
+   link adds without moving a line (the words, their size and the line spacing stay) */
+@media(max-width:559.98px){
+  .bx-perks a,.bots .bx-one a,.bx-steps p a,.bots .bx-guide a,.bx-faq p a,.bots .bx-calc-l a,.bots .bx-need a{padding-top:7px;padding-bottom:7px}
+}
 
 
 /* Daily P&L (rows E732, E735): under the Monthly P&L list, the two latest months by day, the latest first, small; an earlier month pressed in
