@@ -19,31 +19,31 @@ window.AFT_BOTS_CONFIG = {
   // the last part of the link, in Whop's embedded checkout; the link itself is the fallback when that does not load.
   // Empty = the tier has no Add to cart, and the bar's button reads "Opening soon" and does nothing.
   checkout: {
-    base: "https://whop.com/checkout/plan_VFbm88vz1SjKE",
-    select: "https://whop.com/checkout/plan_kPldynvOihuRy",
-    supreme: "https://whop.com/checkout/plan_YE62Ksh1O6DTV",
-    ultimate: "https://whop.com/checkout/plan_5R6oGBr425hQF",
-    lifetime: "https://whop.com/checkout/plan_XqIUXNHPBERdw"
+    base: "",
+    select: "",
+    supreme: "",
+    ultimate: "",
+    lifetime: ""
   },
 
   // Each strategy's own Whop checkout link, by its slug in data/catalog.js ("slug": "https://whop.com/checkout/<plan id>"),
   // used by the cart as the tiers' links are. None listed, or a strategy with no price yet = no Add to cart for it.
   strategyCheckout: {
-    "continuum": "https://whop.com/checkout/plan_xL4ZPnS70DB2P",
-    "midas": "https://whop.com/checkout/plan_eU8ffzIr3yuSF",
-    "slipstream": "https://whop.com/checkout/plan_i5OkH1MQALBye",
-    "aftershock": "https://whop.com/checkout/plan_NzzGbajiqyIly",
-    "lantern": "https://whop.com/checkout/plan_OWbr5WvEqOKJS",
-    "the-press": "https://whop.com/checkout/plan_NtpuvXMo7mPme",
-    "meridian": "https://whop.com/checkout/plan_fTIZHOXtXNubG",
-    "prime-meridian": "https://whop.com/checkout/plan_jbRY9EWVlWGSH",
-    "golden-meridian": "https://whop.com/checkout/plan_DEN4YZza190i2",
-    "hallmark": "https://whop.com/checkout/plan_IahXagsZJcfRA",
-    "the-alloy": "https://whop.com/checkout/plan_8821BgABlYxVf",
-    "the-assay": "https://whop.com/checkout/plan_Y3xJlZBXd0zwF",
-    "the-fix": "https://whop.com/checkout/plan_bR8PrCJzJ169m",
-    "the-ingot": "https://whop.com/checkout/plan_r73qgrN3XufO4",
-    "the-print": "https://whop.com/checkout/plan_2Jfn3cs2VfYdR"
+    "continuum": "",
+    "midas": "",
+    "slipstream": "",
+    "aftershock": "",
+    "lantern": "",
+    "the-press": "",
+    "meridian": "",
+    "prime-meridian": "",
+    "golden-meridian": "",
+    "hallmark": "",
+    "the-alloy": "",
+    "the-assay": "",
+    "the-fix": "",
+    "the-ingot": "",
+    "the-print": ""
   },
 
   // The cart's checkout (row E805's test: Whop charges several monthly plans together as one payment). true = the cart

@@ -47,6 +47,13 @@
     return typeof u === 'string' && /^https:\/\/whop\.com\/checkout\/plan_[A-Za-z0-9]+\/?$/.test(u) ? u : '';
   }
   function plan(it) { var u = link(it); return u ? u.match(/plan_[A-Za-z0-9]+/)[0] : ''; }
+  // Is any checkout link set? When none is (bots-config.js), the empty cart says checkout is opening soon.
+  function anyOpen() {
+    var c = cfg(); if (!c) return true;
+    var a = c.checkout || {}, b = c.strategyCheckout || {};
+    return Object.keys(a).map(function (k) { return a[k]; }).concat(Object.keys(b).map(function (k) { return b[k]; }))
+      .some(function (u) { return typeof u === 'string' && /^https:\/\/whop\.com\/checkout\/plan_[A-Za-z0-9]+\/?$/.test(u); });
+  }
   function multi() { var c = cfg(); return !c || c.multiCart !== false; }
   // Row E832: the free trial's length (bots-config.js trialDays; BRAND-62). Every monthly item starts with it; Lifetime has none.
   function trialDays() { var c = cfg(), d = c && c.trialDays; return typeof d === 'number' && d > 0 ? Math.floor(d) : 0; }
@@ -257,7 +264,7 @@
       '<p class="crt-ask-b"><button class="crt-btn crt-btn-red" type="button" data-crt="replace">Replace Lifetime</button><button class="crt-btn" type="button" data-crt="keep">Keep Lifetime</button></p></div>';
     if (!multi() && !note) h += '<p class="crt-one">Checkout takes one item at a time for now.</p>';
     if (!n) {
-      body.innerHTML = h + '<p class="crt-empty">Your cart is empty. Add a plan or a strategy.</p>' +
+      body.innerHTML = h + '<p class="crt-empty">' + (anyOpen() ? 'Your cart is empty. Add a plan or a strategy.' : 'Checkout is opening soon.') + '</p>' +
         '<p class="crt-links"><a href="/trading-bots/#plans">See the plans</a><a href="/trading-bots/strategies/">Strategy Library</a></p>';
       return;
     }
@@ -488,7 +495,7 @@
       det.textContent = has('strat', s.slug) ? '✓ ' + s.name + ' is in your cart'
         : (holder(s.slug) ? '✓ ' + s.name + ' is in ' + holder(s.slug) + ', in your cart' : s.name + ' · ' + money(s.price) + ' a month');
     } else {
-      det.textContent = n ? n + (n === 1 ? ' item' : ' items') + ' · ' + money(total()) + (lifeIn() ? ' once' : ' a month') : 'Add a plan or a strategy';
+      det.textContent = n ? n + (n === 1 ? ' item' : ' items') + ' · ' + money(total()) + (lifeIn() ? ' once' : ' a month') : (anyOpen() ? 'Add a plan or a strategy' : 'Checkout is opening soon');
     }
     if (canAdd) {
       setBar(main, 'cart-add', 'Add to cart', s.slug);
