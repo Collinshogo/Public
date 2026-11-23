@@ -44,17 +44,17 @@
 /* row E822 addendum (04:46Z): the hypothetical line, at every width (under 900 px the last line under the buttons);
    it takes no clicks, so a tap on it reaches the video */
 .bx-hero-in .bx-hyp{grid-area:h;margin:14px 0 0;font-size:12.5px;line-height:1.4;color:var(--dim);pointer-events:none}
+/* Collin 2026-11-23 (his phone): under the words' scrim the recording could not be seen. Under 900 px it is now its
+   own block under the title, at full brightness, edge to edge up to 520 px wide; the box is the file's width and 1100 of
+   its 1280 rows (the bottom 180 are empty), pinned to its top, so the caption and the whole chart show. The words follow
+   on the page's own background. */
 @media(max-width:899.98px){
-  .bx-hero{padding:0 0 44px;min-height:max(540px,calc(100svh - 150px));display:flex;flex-direction:column;justify-content:flex-end}
-  .bx-hero-fig{position:absolute;inset:0;z-index:0}
-  .bx-hero-vid{height:100%}
+  .bx-hero{padding:20px 0 44px}
+  .bx-hero-fig{position:relative;margin:0 calc(50% - 50vw) 20px}
+  .bx-hero-vid{width:min(100vw,520px);margin:0 auto;aspect-ratio:720/1100}
   .bx-hero-vid video{object-position:50% 0}
-  .bx-hero-in::before{content:"";grid-row:1/-1;grid-column:1;position:relative;z-index:1;pointer-events:none;margin:-140px calc(50% - 50vw) -44px;
-    background:linear-gradient(180deg,rgba(9,10,16,0) 0,rgba(9,10,16,.72) 70px,rgba(9,10,16,.9) 140px,rgba(9,10,16,.94) 100%)}
-  .bx-hero-in h1,.bx-hero-in .bx-lead,.bx-hero-in .bx-cta,.bx-hero-in .bx-hyp{position:relative;z-index:2}
-  .bx-hero-in h1{color:#fff}
-  .bx-hero-snd{top:14px;right:14px}
-  .bx-hero-play{top:14px;left:14px;width:56px;height:56px}
+  .bx-hero-snd{top:12px;right:12px}
+  .bx-hero-play{top:12px;left:12px;width:56px;height:56px}
 }
 @media(min-width:900px){
   /* row E822 version B, row E831: the recording fills the hero edge to edge and top to bottom, behind the words, as
@@ -141,6 +141,7 @@
       <a href="/trading-bots/#how">How it works</a>
       <a href="/trading-bots/setup/">Setup</a>
       <a href="/trading-bots/calculator/">Calculator</a>
+      <a data-dest="discordInvite" data-ev="lead" data-name="nav-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a>
     </nav>
   </div>
 </header>

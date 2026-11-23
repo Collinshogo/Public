@@ -34,7 +34,7 @@
     { k: 'name', label: 'Strategy', first: 'asc' },
     { k: 'inst', label: 'Instrument', first: 'asc' },
     { k: 'tier', label: 'Plan', first: 'asc' },
-    { k: 'rod', label: 'Return on drawdown', first: 'desc', f: 'rodd_pct', d: 'rodd_pct' },   // row E815: net profit / max drawdown, a percentage
+    { k: 'rod', label: 'Return on DD', first: 'desc', f: 'rodd_pct', d: 'rodd_pct' },   // row E815: net profit / max drawdown, a percentage
     { k: 'np', label: 'Total profit', first: 'desc', f: 'net_profit_usd', d: 'net_profit' },
     { k: 'mp', label: 'Monthly profit', first: 'desc', f: 'monthly_profit_usd', d: 'monthly_profit', sub: 'average per month', note: 'hyp-note' },
     { k: 'pf', label: 'Profit factor', first: 'desc', f: 'profit_factor', d: 'profit_factor' },

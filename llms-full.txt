@@ -68,7 +68,7 @@ Billing is through Whop. 14-day free trial. Cancel inside the 14 days and you're
 No. Futures trading involves substantial risk of loss and is not suitable for every investor. Nothing on this site or in the membership is financial advice.
 
 ### What about automated trading bots?
-They are on sale now, separately from the membership: AFT Trading Bots, automated futures strategies for TradingView, in four monthly plans, one Lifetime payment, or one strategy at a time. Base, Select, Supreme, Ultimate and every single strategy start with 14 days free; Lifetime has no free trial.
+Their checkout is opening soon, separately from the membership: AFT Trading Bots, automated futures strategies for TradingView, in four monthly plans, one Lifetime payment, or one strategy at a time. Base, Select, Supreme, Ultimate and every single strategy start with 14 days free; Lifetime has no free trial.
 
 ### Does shogotrades actually trade this?
 Yes. shogotrades' own trading is built on exactly these concepts and setups, and so are the AFT Trading Bots.

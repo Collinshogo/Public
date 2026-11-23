@@ -1,7 +1,7 @@
 /* AFT Trading Bots: the cart (row E806, cart.js). Its own colours and fonts, as nav.css does, so it looks the same on the
    bots pages and on the Setup pages, which do not load /style.css or bots.css. */
 
-/* the count in the top bar: beside the Menu button under 960 px, after the six links from 960 px */
+/* the count in the top bar: beside the Menu button under 1040 px, after the seven links from 1040 px */
 .tbn .tbn-in.has-cart .tbn-cart{position:relative;display:inline-flex;align-items:center;justify-content:center;flex:none;width:44px;height:44px;
   margin:0 0 0 auto;padding:0;border:1px solid #2f3349;border-radius:8px;background:transparent;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .tbn .tbn-in.has-cart .tbn-cart:hover{border-color:#9a9fb3}
@@ -12,8 +12,8 @@
 .tbn .tbn-cart.is-bump .tbn-cart-n{animation:crt-bump .45s ease}
 @keyframes crt-bump{40%{transform:scale(1.35)}}
 @media(prefers-reduced-motion:reduce){.tbn .tbn-cart.is-bump .tbn-cart-n{animation:none}}
-@media(max-width:959.98px){.tbn .tbn-in.has-cart{gap:10px}}
-@media(min-width:960px){
+@media(max-width:1039.98px){.tbn .tbn-in.has-cart{gap:10px}}
+@media(min-width:1040px){
   .tbn .tbn-in.has-cart .tbn-links{margin-left:auto}
   .tbn .tbn-in.has-cart .tbn-cart{order:3;margin-left:6px}
 }

@@ -1,4 +1,4 @@
-/* AFT Trading Bots: the top bar's Menu button (row E804), on every page of the section. Under 960 px the button
+/* AFT Trading Bots: the top bar's Menu button (row E804), on every page of the section. Under 1040 px the button
    opens the bar's six links in a panel under the bar (nav.css shows the panel while aria-expanded is "true").
    It closes on a link tap, on Escape (focus goes back to the button), on a tap or focus outside the bar, when the
    screen widens past the phone layout, and when a page comes back from the browser's back-forward cache. */
@@ -25,7 +25,7 @@
     if (isOpen() && e.relatedTarget && !bar.contains(e.relatedTarget)) set(false);
   });
   window.addEventListener('pageshow', function () { set(false); });
-  var wide = window.matchMedia('(min-width: 960px)');
+  var wide = window.matchMedia('(min-width: 1040px)');
   function onWide() { if (wide.matches) set(false); }
   if (wide.addEventListener) wide.addEventListener('change', onWide);
   else if (wide.addListener) wide.addListener(onWide);

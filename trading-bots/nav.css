@@ -1,7 +1,7 @@
 /* AFT Trading Bots: the one top bar of the section (row E804). The bots page, the Strategy Library, the Calculator and
    the Setup pages all carry the same header markup and load this file, so the bar never changes between them.
    Every rule is scoped under .tbn and sets its own fonts, colours and sizes, so neither /style.css, bots.css, a page
-   stylesheet nor a guide page's own styles can restyle it. From 960 px the six links sit in the bar; below that a
+   stylesheet nor a guide page's own styles can restyle it. From 1040 px the seven links (the last, Discord, opens the invite in a new tab; Collin 2026-11-23) sit in the bar; below that a
    Menu button opens the same six links in a panel under the bar (nav.js). The bar is 64 px plus its 1 px line at
    every width, open or closed. */
 
@@ -25,9 +25,9 @@ html{scrollbar-gutter:stable}
 .tbn .tbn-btn{display:none}
 .tbn a:focus-visible,.tbn button:focus-visible{outline:2px solid #fff;outline-offset:2px;border-radius:6px}
 
-/* under 960 px (phones and tablets): the logo and one Menu button; the button opens the six links in a panel that
+/* under 1040 px (phones and tablets): the logo and one Menu button; the button opens the seven links in a panel that
    lies over the page under the bar, so the bar's height never changes */
-@media(max-width:959.98px){
+@media(max-width:1039.98px){
   .tbn .tbn-btn{display:inline-flex;align-items:center;gap:10px;flex:none;height:44px;margin:0;padding:0 14px;
     border:1px solid #2f3349;border-radius:8px;background:transparent;color:#fff;font:inherit;line-height:1;cursor:pointer;
     -webkit-tap-highlight-color:transparent}

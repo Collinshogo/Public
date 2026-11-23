@@ -68,6 +68,14 @@
 .hub{position:relative;display:flex;flex-direction:column;min-height:100vh;min-height:100svh}
 .hub-head{text-align:center;padding:26px 20px 30px;background:linear-gradient(90deg,rgba(225,25,30,.2),rgba(31,99,224,.2)),#0b0c14}
 .hub-mark{display:inline-block}
+/* Collin 2026-11-23: a Discord link at the top. The logo stays in the middle; the link sits at the right of the same row */
+.hub-top{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:8px}
+.hub-top .hub-mark{grid-column:2}
+.hub-discord{grid-column:3;justify-self:end;display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1px solid rgba(255,255,255,.32);border-radius:999px;background:rgba(11,12,20,.55);color:#fff;font-size:14px;font-weight:600;text-decoration:none;white-space:nowrap}
+.hub-discord:hover{border-color:#fff;color:#fff;text-decoration:none}
+.hub-discord:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media(max-width:559.98px){.hub-discord{min-height:36px;padding:0 10px;font-size:13px}}
+@media(max-width:379.98px){.hub-top .hub-mark img{height:28px}}
 .hub-mark img{height:40px;width:auto;margin:0 auto}
 .hub-line{font-family:var(--display);font-weight:800;font-size:clamp(29px,4.4vw,56px);line-height:1.05;letter-spacing:-.035em;margin:22px auto 0;max-width:16em;color:#fff}
 .hub-line span{display:block}
@@ -132,7 +140,7 @@
 
 <main class="hub">
   <header class="hub-head">
-    <a class="hub-mark" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" srcset="/assets/aft-logo-nav.png 1x, /assets/aft-logo.png 2x" width="468" height="102" alt="AFT, All Fluence Trading"></a>
+    <div class="hub-top"><a class="hub-mark" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" srcset="/assets/aft-logo-nav.png 1x, /assets/aft-logo.png 2x" width="468" height="102" alt="AFT, All Fluence Trading"></a><a class="hub-discord" data-dest="discordInvite" data-ev="lead" data-name="head-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a></div>
     <h1 class="hub-line"><span class="l-red">One does it for you.</span> <span class="l-blue">The other one, you&nbsp;gotta&nbsp;learn.</span> <span class="l-choice">What&#8217;s your choice?</span></h1>
   </header>
 
@@ -144,7 +152,7 @@
         <ul class="points">
           <li>Automated futures strategies for TradingView, built on the All Fluence method</li>
           <li>Fixed rules on closed bars place every entry, stop and target</li>
-          <li>On sale now: four monthly plans or one strategy at a time, each with 14 days free, or one Lifetime payment.</li>
+          <li>Checkout opening soon: four monthly plans or one strategy at a time, each with 14 days free, or one Lifetime payment.</li>
         </ul>
         <a class="btn hub-btn hub-btn-red" href="/trading-bots/" data-ev="content" data-name="hub-bots">See the trading bots</a>
       </div>

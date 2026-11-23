@@ -167,4 +167,15 @@ span.bx-r-btn{color:var(--dim);cursor:default}
   .bx-table thead .bx-h-more button{width:auto;min-height:36px;padding:4px 6px;font-size:12px;white-space:nowrap}
   .bx-table thead th.is-on .bx-h-more button:not(.is-on){color:var(--dim)}
   .bx-table thead .bx-h-more button.is-on{color:var(--bright)}
+  /* Collin 2026-11-23 (his phone): the frozen Strategy column took two thirds of the frame, so the figures were off the
+     screen. On phones it is 136 px: the name one line in smaller type, the Coming soon tag on its own line under it,
+     the sort buttons for instrument and plan on two lines if they need them; the figures start beside it. */
+  .bx-table .bx-h-name,.bx-table .bx-c-name{width:136px;min-width:136px;max-width:136px}
+  .bx-r-open{gap:4px;padding:6px 6px 6px 8px}
+  .bx-r-open .bx-sname.bx-wm{font-size:10.5px;letter-spacing:.02em}
+  .bx-r-open .bx-nt{flex-direction:column;align-items:flex-start}
+  .bx-r-open .bx-cs{font-size:11px;padding-top:1px;padding-bottom:1px}
+  .bx-r-sub{font-size:12px}
+  .bx-h-more{flex-wrap:wrap}
+  .bx-r-chev{font-size:16px}
 }

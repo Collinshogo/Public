@@ -158,7 +158,7 @@
   var tb = $('.tbn .tbn-in'), countBtn = null;
   if (tb) {
     tb.classList.add('has-cart');
-    var menu = $('.tbn-btn', tb);   // before the Menu button, so under 960 px it sits beside it at the right
+    var menu = $('.tbn-btn', tb);   // before the Menu button, so under 1040 px it sits beside it at the right
     (menu || tb).insertAdjacentHTML(menu ? 'beforebegin' : 'beforeend', '<button class="tbn-cart" type="button" aria-haspopup="dialog" aria-controls="crt-panel" aria-label="Cart">' + ICON + '<span class="tbn-cart-n" aria-hidden="true">0</span></button>');
     countBtn = $('.tbn-cart', tb);
     countBtn.addEventListener('click', function () { open(countBtn); });
