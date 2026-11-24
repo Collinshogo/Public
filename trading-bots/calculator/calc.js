@@ -328,7 +328,7 @@
   // Row E745 ruling 10 had the starting-balance switch off by default and row E793 turned it on. Row E828 (the owner,
   // 2026-11-21, of that option: "No one's ever going to use that." and "It's always going to trail"): the switch is
   // gone and the loss limit always trails as its kind says; a link that still carries lock= reads as without it.
-  var DEF = { s: '', k: 'eod', t: 300000, l: 200000, dlOn: false, dl: null, cpOn: false, cp: null, md: 0, x: 1, v: 'one' };
+  var DEF = { s: '', w: '', k: 'eod', t: 300000, l: 200000, dlOn: false, dl: null, cpOn: false, cp: null, md: 0, x: 1, v: 'one' };
   var st = {};
   Object.keys(DEF).forEach(function (k) { st[k] = DEF[k]; });
   // Row E780: the Live account mode keeps its own state (lv), so the Prop firm account mode and its address are exactly as
@@ -391,7 +391,9 @@
     return { kind: st.k, t: st.t, l: st.l, lock: false, dl: st.dlOn ? st.dl : null, cp: st.cpOn ? st.cp : null, md: st.md };
   }
   function writeHash() {
-    var p = ['s=' + encodeURIComponent(st.s), 'k=' + st.k, 't=' + plain(st.t), 'l=' + plain(st.l)];
+    var p = ['s=' + encodeURIComponent(st.s)];
+    if (st.w) p.push('w=' + encodeURIComponent(st.w));
+    p.push('k=' + st.k, 't=' + plain(st.t), 'l=' + plain(st.l));
     if (st.dlOn && st.dl) p.push('dl=' + plain(st.dl));
     if (st.cpOn && st.cp) p.push('c=' + st.cp);
     if (st.md) p.push('md=' + st.md);
@@ -410,6 +412,7 @@
       if (i > 0) { try { q[kv.slice(0, i)] = decodeURIComponent(kv.slice(i + 1)); } catch (e) { q[kv.slice(0, i)] = '\u0000'; } }
     });
     if ('s' in q) { if (recs[q.s]) st.s = q.s; else reset.push('strategy'); }
+    if ('w' in q) { st.w = q.w; if (withSlugs().join(',') !== q.w) reset.push('strategies traded with it'); st.w = withSlugs().join(','); }
     if ('k' in q) { if (KINDS.some(function (x) { return x.id === q.k; })) st.k = q.k; else reset.push('kind of loss limit'); }
     [['t', 't', 'profit target'], ['l', 'l', 'loss limit']].forEach(function (a) {
       if (!(a[0] in q)) return;
@@ -800,7 +803,7 @@
       ['Avg per month', 'mon', amt(g.mon, true), amt(times(g.mon, k), true), tone(g.mon)],
       ['Return on drawdown', 'rod', g.rod || DASH, g.rod || DASH, '']
     ];
-    $('#mx').innerHTML = '<h3 class="cx-mx-h" id="mx-h">Its tested record</h3>' +
+    $('#mx').innerHTML = '<h3 class="cx-mx-h" id="mx-h">' + (rec.parts ? 'Their combined record' : 'Its tested record') + '</h3>' +
       '<table class="cx-mxt"><thead><tr><td></td><th scope="col">As tested</th><th scope="col">' + atWords(k) + '</th></tr></thead><tbody>' +
       rows.map(function (r) {
         return '<tr data-row="' + r[1] + '"><th scope="row">' + r[0] + '</th><td class="' + r[4] + '">' + r[2] + '</td><td class="' + r[4] + '">' + r[3] + '</td></tr>';
@@ -995,6 +998,96 @@
     return !isNaN(d.getTime()) && d.toISOString().slice(0, 10) === t;
   }
   function liveKs(slugs) { return slugs.map(function (s) { return lv.x[mktOf(recs[s])] || 1; }); }
+
+  /* ---------- Collin 2026-11-23: strategies on other markets traded with the chosen one, in one prop firm account ---------- */
+  // The picked records over the range they all cover (liveSpan), each as tested: each day's result is the sum of
+  // their results that day. The records carry no trade times, so within a day each record's turning points are spread
+  // evenly over the day and the account's running result is their sum at every one of those moments (each record's line
+  // runs straight between its points, as the replay walks it). The harsher order puts every record's best point of the day
+  // first and their lowest points together after it. A day only one of them traded keeps that record's own two paths.
+  var combos = {};
+  function withSlugs() {
+    var main = recs[st.s], mm = main ? mktOf(main) : '', got = {};
+    String(st.w || '').split(',').forEach(function (s) {
+      var r = recs[s], m = r ? mktOf(r) : '';
+      if (r && m && m !== mm && !got[m]) got[m] = s;
+    });
+    return MKTS.filter(function (m) { return got[m]; }).map(function (m) { return got[m]; });
+  }
+  function pathAt(p, t) {   // a record's running result at moment t (0 to 1) of the day: 0 at 0, point j at (j + 1) / n
+    var n = p.length, u = t * n, j = Math.floor(u), a = j === 0 ? 0 : p[j - 1];
+    if (j >= n) return p[n - 1];
+    return a + (p[j] - a) * (u - j);
+  }
+  function mergePaths(ps) {
+    var ts = {}, out = [];
+    ps.forEach(function (p) { for (var j = 1; j <= p.length; j++) ts[(j / p.length).toFixed(12)] = j / p.length; });
+    Object.keys(ts).map(function (k) { return ts[k]; }).sort(function (a, b) { return a - b; }).forEach(function (t) {
+      var v = 0;
+      ps.forEach(function (p) { v += pathAt(p, t); });
+      out.push(Math.round(v));
+    });
+    out[out.length - 1] = ps.reduce(function (a, p) { return a + p[p.length - 1]; }, 0);   // the day's total, exact
+    return out;
+  }
+  function comboRec(slugs) {
+    var key = slugs.join('+');
+    if (combos[key]) return combos[key];
+    var sp = liveSpan(slugs), parts = slugs.map(function (s) {
+      var r = recs[s], at = {};
+      r.dates.forEach(function (x, i) { at[x] = i; });
+      return { r: r, at: at };
+    });
+    var tot = [], dp = [], dp2 = [];
+    sp.days.forEach(function (x) {
+      var on = parts.filter(function (p) { return p.at[x] !== undefined; });
+      var t = 0;
+      on.forEach(function (p) { t += p.r.tot[p.at[x]]; });
+      tot.push(t);
+      if (on.length === 1) { dp.push(on[0].r.dp[on[0].at[x]]); dp2.push(on[0].r.dp2[on[0].at[x]]); return; }
+      dp.push(mergePaths(on.map(function (p) { return p.r.dp[p.at[x]]; })));
+      var hi = 0, lo = 0;
+      on.forEach(function (p) {
+        var a = p.r.dp[p.at[x]], mx = 0, mn = 0;
+        for (var z = 0; z < a.length; z++) { if (a[z] > mx) mx = a[z]; if (a[z] < mn) mn = a[z]; }
+        hi += mx; lo += mn;
+      });
+      dp2.push([hi, lo, t]);
+    });
+    // its own figures: total profit, the largest drop from a high over every point of the merged paths, per month
+    var b = 0, pk = 0, dd = 0, mo = {};
+    dp.forEach(function (p, i) {
+      for (var z = 0; z < p.length; z++) { var v = b + p[z]; if (pk - v > dd) dd = pk - v; if (v > pk) pk = v; }
+      b += tot[i];
+      mo[sp.days[i].slice(0, 7)] = 1;
+    });
+    var nm = Object.keys(mo).length, all = function (f) { return slugs.every(function (s) { return !!((recs[s].d.test || {})[f]); }); };
+    var rec = {
+      parts: slugs,
+      s: { name: slugs.map(function (s) { return recs[s].s.name; }).join(' + '),
+        market_line: slugs.map(function (s) { return marketCode(recs[s].s) || mktOf(recs[s]); }).join(' + ') + ' \u00b7 one account' },
+      d: { label: { text: 'Hypothetical backtests, traded together' },
+        test: { window_from: sp.lo, window_to: sp.hi, commission: all('commission'), slippage: all('slippage') },
+        days: sp.days.map(function (x, i) { return [x, tot[i] / 100]; }),
+        figures: { net_profit_usd: b / 100, max_drawdown_usd: dd / 100, monthly_profit_usd: nm ? Math.round(b / nm) / 100 : null } },
+      tot: tot, dp: dp, dp2: dp2, dates: sp.days
+    };
+    combos[key] = rec;
+    return rec;
+  }
+  function curRec() { var w = withSlugs(); return w.length && recs[st.s] ? comboRec([st.s].concat(w)) : recs[st.s]; }
+  function syncWith() {
+    var mm = recs[st.s] ? mktOf(recs[st.s]) : '', w = withSlugs(), by = {};
+    w.forEach(function (s) { by[mktOf(recs[s])] = s; });
+    MKTS.forEach(function (m) {
+      var sel = F['wp' + m];
+      if (!sel) return;
+      sel.closest('.cx-inl').hidden = m === mm;
+      sel.value = by[m] || '';
+      selTexts(sel);
+    });
+    st.w = w.join(',');
+  }
   window.AFT_CALC_LIVE = { run: function (slugs, ks, from) { return liveRun(slugs, ks, from); }, needs: liveNeeds, zero: liveZero, span: liveSpan,
     margin: liveMargin };
 
@@ -1251,7 +1344,8 @@
     moreCount();
     if (bad.some(function (b) { return /^(Daily|Consistency|Required)/.test(b); })) $('#more').open = true;
     pickTexts();
-    if (st.v !== 'compare' && recs[st.s]) drawMx(recs[st.s], st.x);
+    syncWith();
+    if (st.v !== 'compare' && recs[st.s]) drawMx(curRec(), st.x);
     if (bad.length) {
       out.classList.add('is-stale');
       $('#msum').classList.add('is-stale');
@@ -1266,9 +1360,9 @@
     if (st.v === 'compare') {
       drawCompare(R, k);
     } else {
-      var rec = recs[st.s], res = run(rec, k, R, true);
+      var rec = curRec(), res = run(rec, k, R, true);
       cur = { rec: rec, res: res, tal: tally(res, rec.dates), tal2: runHarsh(rec, k, R), rules: R, k: k };
-      $('#one-name').innerHTML = nameSpan(rec.s) + '<span class="cx-name-m">' + esc(rec.s.market_line || '') + '</span>';
+      $('#one-name').innerHTML = (rec.parts ? rec.parts.map(function (s) { return nameSpan(recs[s].s); }).join('<span class="cx-plus"> + </span>') : nameSpan(rec.s)) + '<span class="cx-name-m">' + esc(rec.s.market_line || '') + '</span>';
       $('#label').textContent = rec.d.label && rec.d.label.text ? rec.d.label.text : 'Hypothetical backtest';
       $('#pick-cap').textContent = capFor(rec.d);
       drawDial(cur.tal, cur.tal2, R.kind);
@@ -1297,6 +1391,7 @@
     $('#tab-cmp').setAttribute('aria-selected', String(!one)); $('#tab-cmp').tabIndex = one ? -1 : 0;
     $('#view-one').hidden = !one; $('#view-cmp').hidden = one;
     $('#pick-fld').hidden = !one;
+    $('#with-fld').hidden = !one;
     $('#mx').hidden = !one;
     render(one);
     if (focus) (one ? $('#tab-one') : $('#tab-cmp')).focus();
@@ -1316,6 +1411,17 @@
     }).join('');
     // row E780: the Account type choice and the Live account mode's boxes
     F.acct = $('#acct'); F.ld = $('#ld'); F.lb = $('#lb'); F.lm = $('#lm');
+    MKTS.forEach(function (m) {   // Collin 2026-11-23: the prop firm account's other markets
+      var sel = F['wp' + m] = $('#wp-' + m);
+      sel.innerHTML = '<option value="">None</option>' + order.filter(function (s) { return mktOf(recs[s]) === m; }).map(function (s) {
+        return '<option value="' + esc(s) + '">' + esc(optText(recs[s])) + '</option>';
+      }).join('');
+      sel.addEventListener('change', function () {
+        var w = withSlugs().filter(function (s) { return mktOf(recs[s]) !== m; });
+        if (sel.value) w.push(sel.value);
+        st.w = w.join(','); st.w = withSlugs().join(','); render(true);
+      });
+    });
     MKTS.forEach(function (m) {
       var xs = F['lx' + m] = $('#lx-' + m);   // row E797: the market's own multiplier, the prop mode's choices
       xs.innerHTML = SCALES.map(function (x) { return '<option value="' + x + '">' + (x === 1 ? 'As tested' : x + ' \u00d7 tested') + '</option>'; }).join('');

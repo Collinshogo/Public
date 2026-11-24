@@ -83,6 +83,15 @@
         <p class="cx-cap" id="pick-cap"></p>
       </div>
 
+      <!-- Collin 2026-11-23: strategies on the other markets traded with it in the same prop firm account (calc.js comboRec). -->
+      <fieldset class="cx-kind cx-lp cx-prop" id="with-fld">
+        <legend>Trade other markets with it (optional)</legend>
+        <div class="cx-fld cx-inl"><label for="wp-MNQ">MNQ</label><select id="wp-MNQ"></select></div>
+        <div class="cx-fld cx-inl"><label for="wp-MES">MES</label><select id="wp-MES"></select></div>
+        <div class="cx-fld cx-inl"><label for="wp-MGC">MGC</label><select id="wp-MGC"></select></div>
+        <p class="cx-hint">One account trades them all at once: every day counts all of their trades together, so the target, the loss limit and the drawdown apply to the combined balance.</p>
+      </fieldset>
+
       <div class="cx-fld cx-inl cx-prop" id="scale-fld" hidden>
         <label for="scale">Multiplier</label>
         <select id="scale" aria-describedby="mx-n"></select>
