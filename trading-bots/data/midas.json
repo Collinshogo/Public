@@ -15,42 +15,42 @@
  "test": {
   "tester": "TradingView Strategy Tester",
   "window_from": "2026-01-01",
-  "window_to": "2026-11-18",
-  "run_date": "2026-11-25",
+  "window_to": "2026-11-24",
+  "run_date": "2026-11-26",
   "symbol": "COMEX_MINI:MGC1!",
   "timeframe": "1 minute",
   "start_capital_usd": 25000.0,
   "commission": "$0.75 per contract",
   "slippage": "2 ticks"
  },
- "record_line": "TradingView Strategy Tester · Jan 1, 2026 to Nov 18, 2026 · $25,000 start · commission $0.75 per contract · slippage 2 ticks · run Nov 25, 2026",
+ "record_line": "TradingView Strategy Tester · Jan 1, 2026 to Nov 24, 2026 · $25,000 start · commission $0.75 per contract · slippage 2 ticks · run Nov 26, 2026",
  "figures": {
-  "net_profit_usd": 97496.5,
-  "win_rate_pct": 71.29,
-  "profit_factor": 2.778,
-  "trades": 1139,
+  "net_profit_usd": 97382.0,
+  "win_rate_pct": 70.87,
+  "profit_factor": 2.707,
+  "trades": 1167,
   "display": {
-   "net_profit": "+$97,496.50",
-   "win_rate": "71.29%",
-   "profit_factor": "2.778",
+   "net_profit": "+$97,382.00",
+   "win_rate": "70.87%",
+   "profit_factor": "2.707",
    "max_drawdown": "3.41%",
    "max_drawdown_usd": "$1,668.75",
-   "return_on_drawdown": "58.42",
-   "avg_trade": "+$85.60",
-   "trades": "1,139",
-   "trading_days": "230",
+   "return_on_drawdown": "58.36",
+   "avg_trade": "+$83.45",
+   "trades": "1,167",
+   "trading_days": "234",
    "trade_frequency": "5 per day",
-   "monthly_profit": "+$8,863.32"
+   "monthly_profit": "+$8,852.91"
   },
   "max_drawdown_pct": 3.41,
   "max_drawdown_usd": 1668.75,
-  "return_on_drawdown": 58.42,
-  "avg_trade_usd": 85.6,
-  "trading_days": 230,
-  "trade_frequency": 4.9522,
-  "winners": 812,
+  "return_on_drawdown": 58.36,
+  "avg_trade_usd": 83.45,
+  "trading_days": 234,
+  "trade_frequency": 4.9872,
+  "winners": 827,
   "max_contracts": 5,
-  "monthly_profit_usd": 8863.32
+  "monthly_profit_usd": 8852.91
  },
  "months": [
   {
@@ -105,8 +105,8 @@
   },
   {
    "month": "2026-11",
-   "pnl_usd": 4920.5,
-   "trades": 53
+   "pnl_usd": 4806.0,
+   "trades": 81
   }
  ],
  "equity": [
@@ -1021,6 +1021,22 @@
   [
    "2026-11-18",
    97496.5
+  ],
+  [
+   "2026-11-19",
+   97668.0
+  ],
+  [
+   "2026-11-20",
+   97208.5
+  ],
+  [
+   "2026-11-23",
+   97869.5
+  ],
+  [
+   "2026-11-24",
+   97382.0
   ]
  ],
  "worked_out": {
@@ -1940,6 +1956,22 @@
   [
    "2026-11-18",
    1162.0
+  ],
+  [
+   "2026-11-19",
+   171.5
+  ],
+  [
+   "2026-11-20",
+   -459.5
+  ],
+  [
+   "2026-11-23",
+   661.0
+  ],
+  [
+   "2026-11-24",
+   -487.5
   ]
  ],
  "day_paths": [
@@ -4900,6 +4932,69 @@
    511.75,
    1162.75,
    1162.0
+  ],
+  [
+   75.25,
+   -49.75,
+   -18.5,
+   -194.25,
+   197.75,
+   112.25,
+   172.25,
+   171.5
+  ],
+  [
+   105.25,
+   104.5,
+   195.75,
+   -269.5,
+   -216.25,
+   -592.75,
+   -299.75,
+   -384.25,
+   -105.25,
+   -192.75,
+   -78.75,
+   -294.0,
+   -199.75,
+   -597.75,
+   -459.5
+  ],
+  [
+   -35.75,
+   207.25,
+   199.75,
+   430.75,
+   344.0,
+   367.25,
+   108.75,
+   157.75,
+   118.25,
+   505.25,
+   390.25,
+   541.25,
+   531.75,
+   661.75,
+   661.0
+  ],
+  [
+   52.25,
+   -147.75,
+   169.0,
+   -734.25,
+   -467.25,
+   -468.0,
+   -362.75,
+   -554.5,
+   -494.25,
+   -688.75,
+   -636.75,
+   -781.25,
+   -459.25,
+   -460.0,
+   -354.75,
+   -540.75,
+   -487.5
   ]
  ],
  "day_paths_alt": [
@@ -7814,15 +7909,81 @@
    1162.75,
    511.75,
    1162.0
+  ],
+  [
+   75.25,
+   -49.75,
+   197.75,
+   -194.25,
+   172.25,
+   112.25,
+   171.5
+  ],
+  [
+   105.25,
+   0.0,
+   195.75,
+   -269.5,
+   -216.25,
+   -516.0,
+   -299.75,
+   -592.75,
+   -105.25,
+   -384.25,
+   -78.75,
+   -192.75,
+   -79.5,
+   -294.0,
+   -199.75,
+   -597.75,
+   -459.5
+  ],
+  [
+   207.25,
+   -35.75,
+   430.75,
+   199.75,
+   367.25,
+   115.5,
+   157.75,
+   108.75,
+   505.25,
+   118.25,
+   504.5,
+   420.0,
+   541.25,
+   390.25,
+   661.75,
+   531.75,
+   661.0
+  ],
+  [
+   52.25,
+   -147.75,
+   169.0,
+   -650.5,
+   -467.25,
+   -734.25,
+   -362.75,
+   -554.5,
+   -494.25,
+   -686.0,
+   -636.75,
+   -688.75,
+   -459.25,
+   -781.25,
+   -354.75,
+   -540.75,
+   -487.5
   ]
  ],
  "proof": {
-  "run_date": "2026-11-25",
+  "run_date": "2026-11-26",
   "tradingview_url": null
  },
  "source": {
   "generated_by": "aft_strategy_export.py",
-  "properties_sha256": "7b613d3f58f6b44b14a6b0bb3a6b2aed34962f2f27dbf1521b58e2151dc41758",
-  "trade_list_sha256": "627a6a085d048da54ee5d76771915889b194cc876e2da955d6f9c04586f6dd4a"
+  "properties_sha256": "7076b053ccc432e8b943deb306e888632ca9e72d57b2d3e52997cc6ae9acea90",
+  "trade_list_sha256": "893dd397c23e8a368935a78f9b85bf1c6ca17ce8abb920103eb2325b92433df0"
  }
 }

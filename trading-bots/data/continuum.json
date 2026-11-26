@@ -15,42 +15,42 @@
  "test": {
   "tester": "TradingView Strategy Tester",
   "window_from": "2026-01-01",
-  "window_to": "2026-11-20",
-  "run_date": "2026-11-25",
+  "window_to": "2026-11-24",
+  "run_date": "2026-11-26",
   "symbol": "CME_MINI:MNQ1!",
   "timeframe": "1 minute",
   "start_capital_usd": 25000.0,
   "commission": "$0.75 per contract",
   "slippage": "2 ticks"
  },
- "record_line": "TradingView Strategy Tester · Jan 1, 2026 to Nov 20, 2026 · $25,000 start · commission $0.75 per contract · slippage 2 ticks · run Nov 25, 2026",
+ "record_line": "TradingView Strategy Tester · Jan 1, 2026 to Nov 24, 2026 · $25,000 start · commission $0.75 per contract · slippage 2 ticks · run Nov 26, 2026",
  "figures": {
-  "net_profit_usd": 96933.0,
-  "win_rate_pct": 71.12,
-  "profit_factor": 2.036,
-  "trades": 2358,
+  "net_profit_usd": 97557.0,
+  "win_rate_pct": 71.1,
+  "profit_factor": 2.033,
+  "trades": 2381,
   "display": {
-   "net_profit": "+$96,933.00",
-   "win_rate": "71.12%",
-   "profit_factor": "2.036",
+   "net_profit": "+$97,557.00",
+   "win_rate": "71.10%",
+   "profit_factor": "2.033",
    "max_drawdown": "4.90%",
    "max_drawdown_usd": "$1,879.50",
-   "return_on_drawdown": "51.57",
-   "avg_trade": "+$41.11",
-   "trades": "2,358",
-   "trading_days": "232",
+   "return_on_drawdown": "51.91",
+   "avg_trade": "+$40.97",
+   "trades": "2,381",
+   "trading_days": "234",
    "trade_frequency": "10 per day",
-   "monthly_profit": "+$8,812.09"
+   "monthly_profit": "+$8,868.82"
   },
   "max_drawdown_pct": 4.9,
   "max_drawdown_usd": 1879.5,
-  "return_on_drawdown": 51.57,
-  "avg_trade_usd": 41.11,
-  "trading_days": 232,
-  "trade_frequency": 10.1638,
-  "winners": 1677,
+  "return_on_drawdown": 51.91,
+  "avg_trade_usd": 40.97,
+  "trading_days": 234,
+  "trade_frequency": 10.1752,
+  "winners": 1693,
   "max_contracts": 6,
-  "monthly_profit_usd": 8812.09
+  "monthly_profit_usd": 8868.82
  },
  "months": [
   {
@@ -105,8 +105,8 @@
   },
   {
    "month": "2026-11",
-   "pnl_usd": 237.0,
-   "trades": 148
+   "pnl_usd": 861.0,
+   "trades": 171
   }
  ],
  "equity": [
@@ -1029,6 +1029,14 @@
   [
    "2026-11-20",
    96933.0
+  ],
+  [
+   "2026-11-23",
+   97060.0
+  ],
+  [
+   "2026-11-24",
+   97557.0
   ]
  ],
  "worked_out": {
@@ -1956,6 +1964,14 @@
   [
    "2026-11-20",
    636.0
+  ],
+  [
+   "2026-11-23",
+   127.0
+  ],
+  [
+   "2026-11-24",
+   497.0
   ]
  ],
  "day_paths": [
@@ -7287,6 +7303,56 @@
    245.75,
    636.75,
    636.0
+  ],
+  [
+   -61.75,
+   97.75,
+   87.25,
+   126.25,
+   125.5,
+   171.75,
+   46.25,
+   307.25,
+   237.75,
+   426.75,
+   416.25,
+   523.25,
+   378.75,
+   489.75,
+   347.5,
+   508.25,
+   304.25,
+   403.25,
+   131.25,
+   258.75,
+   183.75,
+   487.75,
+   395.25,
+   563.75,
+   404.25,
+   572.75,
+   505.0,
+   505.25,
+   316.0,
+   316.25,
+   127.0
+  ],
+  [
+   -27.75,
+   116.75,
+   102.75,
+   180.25,
+   179.5,
+   203.25,
+   30.75,
+   94.75,
+   53.25,
+   230.75,
+   221.25,
+   289.25,
+   214.25,
+   497.75,
+   497.0
   ]
  ],
  "day_paths_alt": [
@@ -12556,15 +12622,66 @@
    636.75,
    245.75,
    636.0
+  ],
+  [
+   97.75,
+   -61.75,
+   126.25,
+   87.25,
+   171.75,
+   54.5,
+   307.25,
+   46.25,
+   426.75,
+   237.75,
+   523.25,
+   416.25,
+   489.75,
+   378.75,
+   489.0,
+   347.5,
+   508.25,
+   304.25,
+   403.25,
+   205.5,
+   258.75,
+   131.25,
+   487.75,
+   183.75,
+   563.75,
+   395.25,
+   572.75,
+   404.25,
+   505.25,
+   316.0,
+   316.25,
+   127.0
+  ],
+  [
+   116.75,
+   -27.75,
+   180.25,
+   102.75,
+   203.25,
+   38.0,
+   94.75,
+   30.75,
+   230.75,
+   53.25,
+   289.25,
+   221.25,
+   497.75,
+   214.25,
+   497.0
   ]
  ],
  "proof": {
-  "run_date": "2026-11-25",
+  "run_date": "2026-11-26",
   "tradingview_url": null
  },
  "source": {
   "generated_by": "aft_strategy_export.py",
-  "properties_sha256": "28e838550f9afb8e66320aefe8f29e07f3b7f79a15beabd261db41f7b7e9a811",
-  "trade_list_sha256": "d79574f85e2abe676527bd63fcec298d20e292107fc4fdbc99e98b4464eb1e16"
+  "properties_sha256": "7eec431ee01fcf914ab30ae021ef8b38e13cfde2f8fe1791cd5e9a77a3d18a8e",
+  "trade_list_sha256": "76982dfb016de37fda9502ce06a172ea6d3ed1d9ef42e2636bceedd7e3e36df7"
  }
 }
