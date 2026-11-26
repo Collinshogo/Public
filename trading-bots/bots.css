@@ -16,11 +16,11 @@
   --bar-h:72px;
   /* row E802: a strategy's name is coloured by its market, not by the strategy. Each market is one token with a light
      stop before it and an end stop after it (the ladder's --c0, --c1, --c2). MNQ is the colour Continuum's name had,
-     MGC the gold of the MGC strategy the owner named, MES a teal chosen for the dark panels (row E815). Every stop is at least
+     MGC the gold of the MGC strategy the owner named, MES a violet that runs to red (the owner's choice, 2026-11-25; a teal before, row E815). Every stop is at least
      5.5:1 on --bg, --bg2 and --panel. */
   --mnq-0:#f2f6f3;--mnq:#8ea0ff;--mnq-2:#3ddc84;
   --mgc-0:#fff6dc;--mgc:#f7c948;--mgc-2:#ff8a3d;
-  --mes-0:#e3fbf8;--mes:#2dd4c8;--mes-2:#19b9c4;
+  --mes-0:#f3ecff;--mes:#b57bff;--mes-2:#ff5a5f;
   padding-bottom:calc(var(--bar-h) + env(safe-area-inset-bottom,0px));
 }
 /* keep anything scrolled or tabbed into view clear of the fixed selection bar */
