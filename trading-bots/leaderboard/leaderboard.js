@@ -1,7 +1,8 @@
 /* AFT Trading Bots: the Strategy Leaderboard. No tracking of its own and no network call beyond this site's own data files.
    - What it ranks: the strategies the Strategy Library lists (data/catalog.js: a released strategy with its TradingView
      page, and a coming-soon one that has figures), by one calendar month's profit, for the current month in the
-     records and the two before it.
+     records and the eleven before it: a year of months at most, the current one first. When a new month opens it
+     takes the first place and, once there are twelve, the oldest drops off.
    - Where each figure comes from: the month's entry in the strategy's own data file (data/<slug>.json, months), the same
      entry its card prints in the Monthly P&L table: the trades closed in that month and no others. Nothing is worked
      out here but the order, the bar lengths, the moves and the count in profit. A record import changes this page
@@ -10,12 +11,14 @@
      open a board of its own and one late record does not hold the page back. A month is a part month when a record
      stops before the month's last weekday (or starts after its first); the board says so and each line carries its
      record's last day.
-   - The bars share one scale across the boards, so a longer bar is always a larger figure. A loss is red and carries
-     its minus sign.
+   - A board's bars are drawn against that month's largest figure, so they compare the strategies within the month.
+     A loss is red and carries its minus sign.
    - Names are lettered by the site's rule (as bots.js and calc.js have it): the level from the strategy's plan, the
      colours from its market. A coming-soon strategy carries the tag "Coming soon" right after its name.
-   - Under 1100 px one board shows at a time, picked with the month buttons; from 1100 px the three stand side by side
-     (leaderboard.css). A link to #m-2026-11 opens that month. */
+   - Under 1100 px one board shows at a time, picked with the month buttons; from 1100 px the boards stand in one row,
+     the current month at the far left, and the row slides sideways to the older months (leaderboard.css): a month
+     button slides its board to the left edge, and the buttons of the months in view are the pressed ones. A link to
+     #m-2026-11 opens that month. */
 (function () {
   'use strict';
 
@@ -23,7 +26,7 @@
   var FIGS = CAT.figures || {};
   var DATA = document.body.dataset.dataBase || '../data/';
   var LIB = '../strategies/';
-  var SHOWN = 3;
+  var SHOWN = 12;         // boards on the page: a year of months, the current one first
   var MINUS = '−';
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
@@ -213,12 +216,66 @@
       '</section>';
   }
 
-  /* ---------- the month buttons (under 1100 px one board shows at a time) ---------- */
-  function show(ym, scroll) {
-    var hit = false;
-    $$('.lb-board', boardsEl).forEach(function (el) { var on = el.getAttribute('data-m') === ym; el.classList.toggle('is-on', on); hit = hit || on; });
+  /* ---------- the month buttons and the row of boards ---------- */
+  var WIDE = window.matchMedia ? window.matchMedia('(min-width:1100px)') : { matches: false };        // the boards stand in one row
+  function still() { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
+  function slideTo(box, x, jump) {
+    if (box.scrollTo && !jump && !still()) { try { box.scrollTo({ left: x, behavior: 'smooth' }); return; } catch (err) { /* an older browser */ } }
+    box.scrollLeft = x;
+  }
+  // The pressed buttons; under 1100 px the pressed one is kept in view in its own row.
+  function press(list) {
+    $$('button', pickEl).forEach(function (bt) {
+      var on = list.indexOf(bt.getAttribute('data-m')) >= 0;
+      bt.setAttribute('aria-pressed', on ? 'true' : 'false');
+      if (!on || WIDE.matches || pickEl.scrollWidth <= pickEl.clientWidth + 1) return;
+      var a = bt.offsetLeft, b = a + bt.offsetWidth, pad = 20;
+      if (a - pad < pickEl.scrollLeft) slideTo(pickEl, Math.max(0, a - pad), true);
+      else if (b + pad > pickEl.scrollLeft + pickEl.clientWidth) slideTo(pickEl, b + pad - pickEl.clientWidth, true);
+    });
+  }
+  // In the row: the months standing in its window.
+  function inView() {
+    var x0 = boardsEl.scrollLeft, x1 = x0 + boardsEl.clientWidth, out = [];
+    $$('.lb-board', boardsEl).forEach(function (el) {
+      var a = el.offsetLeft, b = a + el.offsetWidth;
+      if (Math.min(b, x1) - Math.max(a, x0) > el.offsetWidth * 0.6) out.push(el.getAttribute('data-m'));
+    });
+    return out;
+  }
+  // The buttons follow the boards: in the row, every month in view; under 1100 px, the one board shown.
+  var wasWide = WIDE.matches;        // the layout the buttons were last set for
+  function sync() {
+    var on = $('.lb-board.is-on', boardsEl), list, flip = WIDE.matches !== wasWide;
+    wasWide = WIDE.matches;
+    if (!wasWide) { if (on) press([on.getAttribute('data-m')]); return; }
+    if (flip && on) boardsEl.scrollLeft = on.offsetLeft;        // the window grew past 1100 px (a tablet turned on its side): the row opens on the board that was showing
+    list = inView();
+    if (!list.length) return;
+    $$('.lb-board', boardsEl).forEach(function (el) { el.classList.toggle('is-on', el.getAttribute('data-m') === list[0]); });
+    press(list);
+  }
+  var waiting = false;
+  function later() {
+    if (waiting) return;
+    waiting = true;
+    window.setTimeout(function () { waiting = false; sync(); }, 60);        // a timer, not a frame: it also runs in a tab that is not drawn
+  }
+  boardsEl.addEventListener('scroll', later, { passive: true });
+  window.addEventListener('resize', later);
+  if (WIDE.addEventListener) WIDE.addEventListener('change', later); else if (WIDE.addListener) WIDE.addListener(later);
+  function show(ym, scroll, jump) {
+    var hit = null;
+    $$('.lb-board', boardsEl).forEach(function (el) { if (el.getAttribute('data-m') === ym) hit = el; });
     if (!hit) return false;
-    $$('button', pickEl).forEach(function (bt) { bt.setAttribute('aria-pressed', bt.getAttribute('data-m') === ym ? 'true' : 'false'); });
+    if (WIDE.matches) {        // the row slides this month to its left edge; the buttons follow
+      wasWide = true;
+      slideTo(boardsEl, hit.offsetLeft, jump);
+      later();
+      return true;
+    }
+    $$('.lb-board', boardsEl).forEach(function (el) { el.classList.toggle('is-on', el === hit); });
+    press([ym]);
     if (scroll) {
       // a pick made far down a long board: back to the top of the boards, clear of the bar and the buttons
       var y = boardsEl.getBoundingClientRect().top, clear = pickEl.getBoundingClientRect().bottom + 10;
@@ -234,7 +291,7 @@
   });
   function fromHash(first) {
     var m = /^#m-(\d{4}-\d{2})$/.exec(location.hash || '');
-    if (!m || !show(m[1], false)) return;
+    if (!m || !show(m[1], false, true)) return;
     var el = document.getElementById('m-' + m[1]);
     if (el && first) el.scrollIntoView();
   }
@@ -252,16 +309,18 @@
     var all = yms.map(board), shown = all.slice(0, SHOWN).filter(function (b) { return b.rows.length; });
     if (!shown.length) { fail(); return; }
     shown.forEach(function (b) { moves(b, all[all.indexOf(b) + 1]); });
-    var top = 0;
-    shown.forEach(function (b) { b.rows.forEach(function (x) { top = Math.max(top, Math.abs(cents(x.v))); }); });
+    // each board's bars are drawn against that month's largest figure
+    shown.forEach(function (b) { b.top = b.rows.reduce(function (t, x) { return Math.max(t, Math.abs(cents(x.v))); }, 0); });
 
     boardsEl.setAttribute('data-n', String(shown.length));
-    boardsEl.innerHTML = shown.map(function (b, i) { return boardHtml(b, i, top); }).join('');
+    boardsEl.innerHTML = shown.map(function (b, i) { return boardHtml(b, i, b.top); }).join('');
     pickEl.innerHTML = shown.map(function (b, i) {
       return '<button type="button" class="lb-pb" data-m="' + b.ym + '" aria-pressed="' + (i === 0 ? 'true' : 'false') + '" aria-controls="m-' + b.ym + '">' +
-        esc(monthName(b.ym)) + '<span class="bx-vh"> ' + b.ym.slice(0, 4) + '</span></button>';
+        '<span aria-hidden="true">' + MON[Number(b.ym.slice(5)) - 1] + '</span><span class="bx-vh">' + esc(monthLong(b.ym)) + '</span></button>';
     }).join('');
+    pickEl.setAttribute('data-n', String(shown.length));
     pickEl.hidden = shown.length < 2;
+    sync();
 
     var runs = recs.map(function (r) { return r.run; }).filter(isDay).sort(), asof = $('#lb-asof'), part = $('#lb-n-part');
     if (asof) asof.textContent = 'Hypothetical backtests from TradingView’s Strategy Tester.' + (runs.length ? ' Last test run ' + dayFull(runs[runs.length - 1]) + '.' : '');

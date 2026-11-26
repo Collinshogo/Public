@@ -2,8 +2,9 @@
    Prefixed lb- and scoped to body.bx-lbpage. The names' lettering, the plan badges and the coming-soon tag are
    bots.css's own (bx-wm, bx-tier, bx-cs); only their size and wrapping are set here. Everything is drawn by
    leaderboard.js from the site's data files.
-   Under 1100 px one month's board shows at a time, picked with the month buttons, which stay under the top bar;
-   from 1100 px the three boards stand side by side and the buttons are gone. */
+   The month buttons stay under the top bar, the current month first. Under 1100 px one month's board shows at a
+   time; from 1100 px the boards stand in one row, the current month at the far left, and the row slides sideways
+   to the older months. */
 
 .bx-lbpage{padding-bottom:0;--lb-gold:#f7c948;--lb-silver:#cdd5e4;--lb-bronze:#d9925b}
 
@@ -19,10 +20,15 @@
 .lb-status{margin:22px 0 0;color:var(--dim);font-size:15px}
 .lb-status[hidden]{display:none}
 
-/* the month buttons: one row under the top bar (64 px and its line), edge to edge on a phone */
-.lb-pick{position:sticky;top:65px;z-index:5;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:8px;
+/* the month buttons: one row under the top bar (64 px and its line), edge to edge on a phone, the current month
+   first. With more months than fit, the row slides sideways under the finger. */
+.lb-pick{position:sticky;top:65px;z-index:5;display:grid;grid-auto-flow:column;grid-auto-columns:minmax(72px,1fr);gap:8px;
   margin:0 -20px;padding:10px 20px;border-bottom:1px solid var(--line);background:rgba(14,15,22,.94);
+  overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;
   -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.lb-pick::-webkit-scrollbar{display:none}
+/* from 700 px a year of buttons fits the row, so nothing slides */
+@media(min-width:700px){.lb-pick{grid-auto-columns:minmax(0,1fr)}}
 .lb-pick[hidden]{display:none}
 .lb-pb{min-width:0;min-height:44px;margin:0;padding:0 6px;border:1px solid var(--line2);border-radius:999px;background:transparent;
   color:var(--dim);font-family:var(--sans);font-size:15px;font-weight:600;line-height:1;white-space:nowrap;cursor:pointer;
@@ -32,10 +38,10 @@
 @media(max-width:359.98px){.lb-pb{font-size:13.5px}}
 
 /* the boards */
-.lb-boards{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;margin-top:18px}
+.lb-boards{position:relative;display:grid;grid-template-columns:minmax(0,1fr);gap:20px;margin-top:18px}
 .lb-board{display:none;min-width:0;padding:16px 14px 4px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
 .lb-board.is-on{display:block}
-/* the main board (the current month): a red top edge, drawn inside so the three boards keep one floor */
+/* the main board (the current month): a red top edge, drawn inside so the boards keep one floor */
 .lb-board[data-main]{border-top-color:var(--red-brand);box-shadow:inset 0 1px 0 var(--red-brand)}
 .bx-lbpage .lb-board[id]{scroll-margin-top:136px}
 
@@ -67,7 +73,7 @@
 .lb-pv{font-family:var(--sans);font-size:clamp(11.5px,13.4cqw,17px);font-weight:600;font-variant-numeric:tabular-nums;line-height:1.25;white-space:nowrap;color:var(--bright)}
 .lb-pmeta{display:flex;flex-direction:column;align-items:center;max-width:100%;color:var(--dim);font-size:clamp(10px,11.4cqw,11.5px);line-height:1.4}
 .lb-pmeta>span{white-space:nowrap}
-@media(max-width:339.98px){.lb-pmeta>span{white-space:normal}.lb-v{font-size:14px}}
+@media(max-width:339.98px){.lb-pmeta>span{white-space:normal}}
 .lb-ped{display:flex;align-items:flex-start;justify-content:center;width:100%;margin-top:4px;padding-top:7px;border-top:2px solid var(--m);border-radius:8px 8px 0 0;
   background:linear-gradient(180deg,var(--mt),rgba(255,255,255,0));color:var(--m);font-family:var(--display);font-size:22px;font-weight:800;line-height:1}
 .lb-p[data-r="1"] .lb-ped{--m:var(--lb-gold);--mt:rgba(247,201,72,.22);height:66px;font-size:28px}
@@ -98,6 +104,8 @@
 .lb-end{grid-area:end;justify-self:end;color:var(--dim);font-size:12px;line-height:1.4;white-space:nowrap}
 .lb-meta .bx-tier{font-family:var(--sans);font-size:11px;font-weight:600;line-height:1.3;letter-spacing:0;padding:0 7px;white-space:nowrap}
 .lb-v{grid-area:v;justify-self:end;align-self:start;font-family:var(--sans);font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.3;white-space:nowrap;color:var(--bright)}
+/* on the narrowest phones a five-figure amount leaves the longest name its room */
+@media(max-width:339.98px){.lb-v{font-size:14px}}
 .lb-bar{grid-area:bar;display:block;height:4px;margin-top:5px;border-radius:2px;background:rgba(255,255,255,.07);overflow:hidden}
 .lb-bar i{display:block;height:100%;border-radius:2px}
 .lb-bar i.is-pos{background:var(--win)}
@@ -118,16 +126,27 @@
   .lb-board{padding:20px 20px 6px}
   .lb-pod{gap:12px}
 }
-/* from 1100 px: the three months side by side, the latest first; the buttons are not needed */
+/* from 1100 px: the boards in one row, the current month at the far left and three in view, with the edge of the
+   next one showing; the row slides sideways to the older months, and a month button slides its board to the left */
 @media(min-width:1100px){
-  .lb-pick{display:none}
-  .lb-boards{grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;margin-top:28px}
-  .lb-boards[data-n="2"]{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .lb-boards[data-n="1"]{grid-template-columns:minmax(0,560px)}
-  .lb-board{display:block;padding:18px 16px 4px}
-  /* side by side, the three podiums stand on one floor: the same room for each, whatever its names need */
+  .lb-pick{margin:18px 0 0;padding:10px 0;grid-auto-columns:minmax(0,1fr);overflow:visible}
+  /* three boards or fewer are all in view: no buttons needed */
+  .lb-pick[data-n="1"],.lb-pick[data-n="2"],.lb-pick[data-n="3"]{display:none}
+  .lb-pb{min-height:40px;font-size:14.5px}
+  .lb-boards{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:calc((100% - 96px) / 3);align-items:start;margin-top:16px;padding-bottom:14px;
+    overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
+  .lb-boards[data-n="3"]{grid-auto-columns:calc((100% - 40px) / 3)}
+  .lb-boards[data-n="2"]{grid-auto-columns:calc((100% - 20px) / 2)}
+  .lb-boards[data-n="1"]{grid-auto-columns:minmax(0,560px)}
+  .lb-board{display:block;padding:18px 16px 4px;scroll-snap-align:start}
+  /* in one row the podiums stand on one floor: the same room for each, whatever its names need */
   .lb-pod{gap:8px;min-height:222px}
-  .bx-lbpage .lb-board[id]{scroll-margin-top:84px}
+  .bx-lbpage .lb-board[id]{scroll-margin-top:150px}
+}
+/* the narrowest rows: a little less of the next board showing and a little less padding, so a line keeps one row */
+@media(min-width:1100px) and (max-width:1199.98px){
+  .lb-boards{grid-auto-columns:calc((100% - 84px) / 3)}
+  .lb-board{padding:18px 14px 4px}
 }
 @media(forced-colors:active){
   .lb-bar i{background:CanvasText}
