@@ -23,6 +23,9 @@ html{scrollbar-gutter:stable}
 /* the page you are on */
 .tbn .tbn-links a[aria-current]{color:#fff}
 .tbn .tbn-btn{display:none}
+/* the Leaderboard link (2026-11-26) is the eighth: the bar has room for it from 1160 px. From 1040 to 1159 px it stays out
+   of the bar; under 1040 px it is in the Menu panel with the others. */
+@media(min-width:1040px) and (max-width:1159.98px){.tbn .tbn-links a.tbn-lb{display:none}}
 .tbn a:focus-visible,.tbn button:focus-visible{outline:2px solid #fff;outline-offset:2px;border-radius:6px}
 
 /* under 1040 px (phones and tablets): the logo and one Menu button; the button opens the seven links in a panel that

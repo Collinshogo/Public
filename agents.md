@@ -10,6 +10,7 @@ All Fluence Trading (AFT), run by shogotrades, makes the AFT Trading Bots, autom
 - **Membership page (course and indicators):** https://allfluencetrading.com/master-trader/
 - **AFT Trading Bots:** https://allfluencetrading.com/trading-bots/
 - **AFT Strategy Library:** https://allfluencetrading.com/trading-bots/strategies/ (the strategies marked coming soon are named there and not yet sold)
+- **AFT Strategy Leaderboard:** https://allfluencetrading.com/trading-bots/leaderboard/ (the same strategies ranked by profit for each of the last three months; hypothetical backtests)
 - **Setup guide:** https://allfluencetrading.com/trading-bots/setup/
 - **Trading bot risk calculator:** https://allfluencetrading.com/trading-bots/calculator/
 - **Membership and reviews:** https://whop.com/aft-official/

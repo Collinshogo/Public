@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AFT Strategy Leaderboard | All Fluence Trading</title>
+<link rel="canonical" href="https://allfluencetrading.com/trading-bots/leaderboard/">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#0e0f16">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="../bots.css">
+<link rel="stylesheet" href="leaderboard.css">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="All Fluence Trading">
+<meta property="og:title" content="All Fluence Trading — AFT Strategy Leaderboard">
+<meta property="og:description" content="The AFT Trading Bots strategies ranked by monthly profit, for the latest month in the records and the two before it. Every figure is a hypothetical backtest.">
+<meta property="og:url" content="https://allfluencetrading.com/trading-bots/leaderboard/">
+<meta property="og:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-22.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="All Fluence Trading — AFT Strategy Leaderboard">
+<meta name="twitter:description" content="The AFT Trading Bots strategies ranked by monthly profit, for the latest month in the records and the two before it. Every figure is a hypothetical backtest.">
+<meta name="twitter:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-22.png">
+<script src="/config.js"></script>
+<script src="/tracking.js" defer></script>
+<link rel="stylesheet" href="/trading-bots/nav.css">
+<script src="/trading-bots/nav.js" defer></script>
+<link rel="stylesheet" href="/trading-bots/cart.css">
+<script src="/trading-bots/cart.js" defer></script>
+<meta name="description" content="The AFT Trading Bots strategies ranked by monthly profit, for the latest month in the records and the two before it. Every figure is a hypothetical backtest.">
+</head>
+<body class="bots bx-lbpage" data-page="leaderboard" data-data-base="../data/">
+
+<header class="tbn">
+  <div class="tbn-in">
+    <a class="tbn-brand" href="/" aria-label="All Fluence Trading home"><img src="/assets/aft-logo-nav.png" width="468" height="102" alt="AFT, All Fluence Trading"></a>
+    <button class="tbn-btn" type="button" aria-expanded="false" aria-controls="tbn-menu"><span class="tbn-ico" aria-hidden="true"></span>Menu</button>
+    <nav class="tbn-links" id="tbn-menu" aria-label="AFT Trading Bots">
+      <a href="/trading-bots/#plans">Plans</a>
+      <a href="/trading-bots/strategies/">Strategy Library</a>
+      <a class="tbn-lb" href="/trading-bots/leaderboard/" aria-current="page">Leaderboard</a>
+      <a href="/trading-bots/#method">How results are shown</a>
+      <a href="/trading-bots/#how">How it works</a>
+      <a href="/trading-bots/setup/">Setup</a>
+      <a href="/trading-bots/calculator/">Calculator</a>
+      <a data-dest="discordInvite" data-ev="lead" data-name="nav-discord" href="https://discord.gg/aft-traders" rel="noopener" target="_blank">Discord</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="lb-head">
+  <div class="wrap">
+    <p class="bx-kicker"><a href="../">AFT Trading Bots</a></p>
+    <h1>Strategy Leaderboard</h1>
+    <p class="lb-lead">Every strategy in the Strategy Library, ranked by its profit for each of the last three months.</p>
+    <p class="lb-note">Every figure here is a hypothetical backtest from TradingView's Strategy Tester. A backtest does not represent actual trading.</p>
+  </div>
+</section>
+
+<section class="lb-main" id="board">
+  <div class="wrap">
+    <p class="lb-status" id="lb-status" role="status">Loading the leaderboard…</p>
+    <noscript><p class="lb-status">This page needs JavaScript to draw the leaderboard.</p></noscript>
+    <div class="lb-stage">
+      <div class="lb-pick" id="lb-pick" role="group" aria-label="Month shown" hidden></div>
+      <div class="lb-boards" id="lb-boards"></div>
+    </div>
+    <p class="lb-asof" id="lb-asof"></p>
+
+    <div class="lb-read">
+      <h2>How to read it</h2>
+      <ul>
+        <li>A strategy's figure for a month is that month's line in its Monthly P&amp;L table, on its card in the <a href="../strategies/">Strategy Library</a>.</li>
+        <li>A month's figure counts the trades closed in that month and no others. A trade closed at or after 6:00 p.m. New York time counts toward the next weekday, the futures session it belongs to.</li>
+        <li id="lb-n-part" hidden>The latest month is still in progress. Each record stops on its last tested day, shown on its line, so the strategies are not all measured to the same day.</li>
+        <li>The bars share one scale across the months, so a longer bar is always a larger figure. A loss is red and carries a minus sign.</li>
+        <li>The small mark under a place shows how many places the strategy moved from the month before.</li>
+        <li>A strategy marked Coming soon is not released yet.</li>
+        <li>A place here is a place in a list of hypothetical results. It does not say what a strategy will do next.</li>
+      </ul>
+    </div>
+    <p class="lb-go"><a class="btn bx-btn-red" href="../strategies/">Open the Strategy Library</a><a class="btn btn-ghost" href="../#plans">See the plans</a></p>
+  </div>
+</section>
+
+</main>
+
+<footer class="site bx-foot">
+  <div class="wrap">
+    <p class="bx-foot-line">All Fluence Trading · AFT Trading Bots</p>
+    <p class="bx-foot-links"><a href="/">Front page</a> · <a href="../">AFT Trading Bots</a> · <a href="../strategies/">Strategy Library</a> · <a href="/legal/">Disclaimer</a> · <a href="mailto:support@allfluencetrading.com">support@allfluencetrading.com</a></p>
+    <p>For education only. Trading futures involves substantial risk of loss and is not suitable for every investor. You can lose more than your initial investment. Automated strategies can lose money, and an order routed to a broker can fail, be delayed or fill at a different price. Strategy Tester results are hypothetical, have inherent limitations and do not represent actual trading. All Fluence Trading provides educational software and training only and is not a registered investment adviser, broker-dealer or commodity trading advisor. Nothing here is financial advice.</p>
+  </div>
+</footer>
+
+<script src="../data/catalog.js"></script>
+<script src="leaderboard.js"></script>
+</body>
+</html>
