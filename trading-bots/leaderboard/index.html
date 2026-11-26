@@ -18,14 +18,14 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="All Fluence Trading">
 <meta property="og:title" content="All Fluence Trading — AFT Strategy Leaderboard">
-<meta property="og:description" content="The AFT Trading Bots strategies ranked by monthly profit for each of the last twelve months in the records, the current month first. Hypothetical backtests.">
+<meta property="og:description" content="The AFT Trading Bots strategies ranked by return on drawdown (RoDD) for each of the last twelve months in the records, the current month first, with each month's profit. Hypothetical backtests.">
 <meta property="og:url" content="https://allfluencetrading.com/trading-bots/leaderboard/">
 <meta property="og:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-22.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="All Fluence Trading — AFT Strategy Leaderboard">
-<meta name="twitter:description" content="The AFT Trading Bots strategies ranked by monthly profit for each of the last twelve months in the records, the current month first. Hypothetical backtests.">
+<meta name="twitter:description" content="The AFT Trading Bots strategies ranked by return on drawdown (RoDD) for each of the last twelve months in the records, the current month first, with each month's profit. Hypothetical backtests.">
 <meta name="twitter:image" content="https://allfluencetrading.com/assets/og-trading-bots-2026-11-22.png">
 <script src="/config.js"></script>
 <script src="/tracking.js" defer></script>
@@ -33,7 +33,7 @@
 <script src="/trading-bots/nav.js" defer></script>
 <link rel="stylesheet" href="/trading-bots/cart.css">
 <script src="/trading-bots/cart.js" defer></script>
-<meta name="description" content="The AFT Trading Bots strategies ranked by monthly profit for each of the last twelve months in the records, the current month first. Hypothetical backtests.">
+<meta name="description" content="The AFT Trading Bots strategies ranked by return on drawdown (RoDD) for each of the last twelve months in the records, the current month first, with each month's profit. Hypothetical backtests.">
 </head>
 <body class="bots bx-lbpage" data-page="leaderboard" data-data-base="../data/">
 
@@ -60,7 +60,7 @@
   <div class="wrap">
     <p class="bx-kicker"><a href="../">AFT Trading Bots</a></p>
     <h1>Strategy Leaderboard</h1>
-    <p class="lb-lead">Every strategy in the Strategy Library, ranked by its profit for each of the last twelve months, the current month first.</p>
+    <p class="lb-lead">Every strategy in the Strategy Library, ranked by its return on drawdown (RoDD) for each of the last twelve months, the current month first. Each line also shows the month's profit in dollars.</p>
     <p class="lb-note">Every figure here is a hypothetical backtest from TradingView's Strategy Tester. A backtest does not represent actual trading.</p>
   </div>
 </section>
@@ -78,11 +78,12 @@
     <div class="lb-read">
       <h2>How to read it</h2>
       <ul>
-        <li>A strategy's figure for a month is that month's line in its Monthly P&amp;L table, on its card in the <a href="../strategies/">Strategy Library</a>.</li>
+        <li>The strategies are ranked by RoDD, so a place reflects profit against risk, not dollars alone. A month's RoDD is that month's profit divided by the strategy's max drawdown over its whole record (the drawdown its card states), shown as a percent.</li>
+        <li>The dollar figure on each line is the month's profit: that month's line in the strategy's Monthly P&amp;L table, on its card in the <a href="../strategies/">Strategy Library</a>.</li>
         <li>A month's figure counts the trades closed in that month and no others. A trade closed at or after 6:00 p.m. New York time counts toward the next weekday, the futures session it belongs to.</li>
         <li>The current month comes first, on the left, and the months before it follow, up to twelve in all. When a new month starts it takes the first place, and once there are twelve the oldest drops off.</li>
         <li id="lb-n-part" hidden>The latest month is still in progress. Each record stops on its last tested day, shown on its line, so the strategies are not all measured to the same day.</li>
-        <li>In each month the bars are drawn against that month's largest figure, so they compare the strategies within a month, not one month with another. A loss is red and carries a minus sign.</li>
+        <li>In each month the bars are drawn against that month's highest RoDD, so they compare the strategies within a month, not one month with another. A loss is red and carries a minus sign.</li>
         <li>The small mark under a place shows how many places the strategy moved from the month before.</li>
         <li>A strategy marked Coming soon is not released yet.</li>
         <li>A place here is a place in a list of hypothetical results. It does not say what a strategy will do next.</li>

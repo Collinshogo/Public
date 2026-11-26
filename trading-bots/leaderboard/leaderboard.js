@@ -1,17 +1,21 @@
 /* AFT Trading Bots: the Strategy Leaderboard. No tracking of its own and no network call beyond this site's own data files.
    - What it ranks: the strategies the Strategy Library lists (data/catalog.js: a released strategy with its TradingView
-     page, and a coming-soon one that has figures), by one calendar month's profit, for the current month in the
-     records and the eleven before it: a year of months at most, the current one first. When a new month opens it
-     takes the first place and, once there are twelve, the oldest drops off.
+     page, and a coming-soon one that has figures), by one calendar month's return on drawdown (RoDD), for the current
+     month in the records and the eleven before it: a year of months at most, the current one first. When a new month
+     opens it takes the first place and, once there are twelve, the oldest drops off.
+   - A month's RoDD (the owner's call, 2026-11-26: rank by risk, not by dollars): the month's profit over the strategy's
+     max drawdown in its whole record (data/catalog.js figures, max_drawdown_usd, the drawdown its card states), as a
+     whole percent like the site's other RoDD figures. The month's profit in dollars still stands on every line. A
+     strategy with no stated drawdown has no RoDD and is placed after those that have one.
    - Where each figure comes from: the month's entry in the strategy's own data file (data/<slug>.json, months), the same
      entry its card prints in the Monthly P&L table: the trades closed in that month and no others. Nothing is worked
-     out here but the order, the bar lengths, the moves and the count in profit. A record import changes this page
+     out here but the RoDD, the order, the bar lengths, the moves and the count in profit. A record import changes this page
      with no edit to it.
    - The current month is the newest month that more than half the records have reached, so one early export does not
      open a board of its own and one late record does not hold the page back. A month is a part month when a record
      stops before the month's last weekday (or starts after its first); the board says so and each line carries its
      record's last day.
-   - A board's bars are drawn against that month's largest figure, so they compare the strategies within the month.
+   - A board's bars are drawn against that month's largest RoDD, so they compare the strategies within the month.
      A loss is red and carries its minus sign.
    - Names are lettered by the site's rule (as bots.js and calc.js have it): the level from the strategy's plan, the
      colours from its market. A coming-soon strategy carries the tag "Coming soon" right after its name.
@@ -41,6 +45,18 @@
     return (cents(n) < 0 ? MINUS : (cents(n) > 0 ? '+' : '')) + '$' + abs;
   }
   function tone(n) { return cents(n) < 0 ? 'bx-neg' : (cents(n) > 0 ? 'bx-pos' : ''); }
+  // A month's RoDD: its profit over the record's max drawdown, unrounded (for the order and the bars), or null.
+  function roddOf(v, dd) { return typeof dd === 'number' && isFinite(dd) && dd > 0 ? v / dd * 100 : null; }
+  // Printed as a whole percent, rounded half away from zero, with a thousands separator: "312%", "−8%".
+  function pct(p) {
+    if (p === null) return '<span aria-hidden="true">—</span><span class="bx-vh">no drawdown stated</span>';
+    var r = Math.round(Math.abs(p));
+    return (p < 0 && r > 0 ? MINUS : '') + r.toLocaleString('en-US') + '%';
+  }
+  function roddHtml(p, cls) {
+    return '<b class="' + cls + (p === null ? '' : ' ' + tone(p)) + '"><span class="bx-vh">Return on drawdown </span>' + pct(p) +
+      '<small class="lb-u" aria-hidden="true">RoDD</small></b>';
+  }
   var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   var MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   function isYm(v) { return /^\d{4}-(0[1-9]|1[0-2])$/.test(String(v)); }
@@ -130,9 +146,13 @@
       var e = r.months[ym];
       if (!e && r.from <= lw && r.to >= fw) e = { pnl_usd: 0, trades: 0 };        // inside its dates with no entry: no trade closed in it
       if (!e) { none.push(r); return; }
-      rows.push({ r: r, v: e.pnl_usd, n: e.trades, late: r.from > fw ? r.from : '', early: r.to < lw ? r.to : '', end: r.to < lw ? r.to : lw });
+      rows.push({ r: r, v: e.pnl_usd, p: roddOf(e.pnl_usd, r.dd), n: e.trades, late: r.from > fw ? r.from : '', early: r.to < lw ? r.to : '', end: r.to < lw ? r.to : lw });
     });
-    rows.sort(function (a, b) { return cents(b.v) - cents(a.v) || (a.r.s.name < b.r.s.name ? -1 : 1); });
+    // by RoDD, highest first; a line with no RoDD after those with one; then by profit, then by name
+    rows.sort(function (a, b) {
+      if ((a.p === null) !== (b.p === null)) return a.p === null ? 1 : -1;
+      return (a.p !== null ? b.p - a.p : 0) || cents(b.v) - cents(a.v) || (a.r.s.name < b.r.s.name ? -1 : 1);
+    });
     rows.forEach(function (x, i) { x.rank = i + 1; });
     var ends = rows.map(function (x) { return x.end; }).sort();
     return {
@@ -161,9 +181,10 @@
       (up ? 'up ' : 'down ') + plural(n, 'place', 'places') + from + '</span></span>';
   }
   function trades(n) { return typeof n === 'number' && isFinite(n) ? plural(n, 'trade', 'trades') : ''; }
-  // What stands under a name: its market, its plan (on a line) and the month's trades.
+  // What stands under a name: on a line the month's profit in dollars first, then its market, its plan and the month's trades.
   function meta(x, withPlan) {
     var bits = [], mk = marketCode(x.r.s), pl = withPlan ? planBadge(x.r.s) : '', tr = trades(x.n);
+    if (withPlan) bits.push('<span class="lb-usd ' + tone(x.v) + '"><span class="bx-vh">Profit </span>' + usd(x.v) + '</span>');
     if (mk) bits.push('<span>' + esc(mk) + '</span>');
     if (pl) bits.push(pl);
     if (tr) bits.push('<span>' + tr + '</span>');
@@ -181,22 +202,23 @@
       '<span class="bx-vh">Place ' + x.rank + ': </span>' +
       (x.rank === 1 ? CROWN : '') +
       podName(s) + soonTag(s) +
-      '<b class="lb-pv ' + tone(x.v) + '">' + usd(x.v) + '</b>' +
+      roddHtml(x.p, 'lb-pv') +
+      '<span class="lb-pusd ' + tone(x.v) + '"><span class="bx-vh">Profit </span>' + usd(x.v) + '</span>' +
       '<span class="lb-pmeta"><span>' + meta(x, false) + '</span>' + (partDays(x) ? '<span>' + partDays(x) + '</span>' : '') + '</span>' +
       '<span class="lb-ped" aria-hidden="true">' + x.rank + '</span>' +
       '</a></li>';
   }
   function rowLine(x, b, top) {
-    var s = x.r.s, w = top > 0 ? Math.abs(cents(x.v)) / top * 100 : 0;
-    if (cents(x.v) !== 0 && w < 1.2) w = 1.2;
+    var s = x.r.s, w = top > 0 && x.p !== null ? Math.abs(x.p) / top * 100 : 0;
+    if (x.p !== null && Math.round(x.p * 100) !== 0 && w < 1.2) w = 1.2;
     var pd = partDays(x);
     return '<li class="lb-row"><a class="lb-link' + (pd ? ' has-end' : '') + '" href="' + LIB + '#' + esc(s.slug) + '">' +
       '<span class="lb-rk"><b><span class="bx-vh">Place </span>' + x.rank + '</b>' + moveMark(x, b) + '</span>' +
       '<span class="lb-nm">' + nameSpan(s) + '</span>' +
-      '<b class="lb-v ' + tone(x.v) + '">' + usd(x.v) + '</b>' +
+      roddHtml(x.p, 'lb-v') +
       '<span class="lb-meta">' + meta(x, true) + '</span>' +
       (pd ? '<span class="lb-end">' + pd + '</span>' : '') +
-      '<span class="lb-bar" aria-hidden="true"><i class="' + (cents(x.v) < 0 ? 'is-neg' : 'is-pos') + '" style="width:' + w.toFixed(2) + '%"></i></span>' +
+      '<span class="lb-bar" aria-hidden="true"><i class="' + (x.p !== null && x.p < 0 ? 'is-neg' : 'is-pos') + '" style="width:' + w.toFixed(2) + '%"></i></span>' +
       '</a></li>';
   }
   function boardHtml(b, i, top) {
@@ -309,8 +331,8 @@
     var all = yms.map(board), shown = all.slice(0, SHOWN).filter(function (b) { return b.rows.length; });
     if (!shown.length) { fail(); return; }
     shown.forEach(function (b) { moves(b, all[all.indexOf(b) + 1]); });
-    // each board's bars are drawn against that month's largest figure
-    shown.forEach(function (b) { b.top = b.rows.reduce(function (t, x) { return Math.max(t, Math.abs(cents(x.v))); }, 0); });
+    // each board's bars are drawn against that month's largest RoDD
+    shown.forEach(function (b) { b.top = b.rows.reduce(function (t, x) { return x.p === null ? t : Math.max(t, Math.abs(x.p)); }, 0); });
 
     boardsEl.setAttribute('data-n', String(shown.length));
     boardsEl.innerHTML = shown.map(function (b, i) { return boardHtml(b, i, b.top); }).join('');
@@ -342,7 +364,9 @@
       x.d.months.forEach(function (m) {
         if (m && isYm(m.month) && typeof m.pnl_usd === 'number' && isFinite(m.pnl_usd)) months[m.month] = { pnl_usd: m.pnl_usd, trades: m.trades };
       });
-      recs.push({ s: x.s, months: months, from: x.d.test.window_from, to: x.d.test.window_to, run: x.d.test.run_date });
+      var f = FIGS[x.s.slug];        // the record's max drawdown: the catalog's figure, the one its card states
+      recs.push({ s: x.s, months: months, from: x.d.test.window_from, to: x.d.test.window_to, run: x.d.test.run_date,
+                  dd: f && typeof f.max_drawdown_usd === 'number' ? f.max_drawdown_usd : null });
     });
     if (!recs.length) { fail(); return; }
     build();

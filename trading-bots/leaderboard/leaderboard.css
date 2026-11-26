@@ -152,3 +152,7 @@
   .lb-bar i{background:CanvasText}
   .lb-pb[aria-pressed="true"]{border-width:3px}
 }
+/* RoDD ranking (2026-11-26): the RoDD is the big figure with its small unit after it; the month's profit in dollars under it */
+.lb-u{margin-left:4px;font-size:.62em;font-weight:600;letter-spacing:.04em;color:var(--dim)}
+.lb-pusd{font-family:var(--sans);font-size:clamp(10.5px,12cqw,13px);font-weight:600;font-variant-numeric:tabular-nums;line-height:1.3;white-space:nowrap}
+.lb-usd{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
