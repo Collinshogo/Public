@@ -290,9 +290,9 @@ window.AFT_BOTS_CATALOG = {
       name: "Tripwire",
       market_line: "MES · Micro S&P 500",
       timeframe: "1-minute chart",
-      tier: "base",
-      grade: 4,
-      price: 97
+      tier: "supreme",
+      grade: 2,
+      price: 627
     },
     {
       slug: "the-kilo",
