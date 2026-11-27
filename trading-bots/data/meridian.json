@@ -15,7 +15,7 @@
  "test": {
   "tester": "TradingView Strategy Tester",
   "window_from": "2026-01-01",
-  "window_to": "2026-11-24",
+  "window_to": "2026-11-26",
   "run_date": "2026-11-26",
   "symbol": "CME_MINI:MNQ1!",
   "timeframe": "1 minute",
@@ -23,7 +23,7 @@
   "commission": "$0.75 per contract",
   "slippage": "4 ticks"
  },
- "record_line": "TradingView Strategy Tester · Jan 1, 2026 to Nov 24, 2026 · $25,000 start · commission $0.75 per contract · slippage 4 ticks · run Nov 26, 2026",
+ "record_line": "TradingView Strategy Tester · Jan 1, 2026 to Nov 26, 2026 · $25,000 start · commission $0.75 per contract · slippage 4 ticks · run Nov 26, 2026",
  "figures": {
   "net_profit_usd": 42612.5,
   "win_rate_pct": 73.05,
@@ -38,7 +38,7 @@
    "return_on_drawdown": "28.23",
    "avg_trade": "+$85.05",
    "trades": "501",
-   "trading_days": "234",
+   "trading_days": "236",
    "trade_frequency": "2 per day",
    "monthly_profit": "+$3,873.86"
   },
@@ -46,8 +46,8 @@
   "max_drawdown_usd": 1509.25,
   "return_on_drawdown": 28.23,
   "avg_trade_usd": 85.05,
-  "trading_days": 234,
-  "trade_frequency": 2.141,
+  "trading_days": 236,
+  "trade_frequency": 2.1229,
   "winners": 366,
   "max_contracts": 4,
   "monthly_profit_usd": 3873.86
@@ -4782,7 +4782,7 @@
  },
  "source": {
   "generated_by": "aft_strategy_export.py",
-  "properties_sha256": "4216873510bd745f6255a1b69b5e4fa673d40a4806967155d3330a979299fd8f",
+  "properties_sha256": "9d97a5aaa673c1fdd942b743d967a6c7380a2255f51124b476470b1f37bfb93f",
   "trade_list_sha256": "63badba7481184ec29141f6feebfa11069df85a248d6bfd877f657b4bc8cc4e6"
  }
 }

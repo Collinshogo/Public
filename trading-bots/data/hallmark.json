@@ -15,7 +15,7 @@
  "test": {
   "tester": "TradingView Strategy Tester",
   "window_from": "2026-01-01",
-  "window_to": "2026-11-24",
+  "window_to": "2026-11-26",
   "run_date": "2026-11-26",
   "symbol": "COMEX_MINI:MGC1!",
   "timeframe": "1 minute",
@@ -23,34 +23,34 @@
   "commission": "$0.75 per contract",
   "slippage": "2 ticks"
  },
- "record_line": "TradingView Strategy Tester · Jan 1, 2026 to Nov 24, 2026 · $25,000 start · commission $0.75 per contract · slippage 2 ticks · run Nov 26, 2026",
+ "record_line": "TradingView Strategy Tester · Jan 1, 2026 to Nov 26, 2026 · $25,000 start · commission $0.75 per contract · slippage 2 ticks · run Nov 26, 2026",
  "figures": {
-  "net_profit_usd": 67493.5,
-  "win_rate_pct": 72.75,
-  "profit_factor": 2.518,
-  "trades": 811,
+  "net_profit_usd": 69423.0,
+  "win_rate_pct": 73.02,
+  "profit_factor": 2.562,
+  "trades": 819,
   "display": {
-   "net_profit": "+$67,493.50",
-   "win_rate": "72.75%",
-   "profit_factor": "2.518",
+   "net_profit": "+$69,423.00",
+   "win_rate": "73.02%",
+   "profit_factor": "2.562",
    "max_drawdown": "4.23%",
    "max_drawdown_usd": "$1,203.25",
-   "return_on_drawdown": "56.09",
-   "avg_trade": "+$83.22",
-   "trades": "811",
-   "trading_days": "234",
+   "return_on_drawdown": "57.70",
+   "avg_trade": "+$84.77",
+   "trades": "819",
+   "trading_days": "236",
    "trade_frequency": "3 per day",
-   "monthly_profit": "+$6,135.77"
+   "monthly_profit": "+$6,311.18"
   },
   "max_drawdown_pct": 4.23,
   "max_drawdown_usd": 1203.25,
-  "return_on_drawdown": 56.09,
-  "avg_trade_usd": 83.22,
-  "trading_days": 234,
-  "trade_frequency": 3.4658,
-  "winners": 590,
+  "return_on_drawdown": 57.7,
+  "avg_trade_usd": 84.77,
+  "trading_days": 236,
+  "trade_frequency": 3.4703,
+  "winners": 598,
   "max_contracts": 4,
-  "monthly_profit_usd": 6135.77
+  "monthly_profit_usd": 6311.18
  },
  "months": [
   {
@@ -105,8 +105,8 @@
   },
   {
    "month": "2026-11",
-   "pnl_usd": 2597.5,
-   "trades": 57
+   "pnl_usd": 4527.0,
+   "trades": 65
   }
  ],
  "equity": [
@@ -1029,6 +1029,14 @@
   [
    "2026-11-24",
    67493.5
+  ],
+  [
+   "2026-11-25",
+   69286.0
+  ],
+  [
+   "2026-11-26",
+   69423.0
   ]
  ],
  "worked_out": {
@@ -1956,6 +1964,14 @@
   [
    "2026-11-24",
    -346.5
+  ],
+  [
+   "2026-11-25",
+   1792.5
+  ],
+  [
+   "2026-11-26",
+   137.0
   ]
  ],
  "day_paths": [
@@ -4199,6 +4215,28 @@
    -667.75,
    -345.75,
    -346.5
+  ],
+  [
+   -285.75,
+   209.25,
+   -135.0,
+   425.0,
+   264.75,
+   805.75,
+   403.25,
+   941.25,
+   814.75,
+   1352.75,
+   1226.25,
+   1793.25,
+   1792.5
+  ],
+  [
+   -6.75,
+   183.25,
+   105.75,
+   137.75,
+   137.0
   ]
  ],
  "day_paths_alt": [
@@ -6474,6 +6512,28 @@
    -345.75,
    -667.75,
    -346.5
+  ],
+  [
+   209.25,
+   -285.75,
+   425.0,
+   -135.0,
+   805.75,
+   264.75,
+   941.25,
+   403.25,
+   1352.75,
+   814.75,
+   1793.25,
+   1226.25,
+   1792.5
+  ],
+  [
+   183.25,
+   -6.75,
+   137.75,
+   105.75,
+   137.0
   ]
  ],
  "proof": {
@@ -6482,7 +6542,7 @@
  },
  "source": {
   "generated_by": "aft_strategy_export.py",
-  "properties_sha256": "a8e8862d12ec90f1d37acdb0952fd55a8e58e5a8925204324c388455d01bddc6",
-  "trade_list_sha256": "e7f77a8abc5dd7951aeee029d792b1ea7f3ad394103119af50165805ae94425f"
+  "properties_sha256": "ea6155261b67522a359dbf550b9c4be97fcd111ec439a91f5fd9dbca74271d4d",
+  "trade_list_sha256": "516b1f7e309c727456226e76bb58b0c428dcb6403e4a7160f50cf4d2531f51ff"
  }
 }
